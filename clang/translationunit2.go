@@ -225,11 +225,6 @@ func (tu TranslationUnit) ReparseTranslationUnit(unsavedFiles []UnsavedFile, opt
 	return int32(C.clang_reparseTranslationUnit(tu.c, C.uint(len(unsavedFiles)), cp_unsavedFiles, C.uint(options)))
 }
 
-// Return the memory usage of a translation unit. This object should be released with clang_disposeCXTUResourceUsage().
-func (tu TranslationUnit) TUResourceUsage() TUResourceUsage {
-	return TUResourceUsage{C.clang_getCXTUResourceUsage(tu.c)}
-}
-
 /*
 	Retrieve the cursor that represents the given translation unit.
 
