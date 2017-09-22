@@ -101,6 +101,8 @@ const (
 		as possible should be reported. Use this flag to enable this behavior.
 	*/
 	TranslationUnit_KeepGoing = C.CXTranslationUnit_KeepGoing
+	// Sets the preprocessor in a mode for parsing a single file only.
+	TranslationUnit_SingleFileParse = C.CXTranslationUnit_SingleFileParse
 )
 
 func (tuf TranslationUnit_Flags) Spelling() string {
@@ -127,6 +129,8 @@ func (tuf TranslationUnit_Flags) Spelling() string {
 		return "TranslationUnit=CreatePreambleOnFirstParse"
 	case TranslationUnit_KeepGoing:
 		return "TranslationUnit=KeepGoing"
+	case TranslationUnit_SingleFileParse:
+		return "TranslationUnit=SingleFileParse"
 	}
 
 	return fmt.Sprintf("TranslationUnit_Flags unkown %d", int(tuf))
