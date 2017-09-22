@@ -47,7 +47,7 @@ func (mmd ModuleMapDescriptor) SetUmbrellaHeader(name string) ErrorCode {
 */
 func (mmd ModuleMapDescriptor) WriteToBuffer(options uint32) (string, uint32, ErrorCode) {
 	var outBufferPtr *C.char
-	defer C.free(unsafe.Pointer(outBufferPtr))
+	defer C.clang_free(unsafe.Pointer(outBufferPtr))
 	var outBufferSize C.uint
 
 	o := ErrorCode(C.clang_ModuleMapDescriptor_writeToBuffer(mmd.c, C.uint(options), &outBufferPtr, &outBufferSize))

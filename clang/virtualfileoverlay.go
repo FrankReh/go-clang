@@ -46,7 +46,7 @@ func (vfo VirtualFileOverlay) SetCaseSensitivity(caseSensitive int32) ErrorCode 
 */
 func (vfo VirtualFileOverlay) WriteToBuffer(options uint32) (string, uint32, ErrorCode) {
 	var outBufferPtr *C.char
-	defer C.free(unsafe.Pointer(outBufferPtr))
+	defer C.clang_free(unsafe.Pointer(outBufferPtr))
 	var outBufferSize C.uint
 
 	o := ErrorCode(C.clang_VirtualFileOverlay_writeToBuffer(vfo.c, C.uint(options), &outBufferPtr, &outBufferSize))
