@@ -4,6 +4,8 @@ package clang
 // #include "go-clang.h"
 import "C"
 
+// Derived from from ../../v3.9/clang/sourcerange_gen.go
+
 /*
 	Identifies a half-open character range in the source code.
 
