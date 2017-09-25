@@ -121,7 +121,12 @@ func (ccr CodeCompleteResults) Results() []CompletionResult {
 	gos_s.Len = int(ccr.c.NumResults)
 	gos_s.Data = uintptr(unsafe.Pointer(ccr.c.Results))
 
-	return s
+	// Create a slice with a backing store not shared with C to return to user,
+	// allowing the ccr to be disposed and the slice returned here to live on.
+	r := make([]CompletionResult, len(s))
+	copy(r, s)
+
+	return r
 }
 
 // The number of code-completion results stored in the Results array.
