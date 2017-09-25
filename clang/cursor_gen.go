@@ -512,6 +512,15 @@ func (c Cursor) ResultType() Type {
 }
 
 /*
+	Retrieve the exception specification type associated with a given cursor.
+
+	This only returns a valid result if the cursor refers to a function or method.
+*/
+func (c Cursor) ExceptionSpecification() ExceptionSpecification {
+	return ExceptionSpecification(C.clang_getCursorExceptionSpecificationType(c.c))
+}
+
+/*
 	Return the offset of the field represented by the Cursor.
 
 	If the cursor is not a field declaration, -1 is returned.

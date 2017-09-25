@@ -68,6 +68,19 @@ func (t Type) IsRestrictQualifiedType() bool {
 	return o != C.uint(0)
 }
 
+// brief Returns the address space of the given type.
+func (t Type) AddressSpace() uint32 {
+	return uint32(C.clang_getAddressSpace(t.c))
+}
+
+// Returns the typedef name of the given type.
+func (t Type) TypedefName() string {
+	o := cxstring{C.clang_getTypedefName(t.c)}
+	defer o.Dispose()
+
+	return o.String()
+}
+
 // For pointer types, returns the type of the pointee.
 func (t Type) PointeeType() Type {
 	return Type{C.clang_getPointeeType(t.c)}
@@ -102,6 +115,15 @@ func (t Type) FunctionTypeCallingConv() CallingConv {
 */
 func (t Type) ResultType() Type {
 	return Type{C.clang_getResultType(t.c)}
+}
+
+/*
+	Retrieve the exception specification type associated with a function type.
+
+	If a non-function type is passed in, an error code of -1 is returned.
+*/
+func (t Type) ExceptionSpecification() ExceptionSpecification {
+	return ExceptionSpecification(C.clang_getExceptionSpecificationType(t.c))
 }
 
 /*
