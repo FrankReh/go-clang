@@ -160,6 +160,17 @@ func (tu TranslationUnit) SaveTranslationUnit(fileName string, options uint32) i
 	return int32(C.clang_saveTranslationUnit(tu.c, c_fileName, C.uint(options)))
 }
 
+/*
+	Suspend a translation unit in order to free memory associated with it.
+
+	A suspended translation unit uses significantly less memory but on the other
+	side does not support any other calls than clang_reparseTranslationUnit
+	to resume it or clang_disposeTranslationUnit to dispose it completely.
+*/
+func (tu TranslationUnit) SuspendTranslationUnit() uint {
+	return uint(C.clang_suspendTranslationUnit(tu.c))
+}
+
 // Destroy the specified CXTranslationUnit object.
 func (tu TranslationUnit) Dispose() {
 	C.clang_disposeTranslationUnit(tu.c)
