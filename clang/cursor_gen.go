@@ -871,15 +871,25 @@ func (c Cursor) Mangling() string {
 }
 
 // Retrieve the CXStrings representing the mangled symbols of the C++ constructor or destructor at the cursor.
-func (c Cursor) Manglings() *StringSet {
+func (c Cursor) Manglings() []string {
 	o := C.clang_Cursor_getCXXManglings(c.c)
 
-	var gop_o *StringSet
+	var r []string
 	if o != nil {
-		gop_o = &StringSet{*o}
+		var s []C.CXString
+		gos_s := (*reflect.SliceHeader)(unsafe.Pointer(&s))
+		gos_s.Cap = int(o.Count)
+		gos_s.Len = int(o.Count)
+		gos_s.Data = uintptr(unsafe.Pointer(o.Strings))
+
+		r = make([]string, len(s))
+		for i := range s {
+			r[i] = C.GoString(C.clang_getCString(s[i]))
+		}
+		C.clang_disposeStringSet(o)
 	}
 
-	return gop_o
+	return r
 }
 
 // Given a CXCursor_ModuleImportDecl cursor, return the associated module.
