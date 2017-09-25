@@ -23,23 +23,6 @@ func DefaultDiagnosticDisplayOptions() uint32 {
 }
 
 /*
-	Retrieve the name of a particular diagnostic category. This
-	is now deprecated. Use clang_getDiagnosticCategoryText()
-	instead.
-
-	Parameter Category A diagnostic category number, as returned by
-	clang_getDiagnosticCategory().
-
-	Returns The name of the given diagnostic category.
-*/
-func GetDiagnosticCategoryName(category uint32) string {
-	o := cxstring{C.clang_getDiagnosticCategoryName(C.uint(category))}
-	defer o.Dispose()
-
-	return o.String()
-}
-
-/*
 	Returns the set of flags that is suitable for parsing a translation
 	unit that is being edited.
 
