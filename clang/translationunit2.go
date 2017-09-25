@@ -53,15 +53,8 @@ func (tu TranslationUnit) LocationForOffset(file File, offset uint32) SourceLoca
 	The preprocessor will skip lines when they are surrounded by an
 	if/ifdef/ifndef directive whose condition does not evaluate to true.
 */
-func (tu TranslationUnit) SkippedRanges(file File) *SourceRangeList {
-	o := C.clang_getSkippedRanges(tu.c, file.c)
-
-	var gop_o *SourceRangeList
-	if o != nil {
-		gop_o = &SourceRangeList{*o}
-	}
-
-	return gop_o
+func (tu TranslationUnit) SkippedRanges(file File) []SourceRange {
+	return copyAndDisposeSourceRangeList(C.clang_getSkippedRanges(tu.c, file.c))
 }
 
 /*
@@ -70,15 +63,25 @@ func (tu TranslationUnit) SkippedRanges(file File) *SourceRangeList {
 	The preprocessor will skip lines when they are surrounded by an
 	if/ifdef/ifndef directive whose condition does not evaluate to true.
 */
-func (tu TranslationUnit) AllSkippedRanges() *SourceRangeList {
-	o := C.clang_getAllSkippedRanges(tu.c)
+func (tu TranslationUnit) AllSkippedRanges() []SourceRange {
+	return copyAndDisposeSourceRangeList(C.clang_getAllSkippedRanges(tu.c))
+}
 
-	var gop_o *SourceRangeList
+func copyAndDisposeSourceRangeList(o *C.CXSourceRangeList) []SourceRange {
+	var r []SourceRange
 	if o != nil {
-		gop_o = &SourceRangeList{*o}
-	}
+		var s []SourceRange
+		gos_s := (*reflect.SliceHeader)(unsafe.Pointer(&s))
+		gos_s.Cap = int(o.count)
+		gos_s.Len = int(o.count)
+		gos_s.Data = uintptr(unsafe.Pointer(o.ranges))
 
-	return gop_o
+		r = make([]SourceRange, len(s))
+		copy(r, s)
+
+		C.clang_disposeSourceRangeList(o)
+	}
+	return r
 }
 
 // Determine the number of diagnostics produced for the given translation unit.
