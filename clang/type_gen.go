@@ -208,6 +208,18 @@ func (t Type) NamedType() Type {
 }
 
 /*
+	Determine if a typedef is 'transparent' tag.
+
+	A typedef is considered 'transparent' if it shares a name and spelling
+	location with its underlying tag type, as is the case with the NS_ENUM macro.
+*/
+func (t Type) IsTransparentTagTypedef() bool {
+	o := C.clang_Type_isTransparentTagTypedef(t.c)
+
+	return o != C.uint(0)
+}
+
+/*
 	Return the alignment of a type in bytes as per C++[expr.alignof]
 	standard.
 
