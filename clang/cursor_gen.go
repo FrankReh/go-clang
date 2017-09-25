@@ -234,25 +234,22 @@ func (c Cursor) LexicalParent() Cursor {
 */
 func (c Cursor) OverriddenCursors() []Cursor {
 	var cp_overridden *C.CXCursor
-	var overridden []Cursor
+	var tmp_overridden []Cursor
 	var numOverridden C.uint
 
 	C.clang_getOverriddenCursors(c.c, &cp_overridden, &numOverridden)
 
-	gos_overridden := (*reflect.SliceHeader)(unsafe.Pointer(&overridden))
+	gos_overridden := (*reflect.SliceHeader)(unsafe.Pointer(&tmp_overridden))
 	gos_overridden.Cap = int(numOverridden)
 	gos_overridden.Len = int(numOverridden)
 	gos_overridden.Data = uintptr(unsafe.Pointer(cp_overridden))
 
-	return overridden
-}
-
-// Free the set of overridden cursors returned by \c clang_getOverriddenCursors().
-func Dispose(overridden []Cursor) {
-	gos_overridden := (*reflect.SliceHeader)(unsafe.Pointer(&overridden))
-	cp_overridden := (*C.CXCursor)(unsafe.Pointer(gos_overridden.Data))
+	r := make([]Cursor, len(tmp_overridden))
+	copy(r, tmp_overridden)
 
 	C.clang_disposeOverriddenCursors(cp_overridden)
+
+	return r
 }
 
 // Retrieve the file that is included by the given inclusion directive cursor.
