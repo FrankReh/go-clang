@@ -6,8 +6,8 @@ import "C"
 
 // Target information for a given translation unit.
 type TargetInfo struct {
-	triple       string
-	pointerWidth int
+	Triple       string
+	PointerWidth int
 }
 
 func (tu TranslationUnit) TargetInfo() TargetInfo {
@@ -18,7 +18,7 @@ func (tu TranslationUnit) TargetInfo() TargetInfo {
 	defer triple.Dispose()
 
 	return TargetInfo{
-		triple:       triple.String(),
-		pointerWidth: int(C.clang_TargetInfo_getPointerWidth(ti)),
+		Triple:       triple.String(),
+		PointerWidth: int(C.clang_TargetInfo_getPointerWidth(ti)),
 	}
 }
