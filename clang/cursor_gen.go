@@ -820,6 +820,30 @@ func (c Cursor) IsVariadic() bool {
 	return o != C.uint(0)
 }
 
+/*
+	Returns non-zero if the given cursor points to a symbol marked with
+	external_source_symbol attribute.
+
+	language If non-NULL, and the attribute is present, will be set to
+	the 'language' string from the attribute.
+
+	definedIn If non-NULL, and the attribute is present, will be set to
+	the 'definedIn' string from the attribute.
+
+	isGenerated If non-NULL, and the attribute is present, will be set to
+	non-zero if the 'generated_declaration' is set in the attribute.
+*/
+func (c Cursor) IsExternalSymbol() (bool, string, string, bool) {
+	var language cxstring
+	defer language.Dispose()
+	var definedIn cxstring
+	defer definedIn.Dispose()
+	var isGenerated C.uint
+	o := C.clang_Cursor_isExternalSymbol(c.c, &language.c, &definedIn.c, &isGenerated)
+
+	return o != C.uint(0), language.String(), definedIn.String(), isGenerated != C.uint(0)
+}
+
 // Given a cursor that represents a declaration, return the associated comment's source range. The range may include multiple consecutive comments with whitespace in between.
 func (c Cursor) CommentRange() SourceRange {
 	return SourceRange{C.clang_Cursor_getCommentRange(c.c)}
