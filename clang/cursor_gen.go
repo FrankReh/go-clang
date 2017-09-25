@@ -953,6 +953,13 @@ func (c Cursor) CXXMethod_IsVirtual() bool {
 	return o != C.uint(0)
 }
 
+// Determine if an enum declaration refers to a scoped enum.
+func (c Cursor) CXXMethod_IsScoped() bool {
+	o := C.clang_EnumDecl_isScoped(c.c)
+
+	return o != C.uint(0)
+}
+
 // Determine if a C++ member function or member function template is declared 'const'.
 func (c Cursor) CXXMethod_IsConst() bool {
 	o := C.clang_CXXMethod_isConst(c.c)
