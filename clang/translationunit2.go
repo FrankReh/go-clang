@@ -334,25 +334,22 @@ func (tu TranslationUnit) TokenExtent(t Token) SourceRange {
 */
 func (tu TranslationUnit) Tokenize(r SourceRange) []Token {
 	var cp_tokens *C.CXToken
-	var tokens []Token
+	var tmp_tokens []Token
 	var numTokens C.uint
 
 	C.clang_tokenize(tu.c, r.c, &cp_tokens, &numTokens)
 
-	gos_tokens := (*reflect.SliceHeader)(unsafe.Pointer(&tokens))
+	gos_tokens := (*reflect.SliceHeader)(unsafe.Pointer(&tmp_tokens))
 	gos_tokens.Cap = int(numTokens)
 	gos_tokens.Len = int(numTokens)
 	gos_tokens.Data = uintptr(unsafe.Pointer(cp_tokens))
 
+	tokens := make([]Token, len(tmp_tokens))
+	copy(tokens, tmp_tokens)
+
+	C.clang_disposeTokens(tu.c, cp_tokens, numTokens)
+
 	return tokens
-}
-
-// Free the given set of tokens.
-func (tu TranslationUnit) DisposeTokens(tokens []Token) {
-	gos_tokens := (*reflect.SliceHeader)(unsafe.Pointer(&tokens))
-	cp_tokens := (*C.CXToken)(unsafe.Pointer(gos_tokens.Data))
-
-	C.clang_disposeTokens(tu.c, cp_tokens, C.uint(len(tokens)))
 }
 
 /*
