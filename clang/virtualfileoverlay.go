@@ -16,8 +16,8 @@ type VirtualFileOverlay struct {
 
 	Parameter options is reserved, always pass 0.
 */
-func NewVirtualFileOverlay(options uint32) VirtualFileOverlay {
-	return VirtualFileOverlay{C.clang_VirtualFileOverlay_create(C.uint(options))}
+func NewVirtualFileOverlay() VirtualFileOverlay {
+	return VirtualFileOverlay{C.clang_VirtualFileOverlay_create(C.uint(0))}
 }
 
 // Map an absolute virtual file path to an absolute real one. The virtual path must be canonicalized (not contain "."/".."). Returns 0 for success, non-zero to indicate an error.
