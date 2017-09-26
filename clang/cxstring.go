@@ -8,6 +8,17 @@ type cxstring struct {
 	c C.CXString
 }
 
+func cx2GoString(c C.CXString) string {
+	// Would be nice to create one C routine for getting the CString and
+	// disposing of it right away.  Perhaps pass in a buffer of usually large
+	// enough space.  When the buffer is not large enough, either call this old
+	// way, or call with a larger buffer.
+	cstr := C.clang_getCString(c)
+	s := C.GoString(cstr)
+	C.clang_disposeString(c)
+	return s
+}
+
 // Retrieve the character data associated with the given string.
 func (c cxstring) String() string {
 	cstr := C.clang_getCString(c.c)
