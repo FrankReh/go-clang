@@ -7,7 +7,7 @@ import "unsafe"
 
 // A remapping of original source files and their translated files.
 type Remapping struct {
-	c C.CXRemapping
+	Original, Transformed string
 }
 
 /*
@@ -18,11 +18,11 @@ type Remapping struct {
 	Returns the requested remapping. This remapping must be freed
 	via a call to clang_remap_dispose(). Can return NULL if an error occurred.
 */
-func NewRemappings(path string) Remapping {
+func NewRemappings(path string) []Remapping {
 	c_path := C.CString(path)
 	defer C.free(unsafe.Pointer(c_path))
 
-	return Remapping{C.clang_getRemappings(c_path)}
+	return copyAndDisposeRemappings(C.clang_getRemappings(c_path))
 }
 
 /*
@@ -35,7 +35,7 @@ func NewRemappings(path string) Remapping {
 	Returns the requested remapping. This remapping must be freed
 	via a call to clang_remap_dispose(). Can return NULL if an error occurred.
 */
-func NewRemappingsFromFileList(filePaths []string) Remapping {
+func NewRemappingsFromFileList(filePaths []string) []Remapping {
 	ca_filePaths := make([]*C.char, len(filePaths))
 	var cp_filePaths **C.char
 	if len(filePaths) > 0 {
@@ -47,34 +47,31 @@ func NewRemappingsFromFileList(filePaths []string) Remapping {
 		ca_filePaths[i] = ci_str
 	}
 
-	return Remapping{C.clang_getRemappingsFromFileList(cp_filePaths, C.uint(len(filePaths)))}
+	return copyAndDisposeRemappings(C.clang_getRemappingsFromFileList(cp_filePaths, C.uint(len(filePaths))))
 }
 
-// Determine the number of remappings.
-func (r Remapping) NumFiles() uint32 {
-	return uint32(C.clang_remap_getNumFiles(r.c))
-}
+func copyAndDisposeRemappings(c C.CXRemapping) []Remapping {
+	var r []Remapping
 
-/*
-	Get the original and the associated filename from the remapping.
+	if c != nil {
+		n := int(C.clang_remap_getNumFiles(c))
+		r = make([]Remapping, n)
 
-	Parameter original If non-NULL, will be set to the original filename.
+		for i := range r {
+			var original cxstring
+			var transformed cxstring
 
-	Parameter transformed If non-NULL, will be set to the filename that the original
-	is associated with.
-*/
-func (r Remapping) Filenames(index uint32) (string, string) {
-	var original cxstring
-	defer original.Dispose()
-	var transformed cxstring
-	defer transformed.Dispose()
+			C.clang_remap_getFilenames(c, C.uint(i), &original.c, &transformed.c)
 
-	C.clang_remap_getFilenames(r.c, C.uint(index), &original.c, &transformed.c)
+			r[i].Original = original.String()
+			r[i].Transformed = transformed.String()
 
-	return original.String(), transformed.String()
-}
+			original.Dispose()
+			transformed.Dispose()
+		}
 
-// Dispose the remapping.
-func (r Remapping) Dispose() {
-	C.clang_remap_dispose(r.c)
+		C.clang_remap_dispose(c)
+	}
+
+	return r
 }
