@@ -872,8 +872,10 @@ func (c Cursor) Mangling() string {
 
 // Retrieve the CXStrings representing the mangled symbols of the C++ constructor or destructor at the cursor.
 func (c Cursor) Manglings() []string {
-	o := C.clang_Cursor_getCXXManglings(c.c)
+	return copyAndDisposeStringSet(C.clang_Cursor_getCXXManglings(c.c))
+}
 
+func copyAndDisposeStringSet(o *C.CXStringSet) []string {
 	var r []string
 	if o != nil {
 		var s []C.CXString
