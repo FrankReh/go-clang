@@ -19,10 +19,11 @@ func (d Diagnostic) ChildDiagnostics() DiagnosticSet {
 	return DiagnosticSet{C.clang_getChildDiagnostics(d.c)}
 }
 
-// Destroy a diagnostic.
-func (d Diagnostic) Dispose() {
-	C.clang_disposeDiagnostic(d.c)
-}
+// C.clang_disposeDiagnostic() is a noop, so no longer supported here.
+// // Destroy a diagnostic.
+// func (d Diagnostic) Dispose() {
+// 	C.clang_disposeDiagnostic(d.c)
+// }
 
 /*
 	Format the given diagnostic in a manner that is suitable for display.

@@ -21,8 +21,10 @@ func (ds DiagnosticSet) NumDiagnosticsInSet() uint32 {
 	Parameter Diags the CXDiagnosticSet to query.
 	Parameter Index the zero-based diagnostic number to retrieve.
 
-	Returns the requested diagnostic. This diagnostic must be freed
-	via a call to clang_disposeDiagnostic().
+	Returns the requested diagnostic.
+
+	It is no longer true that clang_disposeDiagnostic must be called
+	for each Diagnostic.  In fact, it is a noop.
 */
 func (ds DiagnosticSet) DiagnosticInSet(index uint32) Diagnostic {
 	return Diagnostic{C.clang_getDiagnosticInSet(ds.c, C.uint(index))}
