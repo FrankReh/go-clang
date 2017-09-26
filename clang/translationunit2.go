@@ -232,11 +232,11 @@ func (tu TranslationUnit) DefaultReparseOptions() uint32 {
 	clang_disposeTranslationUnit(TU). The error codes returned by this
 	routine are described by the CXErrorCode enum.
 */
-func (tu TranslationUnit) ReparseTranslationUnit(unsavedFiles []UnsavedFile, options uint32) int32 {
+func (tu TranslationUnit) ReparseTranslationUnit(unsavedFiles []UnsavedFile, options uint32) error {
 	gos_unsavedFiles := (*reflect.SliceHeader)(unsafe.Pointer(&unsavedFiles))
 	cp_unsavedFiles := (*C.struct_CXUnsavedFile)(unsafe.Pointer(gos_unsavedFiles.Data))
 
-	return int32(C.clang_reparseTranslationUnit(tu.c, C.uint(len(unsavedFiles)), cp_unsavedFiles, C.uint(options)))
+	return convertErrorCode(C.enum_CXErrorCode(C.clang_reparseTranslationUnit(tu.c, C.uint(len(unsavedFiles)), cp_unsavedFiles, C.uint(options))))
 }
 
 /*

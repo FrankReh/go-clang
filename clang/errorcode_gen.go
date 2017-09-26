@@ -11,43 +11,45 @@ import "fmt"
 	Zero (CXError_Success) is the only error code indicating success. Other
 	error codes, including not yet assigned non-zero values, indicate errors.
 */
-type ErrorCode uint32
 
-const (
-	// No error.
-	Error_Success ErrorCode = C.CXError_Success
-	/*
-		A generic error code, no further details are available.
+// Thanks Dave C.
+type Error string
 
-		Errors of this kind can get their own specific error codes in future
-		libclang versions.
-	*/
-	Error_Failure = C.CXError_Failure
-	// libclang crashed while performing the requested operation.
-	Error_Crashed = C.CXError_Crashed
-	// The function detected that the arguments violate the function contract.
-	Error_InvalidArguments = C.CXError_InvalidArguments
-	// An AST deserialization error has occurred.
-	Error_ASTReadError = C.CXError_ASTReadError
-)
+func (e Error) Error() string { return string(e) }
 
-func (ec ErrorCode) Spelling() string {
+/*
+	A generic error code, no further details are available.
+
+	Errors of this kind can get their own specific error codes in future
+	libclang versions.
+*/
+const FailureErr = Error("Failure")
+
+// libclang crashed while performing the requested operation.
+const CrashedErr = Error("Crashed")
+
+// The function detected that the arguments violate the function contract.
+const InvalidArgumentsErr = Error("InvalidArguments")
+
+// An AST deserialization error has occurred.
+const ASTReadErr = Error("ASTRead")
+
+// Some other error code, unexpected, was received.
+const OtherErr = Error("Other")
+
+func convertErrorCode(ec C.enum_CXErrorCode) error {
 	switch ec {
-	case Error_Success:
-		return "Error=Success"
-	case Error_Failure:
-		return "Error=Failure"
-	case Error_Crashed:
-		return "Error=Crashed"
-	case Error_InvalidArguments:
-		return "Error=InvalidArguments"
-	case Error_ASTReadError:
-		return "Error=ASTReadError"
+	case C.CXError_Success:
+		return nil
+	case C.CXError_Failure:
+		return FailureErr
+	case C.CXError_Crashed:
+		return CrashedErr
+	case C.CXError_InvalidArguments:
+		return InvalidArgumentsErr
+	case C.CXError_ASTReadError:
+		return ASTReadErr
 	}
 
-	return fmt.Sprintf("ErrorCode unkown %d", int(ec))
-}
-
-func (ec ErrorCode) String() string {
-	return ec.Spelling()
+	return fmt.Errorf("ErrorCode unkown %d", int(ec))
 }

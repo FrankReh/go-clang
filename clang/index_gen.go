@@ -170,11 +170,11 @@ func (i Index) TranslationUnit(astFilename string) TranslationUnit {
 
 	Returns Zero on success, otherwise returns an error code.
 */
-func (i Index) TranslationUnit2(astFilename string, outTU *TranslationUnit) ErrorCode {
+func (i Index) TranslationUnit2(astFilename string, outTU *TranslationUnit) error {
 	c_astFilename := C.CString(astFilename)
 	defer C.free(unsafe.Pointer(c_astFilename))
 
-	return ErrorCode(C.clang_createTranslationUnit2(i.c, c_astFilename, &outTU.c))
+	return convertErrorCode(C.clang_createTranslationUnit2(i.c, c_astFilename, &outTU.c))
 }
 
 // Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
@@ -242,7 +242,7 @@ func (i Index) ParseTranslationUnit(sourceFilename string, commandLineArgs []str
 
 	Returns Zero on success, otherwise returns an error code.
 */
-func (i Index) ParseTranslationUnit2(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32, outTU *TranslationUnit) ErrorCode {
+func (i Index) ParseTranslationUnit2(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32, outTU *TranslationUnit) error {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {
@@ -259,11 +259,11 @@ func (i Index) ParseTranslationUnit2(sourceFilename string, commandLineArgs []st
 	c_sourceFilename := C.CString(sourceFilename)
 	defer C.free(unsafe.Pointer(c_sourceFilename))
 
-	return ErrorCode(C.clang_parseTranslationUnit2(i.c, c_sourceFilename, cp_commandLineArgs, C.int(len(commandLineArgs)), cp_unsavedFiles, C.uint(len(unsavedFiles)), C.uint(options), &outTU.c))
+	return convertErrorCode(C.clang_parseTranslationUnit2(i.c, c_sourceFilename, cp_commandLineArgs, C.int(len(commandLineArgs)), cp_unsavedFiles, C.uint(len(unsavedFiles)), C.uint(options), &outTU.c))
 }
 
 // Same as clang_parseTranslationUnit2 but requires a full command line for command_line_args including argv[0]. This is useful if the standard library paths are relative to the binary.
-func (i Index) ParseTranslationUnit2FullArgv(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32, outTU *TranslationUnit) ErrorCode {
+func (i Index) ParseTranslationUnit2FullArgv(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32, outTU *TranslationUnit) error {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {
@@ -280,7 +280,7 @@ func (i Index) ParseTranslationUnit2FullArgv(sourceFilename string, commandLineA
 	c_sourceFilename := C.CString(sourceFilename)
 	defer C.free(unsafe.Pointer(c_sourceFilename))
 
-	return ErrorCode(C.clang_parseTranslationUnit2FullArgv(i.c, c_sourceFilename, cp_commandLineArgs, C.int(len(commandLineArgs)), cp_unsavedFiles, C.uint(len(unsavedFiles)), C.uint(options), &outTU.c))
+	return convertErrorCode(C.clang_parseTranslationUnit2FullArgv(i.c, c_sourceFilename, cp_commandLineArgs, C.int(len(commandLineArgs)), cp_unsavedFiles, C.uint(len(unsavedFiles)), C.uint(options), &outTU.c))
 }
 
 /*

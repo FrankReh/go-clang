@@ -21,19 +21,19 @@ func NewModuleMapDescriptor(options uint32) ModuleMapDescriptor {
 }
 
 // Sets the framework module name that the module.map describes. Returns 0 for success, non-zero to indicate an error.
-func (mmd ModuleMapDescriptor) SetFrameworkModuleName(name string) ErrorCode {
+func (mmd ModuleMapDescriptor) SetFrameworkModuleName(name string) error {
 	c_name := C.CString(name)
 	defer C.free(unsafe.Pointer(c_name))
 
-	return ErrorCode(C.clang_ModuleMapDescriptor_setFrameworkModuleName(mmd.c, c_name))
+	return convertErrorCode(C.clang_ModuleMapDescriptor_setFrameworkModuleName(mmd.c, c_name))
 }
 
 // Sets the umbrealla header name that the module.map describes. Returns 0 for success, non-zero to indicate an error.
-func (mmd ModuleMapDescriptor) SetUmbrellaHeader(name string) ErrorCode {
+func (mmd ModuleMapDescriptor) SetUmbrellaHeader(name string) error {
 	c_name := C.CString(name)
 	defer C.free(unsafe.Pointer(c_name))
 
-	return ErrorCode(C.clang_ModuleMapDescriptor_setUmbrellaHeader(mmd.c, c_name))
+	return convertErrorCode(C.clang_ModuleMapDescriptor_setUmbrellaHeader(mmd.c, c_name))
 }
 
 /*
@@ -45,12 +45,12 @@ func (mmd ModuleMapDescriptor) SetUmbrellaHeader(name string) ErrorCode {
 	Parameter out_buffer_size pointer to receive the buffer size.
 	Returns 0 for success, non-zero to indicate an error.
 */
-func (mmd ModuleMapDescriptor) WriteToBuffer(options uint32) (string, uint32, ErrorCode) {
+func (mmd ModuleMapDescriptor) WriteToBuffer(options uint32) (string, uint32, error) {
 	var outBufferPtr *C.char
 	defer C.clang_free(unsafe.Pointer(outBufferPtr))
 	var outBufferSize C.uint
 
-	o := ErrorCode(C.clang_ModuleMapDescriptor_writeToBuffer(mmd.c, C.uint(options), &outBufferPtr, &outBufferSize))
+	o := convertErrorCode(C.clang_ModuleMapDescriptor_writeToBuffer(mmd.c, C.uint(options), &outBufferPtr, &outBufferSize))
 
 	return C.GoString(outBufferPtr), uint32(outBufferSize), o
 }
