@@ -5,13 +5,11 @@ package clang
 import "C"
 import "fmt"
 
-/*
-	Describes how the traversal of the children of a particular
-	cursor should proceed after visiting a particular child cursor.
-
-	A value of this enumeration type should be returned by each
-	CXCursorVisitor to indicate how clang_visitChildren() proceed.
-*/
+// Describes how the traversal of the children of a particular cursor should
+// proceed after visiting a particular child cursor.
+//
+// A value of this enumeration type should be returned by each CXCursorVisitor
+// to indicate how clang_visitChildren() proceed.
 type ChildVisitResult uint32
 
 const (

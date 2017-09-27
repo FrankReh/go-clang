@@ -14,11 +14,10 @@ type CompletionResult struct {
 }
 
 /*
-	Sort the code-completion results in case-insensitive alphabetical
-	order.
+	Sort the code-completion results in case-insensitive alphabetical order.
 
 	Parameter Results The set of results to sort.
-	Parameter NumResults The number of results in \p Results.
+	Parameter NumResults The number of results.
 */
 func SortCodeCompletionResults(results []CompletionResult) {
 	gos_results := (*reflect.SliceHeader)(unsafe.Pointer(&results))

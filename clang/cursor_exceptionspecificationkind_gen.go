@@ -5,11 +5,9 @@ package clang
 import "C"
 import "fmt"
 
-/*
-	Describes the exception specification of a cursor.
-
-	A negative value indicates that the cursor is not a function declaration.
-*/
+// Describes the exception specification of a cursor.
+//
+// A negative value indicates that the cursor is not a function declaration.
 type ExceptionSpecification int32
 
 const (

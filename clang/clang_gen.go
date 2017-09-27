@@ -15,7 +15,7 @@ func GetBuildSessionTimestamp() uint64 {
 	Retrieve the set of display options most similar to the
 	default behavior of the clang compiler.
 
-	Returns A set of display options suitable for use with \c
+	Returns A set of display options suitable for use with
 	clang_formatDiagnostic().
 */
 func DefaultDiagnosticDisplayOptions() uint32 {

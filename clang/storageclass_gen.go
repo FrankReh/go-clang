@@ -5,7 +5,8 @@ package clang
 import "C"
 import "fmt"
 
-// Represents the storage classes as declared in the source. CX_SC_Invalid was added for the case that the passed cursor in not a declaration.
+// Represents the storage classes as declared in the source. CX_SC_Invalid was
+// added for the case that the passed cursor in not a declaration.
 type StorageClass uint32
 
 const (

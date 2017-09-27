@@ -8,13 +8,10 @@ import (
 	"unsafe"
 )
 
-/*
-	Contains the results of code-completion.
-
-	This data structure contains the results of code completion, as
-	produced by clang_codeCompleteAt(). Its contents must be freed by
-	clang_disposeCodeCompleteResults.
-*/
+// Contains the results of code-completion.
+//
+// This data structure contains the results of code completion, as produced by
+// clang_codeCompleteAt(). Its contents must be freed by clang_disposeCodeCompleteResults.
 type CodeCompleteResults struct {
 	c *C.CXCodeCompleteResults
 }

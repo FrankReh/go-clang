@@ -5,18 +5,21 @@ package clang
 import "C"
 import "fmt"
 
-// Describes the type of the comment AST node (CXComment). A comment node can be considered block content (e. g., paragraph), inline content (plain text) or neither (the root AST node).
+// Describes the type of the comment AST node (CXComment). A comment node can
+// be considered block content (e. g., paragraph), inline content (plain text)
+// or neither (the root AST node).
 type CommentKind uint32
 
 const (
-	// Null comment. No AST node is constructed at the requested location because there is no text or a syntax error.
+	// Null comment. No AST node is constructed at the requested location
+	// because there is no text or a syntax error.
 	Comment_Null CommentKind = C.CXComment_Null
 	// Plain text. Inline content.
 	Comment_Text = C.CXComment_Text
 	/*
 		A command with word-like arguments that is considered inline content.
 
-		For example: \command.
+		For example: command.
 	*/
 	Comment_InlineCommand = C.CXComment_InlineCommand
 	/*
@@ -49,7 +52,7 @@ const (
 
 		For example: \has 0 word-like arguments and a paragraph argument.
 
-		AST nodes of special kinds that parser knows about (e. g., \\param
+		AST nodes of special kinds that parser knows about (e. g., param
 		command) have their own node kinds.
 	*/
 	Comment_BlockCommand = C.CXComment_BlockCommand

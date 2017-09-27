@@ -13,7 +13,9 @@ type TranslationUnit struct {
 	c C.CXTranslationUnit
 }
 
-// Determine whether the given header is guarded against multiple inclusions, either with the conventional \#ifndef/\#define/\#endif macro guards or with \#pragma once.
+// Determine whether the given header is guarded against multiple inclusions,
+// either with the conventional \#ifndef/\#define/\#endif macro guards or with
+// \#pragma once.
 func (tu TranslationUnit) IsFileMultipleIncludeGuarded(file File) bool {
 	o := C.clang_isFileMultipleIncludeGuarded(tu.c, file.c)
 
@@ -27,7 +29,7 @@ func (tu TranslationUnit) IsFileMultipleIncludeGuarded(file File) bool {
 
 	Parameter file_name the name of the file.
 
-	Returns the file handle for the named file in the translation unit \p tu,
+	Returns the file handle for the named file in the translation unit tu,
 	or a NULL file handle if the file was not a part of this translation unit.
 */
 func (tu TranslationUnit) File(fileName string) File {
@@ -195,7 +197,7 @@ func (tu TranslationUnit) DefaultReparseOptions() uint32 {
 
 	This routine can be used to re-parse the source files that originally
 	created the given translation unit, for example because those source files
-	have changed (either on disk or as passed via \p unsaved_files). The
+	have changed (either on disk or as passed via unsaved_files). The
 	source code will be reparsed with the same command-line options as it
 	was originally parsed.
 
@@ -210,7 +212,7 @@ func (tu TranslationUnit) DefaultReparseOptions() uint32 {
 	translation unit must originally have been built with
 	clang_createTranslationUnitFromSourceFile().
 
-	Parameter num_unsaved_files The number of unsaved file entries in \p
+	Parameter num_unsaved_files The number of unsaved file entries in
 	unsaved_files.
 
 	Parameter unsaved_files The files that have not yet been saved to disk
@@ -380,7 +382,7 @@ func (tu TranslationUnit) Tokenize(r SourceRange) []Token {
 	Parameter TU The translation unit in which code-completion should
 	occur. The source files for this translation unit need not be
 	completely up-to-date (and the contents of those source files may
-	be overridden via \p unsaved_files). Cursors referring into the
+	be overridden via unsaved_files). Cursors referring into the
 	translation unit may be invalidated by this invocation.
 
 	Parameter complete_filename The name of the source file where code
@@ -400,7 +402,7 @@ func (tu TranslationUnit) Tokenize(r SourceRange) []Token {
 	client only needs to guarantee their validity until the call to
 	this function returns.
 
-	Parameter num_unsaved_files The number of unsaved file entries in \p
+	Parameter num_unsaved_files The number of unsaved file entries in
 	unsaved_files.
 
 	Parameter options Extra options that control the behavior of code

@@ -5,7 +5,7 @@ package clang
 import "C"
 import "fmt"
 
-// Describes parameter passing direction for \Parameter or \\arg command.
+// Describes parameter passing direction for Parameter or arg command.
 type CommentParamPassDirection uint32
 
 const (

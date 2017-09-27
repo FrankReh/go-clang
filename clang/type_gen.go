@@ -44,21 +44,24 @@ func (t Type) CanonicalType() Type {
 	return Type{C.clang_getCanonicalType(t.c)}
 }
 
-// Determine whether a CXType has the "const" qualifier set, without looking through typedefs that may have added "const" at a different level.
+// Determine whether a CXType has the "const" qualifier set, without looking
+// through typedefs that may have added "const" at a different level.
 func (t Type) IsConstQualifiedType() bool {
 	o := C.clang_isConstQualifiedType(t.c)
 
 	return o != C.uint(0)
 }
 
-// Determine whether a CXType has the "volatile" qualifier set, without looking through typedefs that may have added "volatile" at a different level.
+// Determine whether a CXType has the "volatile" qualifier set, without looking
+// through typedefs that may have added "volatile" at a different level.
 func (t Type) IsVolatileQualifiedType() bool {
 	o := C.clang_isVolatileQualifiedType(t.c)
 
 	return o != C.uint(0)
 }
 
-// Determine whether a CXType has the "restrict" qualifier set, without looking through typedefs that may have added "restrict" at a different level.
+// Determine whether a CXType has the "restrict" qualifier set, without looking
+// through typedefs that may have added "restrict" at a different level.
 func (t Type) IsRestrictQualifiedType() bool {
 	o := C.clang_isRestrictQualifiedType(t.c)
 

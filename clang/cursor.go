@@ -7,7 +7,38 @@ import (
 	"unsafe"
 )
 
-// Determine the availability of the entity that this cursor refers to on any platforms for which availability information is known. \param cursor The cursor to query. \param always_deprecated If non-NULL, will be set to indicate whether the entity is deprecated on all platforms. \param deprecated_message If non-NULL, will be set to the message text provided along with the unconditional deprecation of this entity. The client is responsible for deallocating this string. \param always_unavailable If non-NULL, will be set to indicate whether the entity is unavailable on all platforms. \param unavailable_message If non-NULL, will be set to the message text provided along with the unconditional unavailability of this entity. The client is responsible for deallocating this string. \param availability If non-NULL, an array of CXPlatformAvailability instances that will be populated with platform availability information, up to either the number of platforms for which availability information is available (as returned by this function) or \c availability_size, whichever is smaller. \param availability_size The number of elements available in the \c availability array. \returns The number of platforms (N) for which availability information is available (which is unrelated to \c availability_size). Note that the client is responsible for calling \c clang_disposeCXPlatformAvailability to free each of the platform-availability structures returned. There are \c min(N, availability_size) such structures.
+// Determine the availability of the entity that this cursor refers to on any
+// platforms for which availability information is known.
+//
+// param cursor The cursor to query.
+//
+// param always_deprecated If non-NULL, will be set to indicate whether the
+// entity is deprecated on all platforms.
+//
+// param deprecated_message If non-NULL, will be set to the message text
+// provided along with the unconditional deprecation of this entity. The client
+// is responsible for deallocating this string.
+//
+// param always_unavailable If non-NULL, will be set to indicate whether the
+// entity is unavailable on all platforms.
+//
+// param unavailable_message If non-NULL, will be set to the message text
+// provided along with the unconditional unavailability of this entity. The
+// client is responsible for deallocating this string.
+//
+// param availability If non-NULL, an array of CXPlatformAvailability instances
+// that will be populated with platform availability information, up to either
+// the number of platforms for which availability information is available (as
+// returned by this function) or availability_size, whichever is smaller.
+
+// param availability_size The number of elements available in the availability
+// array.
+//
+// returns The number of platforms (N) for which availability information is
+// available (which is unrelated to availability_size). Note that the client is
+// responsible for calling clang_disposeCXPlatformAvailability to free each of
+// the platform-availability structures returned. There are min(N,
+// availability_size) such structures.
 func (c Cursor) PlatformAvailability(availabilitySize int) (always_deprecated bool, deprecated_msg string, always_unavailable bool, unavailable_msg string, availability []PlatformAvailability) {
 	var c_always_deprecated C.int
 	var c_deprecated_message cxstring
@@ -33,7 +64,7 @@ func (c Cursor) PlatformAvailability(availabilitySize int) (always_deprecated bo
 
 // CursorVisitor does the following.
 /**
- * \brief Visitor invoked for each cursor found by a traversal.
+ * Visitor invoked for each cursor found by a traversal.
  *
  * This visitor function will be invoked for each cursor found by
  * clang_visitCursorChildren(). Its first argument is the cursor being
@@ -41,7 +72,7 @@ func (c Cursor) PlatformAvailability(availabilitySize int) (always_deprecated bo
  * and its third argument is the client data provided to
  * clang_visitCursorChildren().
  *
- * The visitor should return one of the \c CXChildVisitResult values
+ * The visitor should return one of the CXChildVisitResult values
  * to direct clang_visitCursorChildren().
  */
 type CursorVisitor func(cursor, parent Cursor) (status ChildVisitResult)
@@ -97,26 +128,26 @@ func GoClangCursorVisitor(cursor C.CXCursor, parent C.CXCursor, cfct unsafe.Poin
 
 // Visit does the following.
 /**
- * \brief Visit the children of a particular cursor.
+ * Visit the children of a particular cursor.
  *
  * This function visits all the direct children of the given cursor,
- * invoking the given \p visitor function with the cursors of each
+ * invoking the given visitor function with the cursors of each
  * visited child. The traversal may be recursive, if the visitor returns
- * \c CXChildVisit_Recurse. The traversal may also be ended prematurely, if
- * the visitor returns \c CXChildVisit_Break.
+ * CXChildVisit_Recurse. The traversal may also be ended prematurely, if
+ * the visitor returns CXChildVisit_Break.
  *
- * \param parent the cursor whose child may be visited. All kinds of
+ * param parent the cursor whose child may be visited. All kinds of
  * cursors can be visited, including invalid cursors (which, by
  * definition, have no children).
  *
- * \param visitor the visitor function that will be invoked for each
- * child of \p parent.
+ * param visitor the visitor function that will be invoked for each
+ * child of parent.
  *
- * \param client_data pointer data supplied by the client, which will
+ * param client_data pointer data supplied by the client, which will
  * be passed to the visitor each time it is invoked.
  *
- * \returns a non-zero value if the traversal was terminated
- * prematurely by the visitor returning \c CXChildVisit_Break.
+ * returns a non-zero value if the traversal was terminated
+ * prematurely by the visitor returning CXChildVisit_Break.
  */
 func (c Cursor) Visit(visitor CursorVisitor) bool {
 	i := visitors.register(&visitor)

@@ -8,7 +8,8 @@ import (
 	"unsafe"
 )
 
-// An "index" that consists of a set of translation units that would typically be linked together into an executable or library.
+// An "index" that consists of a set of translation units that would typically
+// be linked together into an executable or library.
 type Index struct {
 	c C.CXIndex
 }
@@ -114,10 +115,10 @@ func (i Index) GlobalOptions() uint32 {
 	associated.
 
 	Parameter source_filename The name of the source file to load, or NULL if the
-	source file is included in \p clang_command_line_args.
+	source file is included in clang_command_line_args.
 
 	Parameter num_clang_command_line_args The number of command-line arguments in
-	\p clang_command_line_args.
+	clang_command_line_args.
 
 	Parameter clang_command_line_args The command-line arguments that would be
 	passed to the clang executable if it were being invoked out-of-process.
@@ -125,8 +126,7 @@ func (i Index) GlobalOptions() uint32 {
 	unit is parsed. Note that the following options are ignored: '-c',
 	'-emit-ast', '-fsyntax-only' (which is the default), and '-o \<output file>'.
 
-	Parameter num_unsaved_files the number of unsaved file entries in \p
-	unsaved_files.
+	Parameter num_unsaved_files the number of unsaved file entries in unsaved_files.
 
 	Parameter unsaved_files the files that have not yet been saved to disk
 	but may be required for code completion, including the contents of
@@ -165,8 +165,7 @@ func (i Index) TranslationUnit(astFilename string) TranslationUnit {
 /*
 	Create a translation unit from an AST file (-emit-ast).
 
-	\param[out] out_TU A non-NULL pointer to store the created
-	CXTranslationUnit.
+	param[out] out_TU A non-NULL pointer to store the created CXTranslationUnit.
 
 	Returns Zero on success, otherwise returns an error code.
 */
@@ -229,14 +228,13 @@ func (i Index) ParseTranslationUnit(sourceFilename string, commandLineArgs []str
 	CXUnsavedFile) are copied when necessary, so the client only needs to
 	guarantee their validity until the call to this function returns.
 
-	Parameter num_unsaved_files the number of unsaved file entries in \p
-	unsaved_files.
+	Parameter num_unsaved_files the number of unsaved file entries in unsaved_files.
 
 	Parameter options A bitmask of options that affects how the translation unit
 	is managed but not its compilation. This should be a bitwise OR of the
 	CXTranslationUnit_XXX flags.
 
-	\param[out] out_TU A non-NULL pointer to store the created
+	param[out] out_TU A non-NULL pointer to store the created
 	CXTranslationUnit, describing the parsed code and containing any
 	diagnostics produced by the compiler.
 

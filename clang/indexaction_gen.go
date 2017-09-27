@@ -39,7 +39,7 @@ func (ia IndexAction) Dispose() {
 	Parameter index_options A bitmask of options that affects how indexing is
 	performed. This should be a bitwise OR of the CXIndexOpt_XXX flags.
 
-	\param[out] out_TU pointer to store a CXTranslationUnit that can be
+	param[out] out_TU pointer to store a CXTranslationUnit that can be
 	reused after indexing is finished. Set to NULL if you do not require it.
 
 	Returns 0 on success or if there were errors from which the compiler could

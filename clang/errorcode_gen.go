@@ -5,24 +5,17 @@ package clang
 import "C"
 import "fmt"
 
-/*
-	Error codes returned by libclang routines.
+// Error codes returned by libclang routines.
+//
+// Zero (CXError_Success) is the only error code indicating success. Other
+// error codes, including not yet assigned non-zero values, indicate errors.
 
-	Zero (CXError_Success) is the only error code indicating success. Other
-	error codes, including not yet assigned non-zero values, indicate errors.
-*/
-
-// Thanks Dave C.
+// Thanks Dave C., for the idea of const Errors that are based on string.
 type Error string
 
 func (e Error) Error() string { return string(e) }
 
-/*
-	A generic error code, no further details are available.
-
-	Errors of this kind can get their own specific error codes in future
-	libclang versions.
-*/
+// A generic error code, no further details are available.
 const FailureErr = Error("Failure")
 
 // libclang crashed while performing the requested operation.

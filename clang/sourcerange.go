@@ -4,8 +4,6 @@ package clang
 // #include "go-clang.h"
 import "C"
 
-// Derived from from ../../v3.9/clang/sourcerange_gen.go
-
 /*
 	Identifies a half-open character range in the source code.
 
@@ -32,7 +30,7 @@ func (sr SourceRange) Equal(sr2 SourceRange) bool {
 	return o != C.uint(0)
 }
 
-// Returns non-zero if \p range is null.
+// Returns non-zero if range is null.
 func (sr SourceRange) IsNull() bool {
 	o := C.clang_Range_isNull(sr.c)
 

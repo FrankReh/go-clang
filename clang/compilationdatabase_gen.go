@@ -5,13 +5,11 @@ package clang
 import "C"
 import "unsafe"
 
-/*
-	A compilation database holds all information used to compile files in a
-	project. For each file in the database, it can be queried for the working
-	directory or the command line used for the compiler invocation.
-
-	Must be freed by clang_CompilationDatabase_dispose
-*/
+// A compilation database holds all information used to compile files in a
+// project. For each file in the database, it can be queried for the working
+// directory or the command line used for the compiler invocation.
+//
+// Must be freed by clang_CompilationDatabase_dispose
 type CompilationDatabase struct {
 	c C.CXCompilationDatabase
 }
