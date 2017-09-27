@@ -28,7 +28,7 @@ import (
 	source code into the AST.
 */
 type Cursor struct {
-	c C.CXCursor
+	c C.CXCursor // N.B. Cursor and C.CXCursor must be same size or the copy() below fails
 }
 
 // Given a cursor that represents a documentable entity (e.g., declaration), return the associated parsed comment as a CXComment_FullComment AST node.
@@ -233,21 +233,25 @@ func (c Cursor) LexicalParent() Cursor {
 	array pointed to by \p overridden.
 */
 func (c Cursor) OverriddenCursors() []Cursor {
+	var r []Cursor
 	var cp_overridden *C.CXCursor
-	var tmp_overridden []Cursor
+	var tmp []Cursor
 	var numOverridden C.uint
 
 	C.clang_getOverriddenCursors(c.c, &cp_overridden, &numOverridden)
 
-	gos_overridden := (*reflect.SliceHeader)(unsafe.Pointer(&tmp_overridden))
-	gos_overridden.Cap = int(numOverridden)
-	gos_overridden.Len = int(numOverridden)
-	gos_overridden.Data = uintptr(unsafe.Pointer(cp_overridden))
+	if cp_overridden != nil {
 
-	r := make([]Cursor, len(tmp_overridden))
-	copy(r, tmp_overridden)
+		gos_overridden := (*reflect.SliceHeader)(unsafe.Pointer(&tmp))
+		gos_overridden.Cap = int(numOverridden)
+		gos_overridden.Len = int(numOverridden)
+		gos_overridden.Data = uintptr(unsafe.Pointer(cp_overridden))
 
-	C.clang_disposeOverriddenCursors(cp_overridden)
+		r = make([]Cursor, len(tmp))
+		copy(r, tmp) // N.B. this works because Cursor is same size as CXCursor
+
+		C.clang_disposeOverriddenCursors(cp_overridden)
+	}
 
 	return r
 }
