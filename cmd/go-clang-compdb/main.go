@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/go-clang/v5.0/clang"
 )
@@ -33,8 +32,8 @@ func cmd(args []string) int {
 	}
 	f.Close()
 
-	err, db := clang.FromDirectory(dir)
-	if err != clang.CompilationDatabase_NoError {
+	db, err := clang.FromDirectory(dir)
+	if err != nil {
 		fmt.Printf("**error: could not open compilation database at [%s]: %v\n", dir, err)
 
 		os.Exit(1)
@@ -42,32 +41,22 @@ func cmd(args []string) int {
 	defer db.Dispose()
 
 	cmds := db.AllCompileCommands()
-	ncmds := cmds.Size()
 
-	fmt.Printf(":: got %d compile commands\n", ncmds)
+	// To skip all the rest, just use this one liner.
+	// fmt.Printf(":: cmds = %q\n", cmds)
 
-	for i := uint32(0); i < ncmds; i++ {
-		cmd := cmds.Command(i)
+	fmt.Printf(":: got %d compile commands\n", len(cmds))
+
+	for i, cmd := range cmds {
 
 		fmt.Printf("::  --- cmd=%d ---\n", i)
-		fmt.Printf("::  dir= %q\n", cmd.Directory())
+		fmt.Printf("::  dir  = %q\n", cmd.Directory)
+		fmt.Printf("::  file = %q\n", cmd.Filename)
 
-		nargs := cmd.NumArgs()
-		fmt.Printf("::  nargs= %d\n", nargs)
+		fmt.Printf("::  nargs= %d\n", len(cmd.Args))
 
-		sargs := make([]string, 0, nargs)
-		for iarg := uint32(0); iarg < nargs; iarg++ {
-			arg := cmd.Arg(iarg)
-			sfmt := "%q, "
-			if iarg+1 == nargs {
-				sfmt = "%q"
-			}
-			sargs = append(sargs, fmt.Sprintf(sfmt, arg))
-
-		}
-
-		fmt.Printf("::  args= {%s}\n", strings.Join(sargs, ""))
-		if i+1 != ncmds {
+		fmt.Printf("::  args =%q\n", cmd.Args)
+		if i+1 != len(cmds) {
 			fmt.Printf("::\n")
 		}
 	}
