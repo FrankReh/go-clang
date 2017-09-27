@@ -51,5 +51,5 @@ func convertErrorCode(ec C.enum_CXErrorCode) error {
 		return ASTReadErr
 	}
 
-	return fmt.Errorf("ErrorCode unkown %d", int(ec))
+	return fmt.Errorf("unknown C.enum_CXErrorCode %d", int(ec))
 }
