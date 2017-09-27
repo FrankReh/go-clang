@@ -17,10 +17,7 @@ type Type struct {
 	If the type is invalid, an empty string is returned.
 */
 func (t Type) Spelling() string {
-	o := cxstring{C.clang_getTypeSpelling(t.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getTypeSpelling(t.c))
 }
 
 /*
@@ -75,10 +72,7 @@ func (t Type) AddressSpace() uint32 {
 
 // Returns the typedef name of the given type.
 func (t Type) TypedefName() string {
-	o := cxstring{C.clang_getTypedefName(t.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getTypedefName(t.c))
 }
 
 // For pointer types, returns the type of the pointee.
@@ -93,10 +87,7 @@ func (t Type) Declaration() Cursor {
 
 // Returns the Objective-C type encoding for the specified CXType.
 func (t Type) Encoding() string {
-	o := cxstring{C.clang_Type_getObjCEncoding(t.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_Type_getObjCEncoding(t.c))
 }
 
 /*

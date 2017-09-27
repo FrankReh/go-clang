@@ -14,11 +14,8 @@ func (tu TranslationUnit) TargetInfo() TargetInfo {
 	ti := C.clang_getTranslationUnitTargetInfo(tu.c)
 	defer C.clang_TargetInfo_dispose(ti)
 
-	triple := cxstring{C.clang_TargetInfo_getTriple(ti)}
-	defer triple.Dispose()
-
 	return TargetInfo{
-		Triple:       triple.String(),
+		Triple:       cx2GoString(C.clang_TargetInfo_getTriple(ti)),
 		PointerWidth: int(C.clang_TargetInfo_getPointerWidth(ti)),
 	}
 }

@@ -89,10 +89,7 @@ func (ccr *CodeCompleteResults) ContainerKind() (uint32, CursorKind) {
 	Returns the USR for the container
 */
 func (ccr *CodeCompleteResults) ContainerUSR() string {
-	o := cxstring{C.clang_codeCompleteGetContainerUSR(ccr.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_codeCompleteGetContainerUSR(ccr.c))
 }
 
 /*
@@ -107,10 +104,7 @@ func (ccr *CodeCompleteResults) ContainerUSR() string {
 	for an Objective-C message send.
 */
 func (ccr *CodeCompleteResults) Selector() string {
-	o := cxstring{C.clang_codeCompleteGetObjCSelector(ccr.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_codeCompleteGetObjCSelector(ccr.c))
 }
 
 // The code-completion results.

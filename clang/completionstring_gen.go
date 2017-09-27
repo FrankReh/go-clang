@@ -45,10 +45,7 @@ func (cs CompletionString) ChunkKind(chunkNumber uint32) CompletionChunkKind {
 	Returns the text associated with the chunk at index chunk_number.
 */
 func (cs CompletionString) ChunkText(chunkNumber uint32) string {
-	o := cxstring{C.clang_getCompletionChunkText(cs.c, C.uint(chunkNumber))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCompletionChunkText(cs.c, C.uint(chunkNumber)))
 }
 
 /*
@@ -124,10 +121,7 @@ func (cs CompletionString) NumAnnotations() uint32 {
 	annotation_number, or a NULL string if that annotation is not available.
 */
 func (cs CompletionString) Annotation(annotationNumber uint32) string {
-	o := cxstring{C.clang_getCompletionAnnotation(cs.c, C.uint(annotationNumber))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCompletionAnnotation(cs.c, C.uint(annotationNumber)))
 }
 
 /*
@@ -152,16 +146,10 @@ func (cs CompletionString) Parent(kind *CursorKind) string {
 		cp_kind = C.enum_CXCursorKind(*kind)
 	}
 
-	o := cxstring{C.clang_getCompletionParent(cs.c, &cp_kind)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCompletionParent(cs.c, &cp_kind))
 }
 
 // Retrieve the brief documentation comment attached to the declaration that corresponds to the given completion string.
 func (cs CompletionString) BriefComment() string {
-	o := cxstring{C.clang_getCompletionBriefComment(cs.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCompletionBriefComment(cs.c))
 }

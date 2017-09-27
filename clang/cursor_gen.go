@@ -493,10 +493,7 @@ func (c Cursor) IsFunctionInlined() bool {
 
 // Returns the Objective-C type encoding for the specified declaration.
 func (c Cursor) DeclObjCTypeEncoding() string {
-	o := cxstring{C.clang_getDeclObjCTypeEncoding(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getDeclObjCTypeEncoding(c.c))
 }
 
 /*
@@ -625,18 +622,12 @@ func (c Cursor) IBOutletCollectionType() Type {
 	one translation refer to an entity defined in another translation unit.
 */
 func (c Cursor) USR() string {
-	o := cxstring{C.clang_getCursorUSR(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCursorUSR(c.c))
 }
 
 // Retrieve a name for the entity referenced by this cursor.
 func (c Cursor) Spelling() string {
-	o := cxstring{C.clang_getCursorSpelling(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCursorSpelling(c.c))
 }
 
 /*
@@ -662,10 +653,7 @@ func (c Cursor) SpellingNameRange(pieceIndex uint32, options uint32) SourceRange
 	class template specialization.
 */
 func (c Cursor) DisplayName() string {
-	o := cxstring{C.clang_getCursorDisplayName(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCursorDisplayName(c.c))
 }
 
 /*
@@ -848,26 +836,17 @@ func (c Cursor) CommentRange() SourceRange {
 
 // Given a cursor that represents a declaration, return the associated comment text, including comment markers.
 func (c Cursor) RawCommentText() string {
-	o := cxstring{C.clang_Cursor_getRawCommentText(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_Cursor_getRawCommentText(c.c))
 }
 
 // Given a cursor that represents a documentable entity (e.g., declaration), return the associated \paragraph; otherwise return the first paragraph.
 func (c Cursor) BriefCommentText() string {
-	o := cxstring{C.clang_Cursor_getBriefCommentText(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_Cursor_getBriefCommentText(c.c))
 }
 
 // Retrieve the CXString representing the mangled name of the cursor.
 func (c Cursor) Mangling() string {
-	o := cxstring{C.clang_Cursor_getMangling(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_Cursor_getMangling(c.c))
 }
 
 // Retrieve the CXStrings representing the mangled symbols of the C++ constructor or destructor at the cursor.

@@ -732,10 +732,7 @@ func (ck CursorKind) IsUnexposed() bool {
 }
 
 func (ck CursorKind) Spelling() string {
-	o := cxstring{C.clang_getCursorKindSpelling(C.enum_CXCursorKind(ck))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getCursorKindSpelling(C.enum_CXCursorKind(ck)))
 }
 
 func (ck CursorKind) String() string {

@@ -114,10 +114,7 @@ func (tu TranslationUnit) DiagnosticSetFromTU() DiagnosticSet {
 
 // Get the original translation unit source file name.
 func (tu TranslationUnit) Spelling() string {
-	o := cxstring{C.clang_getTranslationUnitSpelling(tu.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getTranslationUnitSpelling(tu.c))
 }
 
 /*
@@ -300,10 +297,7 @@ func (tu TranslationUnit) Module_getTopLevelHeader(module Module, index uint32) 
 	the text of an identifier or keyword.
 */
 func (tu TranslationUnit) TokenSpelling(t Token) string {
-	o := cxstring{C.clang_getTokenSpelling(tu.c, t.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getTokenSpelling(tu.c, t.c))
 }
 
 // Retrieve the source location of the given token.

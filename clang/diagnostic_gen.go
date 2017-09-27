@@ -41,10 +41,7 @@ func (d Diagnostic) ChildDiagnostics() DiagnosticSet {
 	Returns A new string containing for formatted diagnostic.
 */
 func (d Diagnostic) FormatDiagnostic(options uint32) string {
-	o := cxstring{C.clang_formatDiagnostic(d.c, C.uint(options))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_formatDiagnostic(d.c, C.uint(options)))
 }
 
 // Determine the severity of the given diagnostic.
@@ -64,10 +61,7 @@ func (d Diagnostic) Location() SourceLocation {
 
 // Retrieve the text of the given diagnostic.
 func (d Diagnostic) Spelling() string {
-	o := cxstring{C.clang_getDiagnosticSpelling(d.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getDiagnosticSpelling(d.c))
 }
 
 /*
@@ -86,10 +80,9 @@ func (d Diagnostic) Option() (string, string) {
 	var disable cxstring
 	defer disable.Dispose()
 
-	o := cxstring{C.clang_getDiagnosticOption(d.c, &disable.c)}
-	defer o.Dispose()
+	option := cx2GoString(C.clang_getDiagnosticOption(d.c, &disable.c))
 
-	return disable.String(), o.String()
+	return disable.String(), option
 }
 
 /*
@@ -112,10 +105,7 @@ func (d Diagnostic) Category() uint32 {
 	Returns The text of the given diagnostic category.
 */
 func (d Diagnostic) CategoryText() string {
-	o := cxstring{C.clang_getDiagnosticCategoryText(d.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getDiagnosticCategoryText(d.c))
 }
 
 // Determine the number of source ranges associated with the given diagnostic.
@@ -173,8 +163,7 @@ func (d Diagnostic) NumFixIts() uint32 {
 func (d Diagnostic) FixIt(fixIt uint32) (SourceRange, string) {
 	var replacementRange SourceRange
 
-	o := cxstring{C.clang_getDiagnosticFixIt(d.c, C.uint(fixIt), &replacementRange.c)}
-	defer o.Dispose()
+	replace := cx2GoString(C.clang_getDiagnosticFixIt(d.c, C.uint(fixIt), &replacementRange.c))
 
-	return replacementRange, o.String()
+	return replacementRange, replace
 }

@@ -369,10 +369,7 @@ const (
 )
 
 func (tk TypeKind) Spelling() string {
-	o := cxstring{C.clang_getTypeKindSpelling(C.enum_CXTypeKind(tk))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getTypeKindSpelling(C.enum_CXTypeKind(tk)))
 }
 
 func (tk TypeKind) String() string {

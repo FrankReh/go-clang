@@ -66,10 +66,7 @@ func (c Comment) InlineContentComment_HasTrailingNewline() bool {
 	Returns text contained in the AST node.
 */
 func (c Comment) TextComment_getText() string {
-	o := cxstring{C.clang_TextComment_getText(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_TextComment_getText(c.c))
 }
 
 /*
@@ -78,10 +75,7 @@ func (c Comment) TextComment_getText() string {
 	Returns name of the inline command.
 */
 func (c Comment) InlineCommandComment_getCommandName() string {
-	o := cxstring{C.clang_InlineCommandComment_getCommandName(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_InlineCommandComment_getCommandName(c.c))
 }
 
 /*
@@ -111,10 +105,7 @@ func (c Comment) InlineCommandComment_getNumArgs() uint32 {
 	Returns text of the specified argument.
 */
 func (c Comment) InlineCommandComment_getArgText(argIdx uint32) string {
-	o := cxstring{C.clang_InlineCommandComment_getArgText(c.c, C.uint(argIdx))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_InlineCommandComment_getArgText(c.c, C.uint(argIdx)))
 }
 
 /*
@@ -124,10 +115,7 @@ func (c Comment) InlineCommandComment_getArgText(argIdx uint32) string {
 	Returns HTML tag name.
 */
 func (c Comment) HTMLTagComment_getTagName() string {
-	o := cxstring{C.clang_HTMLTagComment_getTagName(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_HTMLTagComment_getTagName(c.c))
 }
 
 /*
@@ -158,10 +146,7 @@ func (c Comment) HTMLStartTag_getNumAttrs() uint32 {
 	Returns name of the specified attribute.
 */
 func (c Comment) HTMLStartTag_getAttrName(attrIdx uint32) string {
-	o := cxstring{C.clang_HTMLStartTag_getAttrName(c.c, C.uint(attrIdx))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_HTMLStartTag_getAttrName(c.c, C.uint(attrIdx)))
 }
 
 /*
@@ -172,10 +157,7 @@ func (c Comment) HTMLStartTag_getAttrName(attrIdx uint32) string {
 	Returns value of the specified attribute.
 */
 func (c Comment) HTMLStartTag_getAttrValue(attrIdx uint32) string {
-	o := cxstring{C.clang_HTMLStartTag_getAttrValue(c.c, C.uint(attrIdx))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_HTMLStartTag_getAttrValue(c.c, C.uint(attrIdx)))
 }
 
 /*
@@ -184,10 +166,7 @@ func (c Comment) HTMLStartTag_getAttrValue(attrIdx uint32) string {
 	Returns name of the block command.
 */
 func (c Comment) BlockCommandComment_getCommandName() string {
-	o := cxstring{C.clang_BlockCommandComment_getCommandName(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_BlockCommandComment_getCommandName(c.c))
 }
 
 /*
@@ -207,10 +186,7 @@ func (c Comment) BlockCommandComment_getNumArgs() uint32 {
 	Returns text of the specified word-like argument.
 */
 func (c Comment) BlockCommandComment_getArgText(argIdx uint32) string {
-	o := cxstring{C.clang_BlockCommandComment_getArgText(c.c, C.uint(argIdx))}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_BlockCommandComment_getArgText(c.c, C.uint(argIdx)))
 }
 
 /*
@@ -229,10 +205,7 @@ func (c Comment) BlockCommandComment_getParagraph() Comment {
 	Returns parameter name.
 */
 func (c Comment) ParamCommandComment_getParamName() string {
-	o := cxstring{C.clang_ParamCommandComment_getParamName(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_ParamCommandComment_getParamName(c.c))
 }
 
 /*
@@ -284,10 +257,7 @@ func (c Comment) ParamCommandComment_getDirection() CommentParamPassDirection {
 	Returns template parameter name.
 */
 func (c Comment) TParamCommandComment_getParamName() string {
-	o := cxstring{C.clang_TParamCommandComment_getParamName(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_TParamCommandComment_getParamName(c.c))
 }
 
 /*
@@ -350,10 +320,7 @@ func (c Comment) TParamCommandComment_getIndex(depth uint32) uint32 {
 	Returns text contained in the AST node.
 */
 func (c Comment) VerbatimBlockLineComment_getText() string {
-	o := cxstring{C.clang_VerbatimBlockLineComment_getText(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_VerbatimBlockLineComment_getText(c.c))
 }
 
 /*
@@ -362,10 +329,7 @@ func (c Comment) VerbatimBlockLineComment_getText() string {
 	Returns text contained in the AST node.
 */
 func (c Comment) VerbatimLineComment_getText() string {
-	o := cxstring{C.clang_VerbatimLineComment_getText(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_VerbatimLineComment_getText(c.c))
 }
 
 /*
@@ -377,10 +341,7 @@ func (c Comment) VerbatimLineComment_getText() string {
 	Returns string containing an HTML tag.
 */
 func (c Comment) HTMLTagComment_getAsString() string {
-	o := cxstring{C.clang_HTMLTagComment_getAsString(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_HTMLTagComment_getAsString(c.c))
 }
 
 /*
@@ -415,10 +376,7 @@ func (c Comment) HTMLTagComment_getAsString() string {
 	Returns string containing an HTML fragment.
 */
 func (c Comment) FullComment_getAsHTML() string {
-	o := cxstring{C.clang_FullComment_getAsHTML(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_FullComment_getAsHTML(c.c))
 }
 
 /*
@@ -432,10 +390,7 @@ func (c Comment) FullComment_getAsHTML() string {
 	Returns string containing an XML document.
 */
 func (c Comment) FullComment_getAsXML() string {
-	o := cxstring{C.clang_FullComment_getAsXML(c.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_FullComment_getAsXML(c.c))
 }
 
 func (c Comment) TranslationUnit() TranslationUnit {

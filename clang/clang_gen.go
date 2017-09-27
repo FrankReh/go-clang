@@ -43,10 +43,7 @@ func ConstructUSR_ObjCClass(className string) string {
 	c_className := C.CString(className)
 	defer C.free(unsafe.Pointer(c_className))
 
-	o := cxstring{C.clang_constructUSR_ObjCClass(c_className)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_constructUSR_ObjCClass(c_className))
 }
 
 // Construct a USR for a specified Objective-C category.
@@ -56,10 +53,7 @@ func ConstructUSR_ObjCCategory(className string, categoryName string) string {
 	c_categoryName := C.CString(categoryName)
 	defer C.free(unsafe.Pointer(c_categoryName))
 
-	o := cxstring{C.clang_constructUSR_ObjCCategory(c_className, c_categoryName)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_constructUSR_ObjCCategory(c_className, c_categoryName))
 }
 
 // Construct a USR for a specified Objective-C protocol.
@@ -67,10 +61,7 @@ func ConstructUSR_ObjCProtocol(protocolName string) string {
 	c_protocolName := C.CString(protocolName)
 	defer C.free(unsafe.Pointer(c_protocolName))
 
-	o := cxstring{C.clang_constructUSR_ObjCProtocol(c_protocolName)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_constructUSR_ObjCProtocol(c_protocolName))
 }
 
 // Construct a USR for a specified Objective-C instance variable and the USR for its containing class.
@@ -78,10 +69,7 @@ func ConstructUSR_ObjCIvar(name string, classUSR cxstring) string {
 	c_name := C.CString(name)
 	defer C.free(unsafe.Pointer(c_name))
 
-	o := cxstring{C.clang_constructUSR_ObjCIvar(c_name, classUSR.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_constructUSR_ObjCIvar(c_name, classUSR.c))
 }
 
 // Construct a USR for a specified Objective-C method and the USR for its containing class.
@@ -89,10 +77,7 @@ func ConstructUSR_ObjCMethod(name string, isInstanceMethod uint32, classUSR cxst
 	c_name := C.CString(name)
 	defer C.free(unsafe.Pointer(c_name))
 
-	o := cxstring{C.clang_constructUSR_ObjCMethod(c_name, C.uint(isInstanceMethod), classUSR.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_constructUSR_ObjCMethod(c_name, C.uint(isInstanceMethod), classUSR.c))
 }
 
 // Construct a USR for a specified Objective-C property and the USR for its containing class.
@@ -100,10 +85,7 @@ func ConstructUSR_ObjCProperty(property string, classUSR cxstring) string {
 	c_property := C.CString(property)
 	defer C.free(unsafe.Pointer(c_property))
 
-	o := cxstring{C.clang_constructUSR_ObjCProperty(c_property, classUSR.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_constructUSR_ObjCProperty(c_property, classUSR.c))
 }
 
 func EnableStackTraces() {
@@ -117,10 +99,7 @@ func DefaultCodeCompleteOptions() uint32 {
 
 // Return a version string, suitable for showing to a user, but not intended to be parsed (the format is not guaranteed to be stable).
 func GetClangVersion() string {
-	o := cxstring{C.clang_getClangVersion()}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_getClangVersion())
 }
 
 /*

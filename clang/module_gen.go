@@ -34,10 +34,7 @@ func (m Module) Parent() Module {
 	will return "vector".
 */
 func (m Module) Name() string {
-	o := cxstring{C.clang_Module_getName(m.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_Module_getName(m.c))
 }
 
 /*
@@ -46,10 +43,7 @@ func (m Module) Name() string {
 	Returns the full name of the module, e.g. "std.vector".
 */
 func (m Module) FullName() string {
-	o := cxstring{C.clang_Module_getFullName(m.c)}
-	defer o.Dispose()
-
-	return o.String()
+	return cx2GoString(C.clang_Module_getFullName(m.c))
 }
 
 /*
