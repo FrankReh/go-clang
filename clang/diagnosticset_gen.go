@@ -43,7 +43,7 @@ func (ds DiagnosticSet) DiagnosticInSet(index uint32) Diagnostic {
 	Returns A loaded CXDiagnosticSet if successful, and NULL otherwise. These
 	diagnostics should be released using clang_disposeDiagnosticSet().
 */
-func LoadDiagnostics(file string) (LoadDiag_Error, string, DiagnosticSet) {
+func LoadDiagnostics(file string) (DiagnosticSet, error, string) {
 	var error C.enum_CXLoadDiag_Error
 	var errorString cxstring
 	defer errorString.Dispose()
@@ -53,7 +53,7 @@ func LoadDiagnostics(file string) (LoadDiag_Error, string, DiagnosticSet) {
 
 	o := DiagnosticSet{C.clang_loadDiagnostics(c_file, &error, &errorString.c)}
 
-	return LoadDiag_Error(error), errorString.String(), o
+	return o, convertLoadDiagErrorCode(error), errorString.String()
 }
 
 // Release a CXDiagnosticSet and all of its contained diagnostics.
