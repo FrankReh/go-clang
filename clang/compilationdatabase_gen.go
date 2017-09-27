@@ -23,7 +23,7 @@ type CompilationDatabase struct {
 
 	It must be freed by clang_CompilationDatabase_dispose.
 */
-func FromDirectory(buildDir string) (CompilationDatabase_Error, CompilationDatabase) {
+func FromDirectory(buildDir string) (CompilationDatabase, error) {
 	var errorCode C.CXCompilationDatabase_Error
 
 	c_buildDir := C.CString(buildDir)
@@ -31,7 +31,7 @@ func FromDirectory(buildDir string) (CompilationDatabase_Error, CompilationDatab
 
 	o := CompilationDatabase{C.clang_CompilationDatabase_fromDirectory(c_buildDir, &errorCode)}
 
-	return CompilationDatabase_Error(errorCode), o
+	return o, convertCompilationDatabaseErrorCode(errorCode)
 }
 
 // Free the given compilation database

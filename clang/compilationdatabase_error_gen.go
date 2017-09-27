@@ -5,29 +5,17 @@ package clang
 import "C"
 import "fmt"
 
-// Error codes for Compilation Database
-type CompilationDatabase_Error int32
+// Error code for Compilation Database
 
-const (
-	CompilationDatabase_NoError            CompilationDatabase_Error = C.CXCompilationDatabase_NoError
-	CompilationDatabase_CanNotLoadDatabase                           = C.CXCompilationDatabase_CanNotLoadDatabase
-)
+const CanNotLoadDatabaseErr = Error("CanNotLoadDatabase")
 
-func (cde CompilationDatabase_Error) Spelling() string {
-	switch cde {
-	case CompilationDatabase_NoError:
-		return "CompilationDatabase=NoError"
-	case CompilationDatabase_CanNotLoadDatabase:
-		return "CompilationDatabase=CanNotLoadDatabase"
+func convertCompilationDatabaseErrorCode(ec C.CXCompilationDatabase_Error) error {
+	switch ec {
+	case C.CXCompilationDatabase_NoError:
+		return nil
+	case C.CXCompilationDatabase_CanNotLoadDatabase:
+		return CanNotLoadDatabaseErr
 	}
 
-	return fmt.Sprintf("CompilationDatabase_Error unkown %d", int(cde))
-}
-
-func (cde CompilationDatabase_Error) String() string {
-	return cde.Spelling()
-}
-
-func (cde CompilationDatabase_Error) Error() string {
-	return cde.Spelling()
+	return fmt.Errorf("unknown CXCompilationDatabase_Error %d", int(ec))
 }
