@@ -4,41 +4,23 @@ package clang
 // #include "go-clang.h"
 import "C"
 
-// Represents the command line invocation to compile a specific file.
 type CompileCommand struct {
-	c C.CXCompileCommand
+	Directory string   // the working directory where the CompileCommand was executed
+	Filename  string   // the filename associated with the CompileCommand
+	Args      []string // Args[0] is the compiler executable
 }
 
-// Get the working directory where the CompileCommand was executed from
-func (cc CompileCommand) Directory() string {
-	o := cxstring{C.clang_CompileCommand_getDirectory(cc.c)}
-	defer o.Dispose()
+func newCompileCommand(c C.CXCompileCommand) CompileCommand {
+	var r CompileCommand
 
-	return o.String()
-}
+	n := int(C.clang_CompileCommand_getNumArgs(c))
 
-// Get the filename associated with the CompileCommand.
-func (cc CompileCommand) Filename() string {
-	o := cxstring{C.clang_CompileCommand_getFilename(cc.c)}
-	defer o.Dispose()
+	r.Directory = cx2GoString(C.clang_CompileCommand_getDirectory(c))
+	r.Filename = cx2GoString(C.clang_CompileCommand_getFilename(c))
+	r.Args = make([]string, n)
 
-	return o.String()
-}
-
-// Get the number of arguments in the compiler invocation.
-func (cc CompileCommand) NumArgs() uint32 {
-	return uint32(C.clang_CompileCommand_getNumArgs(cc.c))
-}
-
-/*
-	Get the I'th argument value in the compiler invocations
-
-	Invariant :
-	- argument 0 is the compiler executable
-*/
-func (cc CompileCommand) Arg(i uint32) string {
-	o := cxstring{C.clang_CompileCommand_getArg(cc.c, C.uint(i))}
-	defer o.Dispose()
-
-	return o.String()
+	for i := range r.Args {
+		r.Args[i] = cx2GoString(C.clang_CompileCommand_getArg(c, C.uint(i)))
+	}
+	return r
 }

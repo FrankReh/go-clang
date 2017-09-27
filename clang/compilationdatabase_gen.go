@@ -39,15 +39,15 @@ func (cd CompilationDatabase) Dispose() {
 	C.clang_CompilationDatabase_dispose(cd.c)
 }
 
-// Find the compile commands used for a file. The compile commands must be freed by clang_CompileCommands_dispose.
-func (cd CompilationDatabase) CompileCommands(completeFileName string) CompileCommands {
+// Find the compile commands used for a file.
+func (cd CompilationDatabase) CompileCommands(completeFileName string) []CompileCommand {
 	c_completeFileName := C.CString(completeFileName)
 	defer C.free(unsafe.Pointer(c_completeFileName))
 
-	return CompileCommands{C.clang_CompilationDatabase_getCompileCommands(cd.c, c_completeFileName)}
+	return convertCompileCommandsAndDispose(C.clang_CompilationDatabase_getCompileCommands(cd.c, c_completeFileName))
 }
 
 // Get all the compile commands in the given compilation database.
-func (cd CompilationDatabase) AllCompileCommands() CompileCommands {
-	return CompileCommands{C.clang_CompilationDatabase_getAllCompileCommands(cd.c)}
+func (cd CompilationDatabase) AllCompileCommands() []CompileCommand {
+	return convertCompileCommandsAndDispose(C.clang_CompilationDatabase_getAllCompileCommands(cd.c))
 }

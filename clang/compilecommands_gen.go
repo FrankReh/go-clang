@@ -13,25 +13,16 @@ import "C"
 	commands is wrapped in this opaque data structure. It must be freed by
 	clang_CompileCommands_dispose.
 */
-type CompileCommands struct {
-	c C.CXCompileCommands
-}
 
-// Free the given CompileCommands
-func (cc CompileCommands) Dispose() {
-	C.clang_CompileCommands_dispose(cc.c)
-}
+func convertCompileCommandsAndDispose(c C.CXCompileCommands) []CompileCommand {
+	n := int(C.clang_CompileCommands_getSize(c))
 
-// Get the number of CompileCommand we have for a file
-func (cc CompileCommands) Size() uint32 {
-	return uint32(C.clang_CompileCommands_getSize(cc.c))
-}
+	r := make([]CompileCommand, n)
 
-/*
-	Get the I'th CompileCommand for a file
+	for i := range r {
+		r[i] = newCompileCommand(C.clang_CompileCommands_getCommand(c, C.uint(i)))
+	}
 
-	Note : 0 <= i < clang_CompileCommands_getSize(CXCompileCommands)
-*/
-func (cc CompileCommands) Command(i uint32) CompileCommand {
-	return CompileCommand{C.clang_CompileCommands_getCommand(cc.c, C.uint(i))}
+	C.clang_CompileCommands_dispose(c)
+	return r
 }
