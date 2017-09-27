@@ -22,7 +22,7 @@ func (pa PlatformAvailability) Dispose() {
 */
 func (pa PlatformAvailability) Platform() string {
 	o := cxstring{pa.c.Platform}
-	defer o.Dispose()
+	// defer o.Dispose() // Don't call Dispose here, clang_disposeCXPlatformAvailability does it
 
 	return o.String()
 }
@@ -50,7 +50,7 @@ func (pa PlatformAvailability) Unavailable() int32 {
 // An optional message to provide to a user of this API, e.g., to suggest replacement APIs.
 func (pa PlatformAvailability) Message() string {
 	o := cxstring{pa.c.Message}
-	defer o.Dispose()
+	// defer o.Dispose() // Don't call Dispose here, clang_disposeCXPlatformAvailability does it
 
 	return o.String()
 }
