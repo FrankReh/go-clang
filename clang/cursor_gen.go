@@ -531,8 +531,8 @@ func (c Cursor) ExceptionSpecification() ExceptionSpecification {
 	If the field's name S is not found,
 	CXTypeLayoutError_InvalidFieldName is returned.
 */
-func (c Cursor) OffsetOfField() int64 {
-	return int64(C.clang_Cursor_getOffsetOfField(c.c))
+func (c Cursor) OffsetOfField() (uint64, error) {
+	return convertTypeLayoutError(C.clang_Cursor_getOffsetOfField(c.c))
 }
 
 // Determine whether the given cursor represents an anonymous record declaration.

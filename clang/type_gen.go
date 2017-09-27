@@ -222,8 +222,8 @@ func (t Type) IsTransparentTagTypedef() bool {
 	If the type declaration is not a constant size type,
 	CXTypeLayoutError_NotConstantSize is returned.
 */
-func (t Type) AlignOf() int64 {
-	return int64(C.clang_Type_getAlignOf(t.c))
+func (t Type) AlignOf() (uint64, error) {
+	return convertTypeLayoutError(C.clang_Type_getAlignOf(t.c))
 }
 
 /*
@@ -244,8 +244,8 @@ func (t Type) ClassType() Type {
 	If the type declaration is a dependent type, CXTypeLayoutError_Dependent is
 	returned.
 */
-func (t Type) SizeOf() int64 {
-	return int64(C.clang_Type_getSizeOf(t.c))
+func (t Type) SizeOf() (uint64, error) {
+	return convertTypeLayoutError(C.clang_Type_getSizeOf(t.c))
 }
 
 /*
@@ -261,11 +261,11 @@ func (t Type) SizeOf() int64 {
 	If the field's name S is not found,
 	CXTypeLayoutError_InvalidFieldName is returned.
 */
-func (t Type) OffsetOf(s string) int64 {
+func (t Type) OffsetOf(s string) (uint64, error) {
 	c_s := C.CString(s)
 	defer C.free(unsafe.Pointer(c_s))
 
-	return int64(C.clang_Type_getOffsetOf(t.c, c_s))
+	return convertTypeLayoutError(C.clang_Type_getOffsetOf(t.c, c_s))
 }
 
 /*

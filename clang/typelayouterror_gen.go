@@ -13,42 +13,29 @@ import "fmt"
 	A value of this enumeration type can be returned if the target type is not
 	a valid argument to sizeof, alignof or offsetof.
 */
-type TypeLayoutError int32
 
-const (
-	// Type is of kind CXType_Invalid.
-	TypeLayoutError_Invalid TypeLayoutError = C.CXTypeLayoutError_Invalid
-	// The type is an incomplete Type.
-	TypeLayoutError_Incomplete = C.CXTypeLayoutError_Incomplete
-	// The type is a dependent Type.
-	TypeLayoutError_Dependent = C.CXTypeLayoutError_Dependent
-	// The type is not a constant size type.
-	TypeLayoutError_NotConstantSize = C.CXTypeLayoutError_NotConstantSize
-	// The Field name is not valid for this record.
-	TypeLayoutError_InvalidFieldName = C.CXTypeLayoutError_InvalidFieldName
-)
+const TypeLayout_InvalidErr = Error("InvalidTypeLayout")
+const TypeLayout_IncompleteErr = Error("IncompleteTypeLayout")
+const TypeLayout_DependentErr = Error("DependentTypeLayout")
+const TypeLayout_NotConstantSizeErr = Error("NotConstantSizeTypeLayout")
+const TypeLayout_InvalidFieldNameErr = Error("InvalidFieldNameTypeLayout")
 
-func (tle TypeLayoutError) Spelling() string {
-	switch tle {
-	case TypeLayoutError_Invalid:
-		return "TypeLayoutError=Invalid"
-	case TypeLayoutError_Incomplete:
-		return "TypeLayoutError=Incomplete"
-	case TypeLayoutError_Dependent:
-		return "TypeLayoutError=Dependent"
-	case TypeLayoutError_NotConstantSize:
-		return "TypeLayoutError=NotConstantSize"
-	case TypeLayoutError_InvalidFieldName:
-		return "TypeLayoutError=InvalidFieldName"
+func convertTypeLayoutError(r C.longlong) (uint64, error) {
+	if r >= 0 {
+		return uint64(r), nil
+	}
+	switch r {
+	case C.CXTypeLayoutError_Invalid:
+		return 0, TypeLayout_InvalidErr
+	case C.CXTypeLayoutError_Incomplete:
+		return 0, TypeLayout_IncompleteErr
+	case C.CXTypeLayoutError_Dependent:
+		return 0, TypeLayout_DependentErr
+	case C.CXTypeLayoutError_NotConstantSize:
+		return 0, TypeLayout_NotConstantSizeErr
+	case C.CXTypeLayoutError_InvalidFieldName:
+		return 0, TypeLayout_InvalidFieldNameErr
 	}
 
-	return fmt.Sprintf("TypeLayoutError unkown %d", int(tle))
-}
-
-func (tle TypeLayoutError) String() string {
-	return tle.Spelling()
-}
-
-func (tle TypeLayoutError) Error() string {
-	return tle.Spelling()
+	return 0, fmt.Errorf("unknown CXTypeLayoutError %d", r)
 }
