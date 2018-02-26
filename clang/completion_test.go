@@ -35,11 +35,6 @@ func TestCompletion(t *testing.T) {
 	}
 
 	diags := res.Diagnostics()
-	defer func() {
-		for _, d := range diags {
-			d.Dispose()
-		}
-	}()
 
 	ok := false
 	for _, d := range diags {

@@ -16,11 +16,6 @@ func TestDiagnostics(t *testing.T) {
 	defer tu.Dispose()
 
 	diags := tu.Diagnostics()
-	defer func() {
-		for _, d := range diags {
-			d.Dispose()
-		}
-	}()
 
 	ok := false
 	for _, d := range diags {

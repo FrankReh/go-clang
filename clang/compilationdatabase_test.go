@@ -5,15 +5,15 @@ import (
 )
 
 func TestCompilationDatabaseError(t *testing.T) {
-	err, _ := FromDirectory("../testdata-not-there")
-	if err != CompilationDatabase_CanNotLoadDatabase {
-		t.Fatalf("expected %v", CompilationDatabase_CanNotLoadDatabase)
+	_, err := FromDirectory("../testdata-not-there")
+	if err != CanNotLoadDatabaseErr {
+		t.Fatalf("expected %v", CanNotLoadDatabaseErr)
 	}
 }
 
 func TestCompilationDatabase(t *testing.T) {
-	err, db := FromDirectory("../testdata")
-	if err != CompilationDatabase_NoError {
+	db, err := FromDirectory("../testdata")
+	if err != nil {
 		t.Fatalf("error loading compilation database: %v", err)
 	}
 	defer db.Dispose()
@@ -43,25 +43,23 @@ func TestCompilationDatabase(t *testing.T) {
 	}
 
 	cmds := db.AllCompileCommands()
-	if int(cmds.Size()) != len(table) {
-		t.Errorf("expected #cmds=%d. got=%d", len(table), cmds.Size())
+	if len(cmds) != len(table) {
+		t.Errorf("expected #cmds=%d. got=%d", len(table), len(cmds))
 	}
 
-	for i := 0; i < int(cmds.Size()); i++ {
-		cmd := cmds.Command(uint32(i))
-		if cmd.Directory() != table[i].directory {
-			t.Errorf("expected dir=%q. got=%q", table[i].directory, cmd.Directory())
+	for i, cmd := range cmds {
+		if cmd.Directory != table[i].directory {
+			t.Errorf("expected dir=%q. got=%q", table[i].directory, cmd.Directory)
 		}
 
-		nargs := int(cmd.NumArgs())
+		nargs := len(cmd.Args)
 		if nargs != len(table[i].args) {
 			t.Errorf("expected #args=%d. got=%d", len(table[i].args), nargs)
 		}
 		if nargs > len(table[i].args) {
 			nargs = len(table[i].args)
 		}
-		for j := 0; j < nargs; j++ {
-			arg := cmd.Arg(uint32(j))
+		for j, arg := range cmd.Args {
 			if arg != table[i].args[j] {
 				t.Errorf("expected arg[%d]=%q. got=%q", j, table[i].args[j], arg)
 			}
