@@ -2,16 +2,35 @@ package clang
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
+
+func assertTrue(t *testing.T, b bool) {
+	t.Helper()
+	if !b {
+		t.Fatal("not true")
+	}
+}
+
+func assertEqualString(t *testing.T, s1, s2 string) {
+	t.Helper()
+	if s1 != s2 {
+		t.Fatalf("%s != %s", s1, s2)
+	}
+}
+
+func assertEqualInt(t *testing.T, i1, i2 int) {
+	t.Helper()
+	if i1 != i2 {
+		t.Fatalf("%d != %d", i1, i2)
+	}
+}
 
 func TestBasicParsing(t *testing.T) {
 	idx := NewIndex(0, 1)
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("../testdata/basicparsing.c", nil, nil, 0)
-	assert.True(t, tu.IsValid())
+	assertTrue(t, tu.IsValid())
 	defer tu.Dispose()
 
 	found := 0
@@ -23,11 +42,11 @@ func TestBasicParsing(t *testing.T) {
 
 		switch cursor.Kind() {
 		case Cursor_FunctionDecl:
-			assert.Equal(t, "foo", cursor.Spelling())
+			assertEqualString(t, "foo", cursor.Spelling())
 
 			found++
 		case Cursor_ParmDecl:
-			assert.Equal(t, "bar", cursor.Spelling())
+			assertEqualString(t, "bar", cursor.Spelling())
 
 			found++
 		}
@@ -35,7 +54,7 @@ func TestBasicParsing(t *testing.T) {
 		return ChildVisit_Recurse
 	})
 
-	assert.Equal(t, 2, found, "Did not find all nodes")
+	assertEqualInt(t, 2, found)
 }
 
 func TestReparse(t *testing.T) {
@@ -47,7 +66,7 @@ func TestReparse(t *testing.T) {
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("hello.cpp", nil, us, 0)
-	assert.True(t, tu.IsValid())
+	assertTrue(t, tu.IsValid())
 	defer tu.Dispose()
 
 	ok := false

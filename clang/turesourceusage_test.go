@@ -3,8 +3,6 @@ package clang
 import (
 	"fmt"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestResourceUsage(t *testing.T) {
@@ -16,7 +14,7 @@ func TestResourceUsage(t *testing.T) {
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("hello.cpp", nil, us, 0)
-	assert.True(t, tu.IsValid())
+	assertTrue(t, tu.IsValid())
 	defer tu.Dispose()
 
 	ru0_slice := tu.ResourceUsage()
@@ -25,7 +23,7 @@ func TestResourceUsage(t *testing.T) {
 
 	us[0] = NewUnsavedFile("hello.cpp", " int world2();")
 	tu.ReparseTranslationUnit(us, 0)
-	assert.True(t, tu.IsValid())
+	assertTrue(t, tu.IsValid())
 
 	ru1_slice := tu.ResourceUsage()
 	ru1_slice_str := fmt.Sprintf("%v", ru1_slice)
@@ -36,7 +34,7 @@ func TestResourceUsage(t *testing.T) {
 	// Now the resource usages are the same for the two runs so don't enforce
 	// they're being different.
 	//assert.NotEqual(t, ru0_slice_str_a, ru1_slice_str) // should be different
-	assert.Equal(t, ru0_slice_str_a, ru0_slice_str_b) // should be the same
+	assertEqualString(t, ru0_slice_str_a, ru0_slice_str_b) // should be the same
 
 	/*
 		for i := range ru0_slice {

@@ -2,14 +2,15 @@ package main
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGoClangCompDB(t *testing.T) {
 	for _, path := range []string{
 		"../../testdata",
 	} {
-		assert.Equal(t, 0, cmd([]string{path}))
+		r := cmd([]string{path})
+		if r != 0 {
+			t.Errorf("cmd([]string{%s}) = %d", path, r)
+		}
 	}
 }

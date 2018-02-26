@@ -3,8 +3,6 @@ package clang
 import (
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCompletion(t *testing.T) {
@@ -12,11 +10,11 @@ func TestCompletion(t *testing.T) {
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("cursor.c", nil, nil, 0)
-	assert.True(t, tu.IsValid())
+	assertTrue(t, tu.IsValid())
 	defer tu.Dispose()
 
 	res := tu.CodeCompleteAt("cursor.c", 5, 18, nil, 0)
-	assert.NotNil(t, res)
+	assertTrue(t, res != nil)
 	defer res.Dispose()
 
 	if n := len(res.Results()); n < 10 {
@@ -43,5 +41,5 @@ func TestCompletion(t *testing.T) {
 		}
 		t.Log(d.Severity(), d.Spelling())
 	}
-	assert.True(t, ok)
+	assertTrue(t, ok)
 }
