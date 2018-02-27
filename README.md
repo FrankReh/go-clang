@@ -1,30 +1,67 @@
-# go-clang/v3.9 [![GoDoc](https://godoc.org/github.com/go-clang/v3.9?status.png)](https://godoc.org/github.com/go-clang/v3.9) [![Build Status](https://travis-ci.org/go-clang/v3.9.svg?branch=master)](https://travis-ci.org/go-clang/v3.9)
+# frankreh/go-clang-v5.0 
 
-Native Go bindings for Clang's C API.
+Native Go bindings for Clang's C API (for versions 5.0.0 and 5.0.1).
 
-## Install/Update
+## Forked
 
-```bash
-CGO_LDFLAGS="-L`llvm-config --libdir`" \
-  go get -u github.com/go-clang/v3.9/...
-```
+Forked from [https://github.com/go-clang/v3.9](https://github.com/go-clang/v3.9).
+
+This version has incorporated the clang-c headers from 5.0.0 and comes with some necessary changes as a result.
+Some bug fixes and some API changes are also included.
+
+The git log will show what has changed. Or the quick way for users of previous versions to incorporate this
+would be to change their import lines and see what no longer compiles. (Also using git log on the `*_test.go`
+and cmd examples shows what API changes were made to keep the tests passing.)
+
+This fork was not meant to be completely backward compatible with the v3.9 repository.
+As with that repository, this comes with a liberal license and users are free to take any parts they like.
 
 ## Usage
 
-An example on how to use the AST visitor of the Clang API can be found in [/cmd/go-clang-dump/main.go](/cmd/go-clang-dump/main.go)
+Usage hasn't changed drastically. Some return types have changed so that some Dispose calls could be done away with.
+Some return error values have been changed to be more go idiomatic. In at least one case, a routine's return values
+are swapped so the error result is second.
 
-## I need bindings for a different Clang version
+As before, an example on how to use the AST visitor of the Clang API can be found in [/cmd/go-clang-dump/main.go](/cmd/go-clang-dump/main.go)
 
-The Go bindings are placed in their own repositories to provide the correct bindings for the corresponding Clang version. A list of supported versions can be found in [go-clang/gen's README](https://github.com/go-clang/gen#where-are-the-bindings).
+## Generated Bindings
 
-## I found a bug/missing a feature in go-clang
+The v3.9 bindings were used as a base.
+The gen tool from github.com/go-clang was also used on the 3.9 headers to get a sense for what had to be manually changed when the v3.9 repository was created.
+The gen tool was used on the new headers which saved a considerable amount of time.
+Finally a diff between 5.0 and 3.9 headers was done to see how the libclang API had changed and what might need to be accounted for manually.
 
-We are using the issue tracker of the `go-clang/gen` repository. Please go through the [open issues](https://github.com/go-clang/gen/issues) in the tracker first. If you cannot find your request just open up a [new issue](https://github.com/go-clang/gen/issues/new).
+## Build and run self tests.
 
-## How is this binding generated?
+Once you have downloaded the repository:
 
-The [go-clang/gen](https://github.com/go-clang/gen) repository is used to automatically generate this binding.
+```bash
+  source env.sh
+  cd clang
+  go install
+  go test
+
+  cd ../cmd/go-clang-dump
+  go build
+  go test
+
+
+  cd ../go-clang-compdb
+  go build
+  go test
+```
+
+## Platforms tested.
+
+    | Platform | clang+llvm |
+    | --- | --- |
+    | 10.12 Darwin | clang+llvm 5.0.0 |
+    | 10.13 Darwin | clang+llvm 5.0.1 |
+    | 4.9 Debian | clang+llvm 5.0.1 built for Debian8 |
+    | 11 FreeeBSD | clang+llvm 5.0.1 built for FreeBSD10 |
+
+All builds done with go1.10. This was also found to build and test successfully with the new vgo command.
 
 # License
 
-This project, like all go-clang projects, is licensed under a BSD-3 license which can be found in the [LICENSE file](https://github.com/go-clang/license/blob/master/LICENSE) in [go-clang's license repository](https://github.com/go-clang/license)
+This repository comes with the 3-Clause BSD License.
