@@ -2,6 +2,11 @@
 
 Native Go bindings for Clang's C API (for versions 5.0.0 and 5.0.1).
 
+## Alpha
+
+This should still be considered alpha as there are some API changes coming,
+albeit minor ones, that would break some compiles.
+
 ## Forked
 
 Forked from [https://github.com/go-clang/v3.9](https://github.com/go-clang/v3.9).
