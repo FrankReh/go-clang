@@ -40,7 +40,7 @@ func (d Diagnostic) ChildDiagnostics() DiagnosticSet {
 
 	Returns A new string containing for formatted diagnostic.
 */
-func (d Diagnostic) FormatDiagnostic(options uint32) string {
+func (d Diagnostic) FormatDiagnostic(options DiagnosticDisplayOptions) string {
 	return cx2GoString(C.clang_formatDiagnostic(d.c, C.uint(options)))
 }
 

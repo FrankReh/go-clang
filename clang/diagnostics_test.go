@@ -24,7 +24,11 @@ func TestDiagnostics(t *testing.T) {
 		}
 		t.Log(d)
 		t.Log(d.Severity(), d.Spelling())
-		t.Log(d.FormatDiagnostic(uint32(clang.Diagnostic_DisplayCategoryName | clang.Diagnostic_DisplaySourceLocation)))
+		t.Log(d.FormatDiagnostic(clang.Diagnostic_DisplayCategoryName | clang.Diagnostic_DisplaySourceLocation))
 	}
 	assertTrue(t, ok)
+
+	// Test that unexpected values don't break us.
+	max := ^clang.DiagnosticDisplayOptions(0)
+	assertStringNotEmpty(t, max.String())
 }

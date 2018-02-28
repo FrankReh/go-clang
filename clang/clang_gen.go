@@ -18,8 +18,8 @@ func GetBuildSessionTimestamp() uint64 {
 	Returns A set of display options suitable for use with
 	clang_formatDiagnostic().
 */
-func DefaultDiagnosticDisplayOptions() uint32 {
-	return uint32(C.clang_defaultDiagnosticDisplayOptions())
+func DefaultDiagnosticDisplayOptions() DiagnosticDisplayOptions {
+	return DiagnosticDisplayOptions(C.clang_defaultDiagnosticDisplayOptions())
 }
 
 /*

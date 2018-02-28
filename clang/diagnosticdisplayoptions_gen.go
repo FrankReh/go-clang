@@ -3,7 +3,10 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 /*
 	Options to control the display of diagnostics.
@@ -34,7 +37,7 @@ const (
 
 		This option corresponds to the clang flag -fshow-column.
 	*/
-	Diagnostic_DisplayColumn = C.CXDiagnostic_DisplayColumn
+	Diagnostic_DisplayColumn DiagnosticDisplayOptions = C.CXDiagnostic_DisplayColumn
 	/*
 		If displaying the source-location information of the
 		diagnostic, also include information about source ranges in a
@@ -43,7 +46,7 @@ const (
 		This option corresponds to the clang flag
 		-fdiagnostics-print-source-range-info.
 	*/
-	Diagnostic_DisplaySourceRanges = C.CXDiagnostic_DisplaySourceRanges
+	Diagnostic_DisplaySourceRanges DiagnosticDisplayOptions = C.CXDiagnostic_DisplaySourceRanges
 	/*
 		Display the option name associated with this diagnostic, if any.
 
@@ -51,7 +54,7 @@ const (
 		after the diagnostic text. This option corresponds to the clang flag
 		-fdiagnostics-show-option.
 	*/
-	Diagnostic_DisplayOption = C.CXDiagnostic_DisplayOption
+	Diagnostic_DisplayOption DiagnosticDisplayOptions = C.CXDiagnostic_DisplayOption
 	/*
 		Display the category number associated with this diagnostic, if any.
 
@@ -59,7 +62,7 @@ const (
 		This option corresponds to the clang flag
 		-fdiagnostics-show-category=id.
 	*/
-	Diagnostic_DisplayCategoryId = C.CXDiagnostic_DisplayCategoryId
+	Diagnostic_DisplayCategoryId DiagnosticDisplayOptions = C.CXDiagnostic_DisplayCategoryId
 	/*
 		Display the category name associated with this diagnostic, if any.
 
@@ -67,28 +70,31 @@ const (
 		This option corresponds to the clang flag
 		-fdiagnostics-show-category=name.
 	*/
-	Diagnostic_DisplayCategoryName = C.CXDiagnostic_DisplayCategoryName
+	Diagnostic_DisplayCategoryName DiagnosticDisplayOptions = C.CXDiagnostic_DisplayCategoryName
 )
 
-func (ddo DiagnosticDisplayOptions) Spelling() string {
-	switch ddo {
-	case Diagnostic_DisplaySourceLocation:
-		return "Diagnostic=DisplaySourceLocation"
-	case Diagnostic_DisplayColumn:
-		return "Diagnostic=DisplayColumn"
-	case Diagnostic_DisplaySourceRanges:
-		return "Diagnostic=DisplaySourceRanges"
-	case Diagnostic_DisplayOption:
-		return "Diagnostic=DisplayOption"
-	case Diagnostic_DisplayCategoryId:
-		return "Diagnostic=DisplayCategoryId"
-	case Diagnostic_DisplayCategoryName:
-		return "Diagnostic=DisplayCategoryName"
-	}
-
-	return fmt.Sprintf("DiagnosticDisplayOptions unkown %d", int(ddo))
-}
-
 func (ddo DiagnosticDisplayOptions) String() string {
-	return ddo.Spelling()
+	var r []string
+	for _, t := range []struct {
+		flag DiagnosticDisplayOptions
+		name string
+	}{
+		{Diagnostic_DisplaySourceLocation, "DisplaySourceLocation"},
+		{Diagnostic_DisplayColumn, "DisplayColumn"},
+		{Diagnostic_DisplaySourceRanges, "DisplaySourceRanges"},
+		{Diagnostic_DisplayOption, "DisplayOption"},
+		{Diagnostic_DisplayCategoryId, "DisplayCategoryId"},
+		{Diagnostic_DisplayCategoryName, "DisplayCategoryName"},
+	} {
+		if ddo&t.flag == 0 {
+			continue
+		}
+		ddo &^= t.flag
+		r = append(r, t.name)
+	}
+	if ddo != 0 {
+		// This cast to a large intrinsic is important; it avoids recursive calls to String().
+		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(ddo)))
+	}
+	return strings.Join(r, ",")
 }
