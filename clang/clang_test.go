@@ -71,6 +71,10 @@ func TestBasicParsing(t *testing.T) {
 	})
 
 	assertEqualInt(t, 2, found)
+
+	// Test that unexpected values don't break us.
+	max := ^clang.TranslationUnit_Flags(0)
+	assertStringNotEmpty(t, max.String())
 }
 
 func TestReparse(t *testing.T) {

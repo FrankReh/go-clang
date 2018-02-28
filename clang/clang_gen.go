@@ -34,8 +34,8 @@ func DefaultDiagnosticDisplayOptions() DiagnosticDisplayOptions {
 	preamble) geared toward improving the performance of these routines. The
 	set of optimizations enabled may change from one version to the next.
 */
-func DefaultEditingTranslationUnitOptions() uint32 {
-	return uint32(C.clang_defaultEditingTranslationUnitOptions())
+func DefaultEditingTranslationUnitOptions() TranslationUnit_Flags {
+	return TranslationUnit_Flags(C.clang_defaultEditingTranslationUnitOptions())
 }
 
 // Construct a USR for a specified Objective-C class.

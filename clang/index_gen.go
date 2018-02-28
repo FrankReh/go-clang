@@ -177,7 +177,7 @@ func (i Index) TranslationUnit2(astFilename string, outTU *TranslationUnit) erro
 }
 
 // Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
-func (i Index) ParseTranslationUnit(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32) TranslationUnit {
+func (i Index) ParseTranslationUnit(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options TranslationUnit_Flags) TranslationUnit {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {
@@ -240,7 +240,7 @@ func (i Index) ParseTranslationUnit(sourceFilename string, commandLineArgs []str
 
 	Returns Zero on success, otherwise returns an error code.
 */
-func (i Index) ParseTranslationUnit2(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32, outTU *TranslationUnit) error {
+func (i Index) ParseTranslationUnit2(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options TranslationUnit_Flags, outTU *TranslationUnit) error {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {
@@ -261,7 +261,7 @@ func (i Index) ParseTranslationUnit2(sourceFilename string, commandLineArgs []st
 }
 
 // Same as clang_parseTranslationUnit2 but requires a full command line for command_line_args including argv[0]. This is useful if the standard library paths are relative to the binary.
-func (i Index) ParseTranslationUnit2FullArgv(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options uint32, outTU *TranslationUnit) error {
+func (i Index) ParseTranslationUnit2FullArgv(sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, options TranslationUnit_Flags, outTU *TranslationUnit) error {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {

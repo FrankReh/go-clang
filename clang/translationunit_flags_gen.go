@@ -3,7 +3,10 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 /*
 	Flags that control the creation of translation units.
@@ -15,8 +18,11 @@ import "fmt"
 type TranslationUnit_Flags uint32
 
 const (
-	// Used to indicate that no special translation-unit options are needed.
+	/*
+		Used to indicate that no special translation-unit options are needed.
+	*/
 	TranslationUnit_None TranslationUnit_Flags = C.CXTranslationUnit_None
+
 	/*
 		Used to indicate that the parser should construct a "detailed"
 		preprocessing record, including all macro definitions and instantiations.
@@ -27,7 +33,8 @@ const (
 		applications that require more detailed information about the
 		behavior of the preprocessor.
 	*/
-	TranslationUnit_DetailedPreprocessingRecord = C.CXTranslationUnit_DetailedPreprocessingRecord
+	TranslationUnit_DetailedPreprocessingRecord TranslationUnit_Flags = C.CXTranslationUnit_DetailedPreprocessingRecord
+
 	/*
 		Used to indicate that the translation unit is incomplete.
 
@@ -39,7 +46,8 @@ const (
 		C++. This option is typically used when parsing a header with the
 		intent of producing a precompiled header.
 	*/
-	TranslationUnit_Incomplete = C.CXTranslationUnit_Incomplete
+	TranslationUnit_Incomplete TranslationUnit_Flags = C.CXTranslationUnit_Incomplete
+
 	/*
 		Used to indicate that the translation unit should be built with an
 		implicit precompiled header for the preamble.
@@ -54,7 +62,8 @@ const (
 		clang_reparseTranslationUnit() will re-use the implicit
 		precompiled header to improve parsing performance.
 	*/
-	TranslationUnit_PrecompiledPreamble = C.CXTranslationUnit_PrecompiledPreamble
+	TranslationUnit_PrecompiledPreamble TranslationUnit_Flags = C.CXTranslationUnit_PrecompiledPreamble
+
 	/*
 		Used to indicate that the translation unit should cache some
 		code-completion results with each reparse of the source file.
@@ -63,7 +72,8 @@ const (
 		introduces some overhead to reparsing but improves the performance of
 		code-completion operations.
 	*/
-	TranslationUnit_CacheCompletionResults = C.CXTranslationUnit_CacheCompletionResults
+	TranslationUnit_CacheCompletionResults TranslationUnit_Flags = C.CXTranslationUnit_CacheCompletionResults
+
 	/*
 		Used to indicate that the translation unit will be serialized with
 		clang_saveTranslationUnit.
@@ -71,14 +81,16 @@ const (
 		This option is typically used when parsing a header with the intent of
 		producing a precompiled header.
 	*/
-	TranslationUnit_ForSerialization = C.CXTranslationUnit_ForSerialization
+	TranslationUnit_ForSerialization TranslationUnit_Flags = C.CXTranslationUnit_ForSerialization
+
 	/*
 		DEPRECATED: Enabled chained precompiled preambles in C++.
 
 		Note: this is a *temporary* option that is available only while
 		we are testing C++ precompiled preamble support. It is deprecated.
 	*/
-	TranslationUnit_CXXChainedPCH = C.CXTranslationUnit_CXXChainedPCH
+	TranslationUnit_CXXChainedPCH TranslationUnit_Flags = C.CXTranslationUnit_CXXChainedPCH
+
 	/*
 		Used to indicate that function/method bodies should be skipped while
 		parsing.
@@ -86,11 +98,18 @@ const (
 		This option can be used to search for declarations/definitions while
 		ignoring the usages.
 	*/
-	TranslationUnit_SkipFunctionBodies = C.CXTranslationUnit_SkipFunctionBodies
-	// Used to indicate that brief documentation comments should be included into the set of code completions returned from this translation unit.
-	TranslationUnit_IncludeBriefCommentsInCodeCompletion = C.CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
-	// Used to indicate that the precompiled preamble should be created on the first parse. Otherwise it will be created on the first reparse. This trades runtime on the first parse (serializing the preamble takes time) for reduced runtime on the second parse (can now reuse the preamble).
-	TranslationUnit_CreatePreambleOnFirstParse = C.CXTranslationUnit_CreatePreambleOnFirstParse
+	TranslationUnit_SkipFunctionBodies TranslationUnit_Flags = C.CXTranslationUnit_SkipFunctionBodies
+
+	/*
+		Used to indicate that brief documentation comments should be included into the set of code completions returned from this translation unit.
+	*/
+	TranslationUnit_IncludeBriefCommentsInCodeCompletion TranslationUnit_Flags = C.CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
+
+	/*
+		Used to indicate that the precompiled preamble should be created on the first parse. Otherwise it will be created on the first reparse. This trades runtime on the first parse (serializing the preamble takes time) for reduced runtime on the second parse (can now reuse the preamble).
+	*/
+	TranslationUnit_CreatePreambleOnFirstParse TranslationUnit_Flags = C.CXTranslationUnit_CreatePreambleOnFirstParse
+
 	/*
 		Do not stop processing when fatal errors are encountered.
 
@@ -100,42 +119,41 @@ const (
 		purposes of an IDE, this is undesirable behavior and as much information
 		as possible should be reported. Use this flag to enable this behavior.
 	*/
-	TranslationUnit_KeepGoing = C.CXTranslationUnit_KeepGoing
-	// Sets the preprocessor in a mode for parsing a single file only.
-	TranslationUnit_SingleFileParse = C.CXTranslationUnit_SingleFileParse
+	TranslationUnit_KeepGoing TranslationUnit_Flags = C.CXTranslationUnit_KeepGoing
+
+	/*
+		Sets the preprocessor in a mode for parsing a single file only.
+	*/
+	TranslationUnit_SingleFileParse TranslationUnit_Flags = C.CXTranslationUnit_SingleFileParse
 )
 
-func (tuf TranslationUnit_Flags) Spelling() string {
-	switch tuf {
-	case TranslationUnit_None:
-		return "TranslationUnit=None"
-	case TranslationUnit_DetailedPreprocessingRecord:
-		return "TranslationUnit=DetailedPreprocessingRecord"
-	case TranslationUnit_Incomplete:
-		return "TranslationUnit=Incomplete"
-	case TranslationUnit_PrecompiledPreamble:
-		return "TranslationUnit=PrecompiledPreamble"
-	case TranslationUnit_CacheCompletionResults:
-		return "TranslationUnit=CacheCompletionResults"
-	case TranslationUnit_ForSerialization:
-		return "TranslationUnit=ForSerialization"
-	case TranslationUnit_CXXChainedPCH:
-		return "TranslationUnit=CXXChainedPCH"
-	case TranslationUnit_SkipFunctionBodies:
-		return "TranslationUnit=SkipFunctionBodies"
-	case TranslationUnit_IncludeBriefCommentsInCodeCompletion:
-		return "TranslationUnit=IncludeBriefCommentsInCodeCompletion"
-	case TranslationUnit_CreatePreambleOnFirstParse:
-		return "TranslationUnit=CreatePreambleOnFirstParse"
-	case TranslationUnit_KeepGoing:
-		return "TranslationUnit=KeepGoing"
-	case TranslationUnit_SingleFileParse:
-		return "TranslationUnit=SingleFileParse"
-	}
-
-	return fmt.Sprintf("TranslationUnit_Flags unkown %d", int(tuf))
-}
-
 func (tuf TranslationUnit_Flags) String() string {
-	return tuf.Spelling()
+	var r []string
+	for _, t := range []struct {
+		flag TranslationUnit_Flags
+		name string
+	}{
+		{TranslationUnit_DetailedPreprocessingRecord, "DetailedPreprocessingRecord"},
+		{TranslationUnit_Incomplete, "Incomplete"},
+		{TranslationUnit_PrecompiledPreamble, "PrecompiledPreamble"},
+		{TranslationUnit_CacheCompletionResults, "CacheCompletionResults"},
+		{TranslationUnit_ForSerialization, "ForSerialization"},
+		{TranslationUnit_CXXChainedPCH, "CXXChainedPCH"},
+		{TranslationUnit_SkipFunctionBodies, "SkipFunctionBodies"},
+		{TranslationUnit_IncludeBriefCommentsInCodeCompletion, "IncludeBriefCommentsInCodeCompletion"},
+		{TranslationUnit_CreatePreambleOnFirstParse, "CreatePreambleOnFirstParse"},
+		{TranslationUnit_KeepGoing, "KeepGoing"},
+		{TranslationUnit_SingleFileParse, "SingleFileParse"},
+	} {
+		if tuf&t.flag == 0 {
+			continue
+		}
+		tuf &^= t.flag
+		r = append(r, t.name)
+	}
+	if tuf != 0 {
+		// This cast to a large intrinsic is important; it avoids recursive calls to String().
+		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(tuf)))
+	}
+	return strings.Join(r, ",")
 }
