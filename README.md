@@ -50,8 +50,11 @@ Once you have downloaded the repository:
   go build
   go test
 
-
   cd ../go-clang-compdb
+  go build
+  go test
+
+  cd ../go-clang-includes
   go build
   go test
 ```
