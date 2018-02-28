@@ -27,6 +27,20 @@ func assertEqualInt(t *testing.T, i1, i2 int) {
 	}
 }
 
+func assertStringEmpty(t *testing.T, s string) {
+	t.Helper()
+	if s != "" {
+		t.Fatalf("string not empty: %s", s)
+	}
+}
+
+func assertStringNotEmpty(t *testing.T, s string) {
+	t.Helper()
+	if s == "" {
+		t.Fatalf("string is empty")
+	}
+}
+
 func TestBasicParsing(t *testing.T) {
 	idx := clang.NewIndex(0, 1)
 	defer idx.Dispose()

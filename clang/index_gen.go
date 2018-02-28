@@ -81,7 +81,7 @@ func (i Index) Dispose() {
 
 	Parameter options A bitmask of options, a bitwise OR of CXGlobalOpt_XXX flags.
 */
-func (i Index) SetGlobalOptions(options uint32) {
+func (i Index) SetGlobalOptions(options GlobalOptFlags) {
 	C.clang_CXIndex_setGlobalOptions(i.c, C.uint(options))
 }
 
@@ -91,8 +91,8 @@ func (i Index) SetGlobalOptions(options uint32) {
 	Returns A bitmask of options, a bitwise OR of CXGlobalOpt_XXX flags that
 	are associated with the given CXIndex object.
 */
-func (i Index) GlobalOptions() uint32 {
-	return uint32(C.clang_CXIndex_getGlobalOptions(i.c))
+func (i Index) GlobalOptions() GlobalOptFlags {
+	return GlobalOptFlags(C.clang_CXIndex_getGlobalOptions(i.c))
 }
 
 /*
