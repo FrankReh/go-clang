@@ -416,7 +416,7 @@ func (tu TranslationUnit) Tokenize(r SourceRange) []Token {
 	freed with clang_disposeCodeCompleteResults(). If code
 	completion fails, returns NULL.
 */
-func (tu TranslationUnit) CodeCompleteAt(completeFilename string, completeLine uint32, completeColumn uint32, unsavedFiles []UnsavedFile, options uint32) *CodeCompleteResults {
+func (tu TranslationUnit) CodeCompleteAt(completeFilename string, completeLine uint32, completeColumn uint32, unsavedFiles []UnsavedFile, options CodeComplete_Flags) *CodeCompleteResults {
 	gos_unsavedFiles := (*reflect.SliceHeader)(unsafe.Pointer(&unsavedFiles))
 	cp_unsavedFiles := (*C.struct_CXUnsavedFile)(unsafe.Pointer(gos_unsavedFiles.Data))
 

@@ -3,7 +3,10 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // Flags that can be passed to clang_codeCompleteAt() to modify its behavior.
 //
@@ -14,25 +17,33 @@ type CodeComplete_Flags uint32
 const (
 	// Whether to include macros within the set of code completions returned.
 	CodeComplete_IncludeMacros CodeComplete_Flags = C.CXCodeComplete_IncludeMacros
+
 	// Whether to include code patterns for language constructs within the set of code completions, e.g., for loops.
-	CodeComplete_IncludeCodePatterns = C.CXCodeComplete_IncludeCodePatterns
+	CodeComplete_IncludeCodePatterns CodeComplete_Flags = C.CXCodeComplete_IncludeCodePatterns
+
 	// Whether to include brief documentation within the set of code completions returned.
-	CodeComplete_IncludeBriefComments = C.CXCodeComplete_IncludeBriefComments
+	CodeComplete_IncludeBriefComments CodeComplete_Flags = C.CXCodeComplete_IncludeBriefComments
 )
 
-func (ccf CodeComplete_Flags) Spelling() string {
-	switch ccf {
-	case CodeComplete_IncludeMacros:
-		return "CodeComplete=IncludeMacros"
-	case CodeComplete_IncludeCodePatterns:
-		return "CodeComplete=IncludeCodePatterns"
-	case CodeComplete_IncludeBriefComments:
-		return "CodeComplete=IncludeBriefComments"
-	}
-
-	return fmt.Sprintf("CodeComplete_Flags unkown %d", int(ccf))
-}
-
 func (ccf CodeComplete_Flags) String() string {
-	return ccf.Spelling()
+	var r []string
+	for _, t := range []struct {
+		flag CodeComplete_Flags
+		name string
+	}{
+		{CodeComplete_IncludeMacros, "IncludeMacros"},
+		{CodeComplete_IncludeCodePatterns, "IncludeCodePatterns"},
+		{CodeComplete_IncludeBriefComments, "IncludeBriefComments"},
+	} {
+		if ccf&t.flag == 0 {
+			continue
+		}
+		ccf &^= t.flag
+		r = append(r, t.name)
+	}
+	if ccf != 0 {
+		// This cast to a large intrinsic is important; it avoids recursive calls to String().
+		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(ccf)))
+	}
+	return strings.Join(r, ",")
 }
