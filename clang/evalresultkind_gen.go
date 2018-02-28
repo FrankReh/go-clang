@@ -9,35 +9,31 @@ type EvalResultKind uint32
 
 const (
 	Eval_Int            EvalResultKind = C.CXEval_Int
-	Eval_Float                         = C.CXEval_Float
-	Eval_ObjCStrLiteral                = C.CXEval_ObjCStrLiteral
-	Eval_StrLiteral                    = C.CXEval_StrLiteral
-	Eval_CFStr                         = C.CXEval_CFStr
-	Eval_Other                         = C.CXEval_Other
-	Eval_UnExposed                     = C.CXEval_UnExposed
+	Eval_Float          EvalResultKind = C.CXEval_Float
+	Eval_ObjCStrLiteral EvalResultKind = C.CXEval_ObjCStrLiteral
+	Eval_StrLiteral     EvalResultKind = C.CXEval_StrLiteral
+	Eval_CFStr          EvalResultKind = C.CXEval_CFStr
+	Eval_Other          EvalResultKind = C.CXEval_Other
+	Eval_UnExposed      EvalResultKind = C.CXEval_UnExposed
 )
 
-func (erk EvalResultKind) Spelling() string {
+func (erk EvalResultKind) String() string {
 	switch erk {
 	case Eval_Int:
-		return "Eval=Int"
+		return "Eval_Int"
 	case Eval_Float:
-		return "Eval=Float"
+		return "Eval_Float"
 	case Eval_ObjCStrLiteral:
-		return "Eval=ObjCStrLiteral"
+		return "Eval_ObjCStrLiteral"
 	case Eval_StrLiteral:
-		return "Eval=StrLiteral"
+		return "Eval_StrLiteral"
 	case Eval_CFStr:
-		return "Eval=CFStr"
+		return "Eval_CFStr"
 	case Eval_Other:
-		return "Eval=Other"
+		return "Eval_Other"
 	case Eval_UnExposed:
-		return "Eval=UnExposed"
+		return "Eval_UnExposed"
 	}
 
-	return fmt.Sprintf("EvalResultKind unkown %d", int(erk))
-}
-
-func (erk EvalResultKind) String() string {
-	return erk.Spelling()
+	return fmt.Sprintf("EvalResultKind unknown %d", int(erk))
 }
