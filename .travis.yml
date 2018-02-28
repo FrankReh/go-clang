@@ -1,17 +1,17 @@
 language: go
 go:
-  - 1.7.1
+  - 1.10
 
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.9
+      - llvm-toolchain-precise-5.0
     packages:
-      - llvm-3.9
-      - clang-3.9
-      - libclang1-3.9
-      - libclang-3.9-dev
+      - llvm-5.0
+      - clang-5.0
+      - libclang1-5.0
+      - libclang-5.0-dev
 
 env:
   global:
@@ -19,8 +19,8 @@ env:
 
 install:
   - mkdir -p /home/travis/bin
-  - sudo ln -s /usr/bin/clang-3.9 /home/travis/bin/clang
-  - sudo ln -s /usr/bin/llvm-config-3.9 /home/travis/bin/llvm-config
+  - sudo ln -s /usr/bin/clang-5.0 /home/travis/bin/clang
+  - sudo ln -s /usr/bin/llvm-config-5.0 /home/travis/bin/llvm-config
   - sudo ldconfig
 
   - llvm-config --version
@@ -32,8 +32,4 @@ install:
   - make install-tools
 
 script:
-  # Install the project
-  - make install
-
-  # Test without any coverage
-  - make test-full
+  - build-and-test.sh
