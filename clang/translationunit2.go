@@ -188,8 +188,8 @@ func (tu TranslationUnit) Dispose() {
 	of reparsing. The set of optimizations enabled may change from one version
 	to the next.
 */
-func (tu TranslationUnit) DefaultReparseOptions() uint32 {
-	return uint32(C.clang_defaultReparseOptions(tu.c))
+func (tu TranslationUnit) DefaultReparseOptions() Reparse_Flags {
+	return Reparse_Flags(C.clang_defaultReparseOptions(tu.c))
 }
 
 /*
@@ -231,7 +231,7 @@ func (tu TranslationUnit) DefaultReparseOptions() uint32 {
 	clang_disposeTranslationUnit(TU). The error codes returned by this
 	routine are described by the CXErrorCode enum.
 */
-func (tu TranslationUnit) ReparseTranslationUnit(unsavedFiles []UnsavedFile, options uint32) error {
+func (tu TranslationUnit) ReparseTranslationUnit(unsavedFiles []UnsavedFile, options Reparse_Flags) error {
 	gos_unsavedFiles := (*reflect.SliceHeader)(unsafe.Pointer(&unsavedFiles))
 	cp_unsavedFiles := (*C.struct_CXUnsavedFile)(unsafe.Pointer(gos_unsavedFiles.Data))
 

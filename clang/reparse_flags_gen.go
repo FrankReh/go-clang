@@ -19,15 +19,11 @@ const (
 	Reparse_None Reparse_Flags = C.CXReparse_None
 )
 
-func (rf Reparse_Flags) Spelling() string {
+func (rf Reparse_Flags) String() string {
 	switch rf {
 	case Reparse_None:
-		return "Reparse=None"
+		return ""
 	}
 
-	return fmt.Sprintf("Reparse_Flags unkown %d", int(rf))
-}
-
-func (rf Reparse_Flags) String() string {
-	return rf.Spelling()
+	return fmt.Sprintf("additional-bits(%x)", uint64(rf))
 }
