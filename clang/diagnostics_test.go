@@ -1,12 +1,14 @@
-package clang
+package clang_test
 
 import (
 	"strings"
 	"testing"
+
+	"github.com/frankreh/go-clang-v5.0/clang"
 )
 
 func TestDiagnostics(t *testing.T) {
-	idx := NewIndex(0, 0)
+	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("cursor.c", nil, nil, 0)
@@ -22,7 +24,7 @@ func TestDiagnostics(t *testing.T) {
 		}
 		t.Log(d)
 		t.Log(d.Severity(), d.Spelling())
-		t.Log(d.FormatDiagnostic(uint32(Diagnostic_DisplayCategoryName | Diagnostic_DisplaySourceLocation)))
+		t.Log(d.FormatDiagnostic(uint32(clang.Diagnostic_DisplayCategoryName | clang.Diagnostic_DisplaySourceLocation)))
 	}
 	assertTrue(t, ok)
 }

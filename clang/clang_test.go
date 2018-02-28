@@ -1,7 +1,9 @@
-package clang
+package clang_test
 
 import (
 	"testing"
+
+	"github.com/frankreh/go-clang-v5.0/clang"
 )
 
 func assertTrue(t *testing.T, b bool) {
@@ -26,7 +28,7 @@ func assertEqualInt(t *testing.T, i1, i2 int) {
 }
 
 func TestBasicParsing(t *testing.T) {
-	idx := NewIndex(0, 1)
+	idx := clang.NewIndex(0, 1)
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("../testdata/basicparsing.c", nil, nil, 0)
@@ -35,34 +37,34 @@ func TestBasicParsing(t *testing.T) {
 
 	found := 0
 
-	tu.TranslationUnitCursor().Visit(func(cursor, parent Cursor) ChildVisitResult {
+	tu.TranslationUnitCursor().Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
 		if cursor.IsNull() {
-			return ChildVisit_Continue
+			return clang.ChildVisit_Continue
 		}
 
 		switch cursor.Kind() {
-		case Cursor_FunctionDecl:
+		case clang.Cursor_FunctionDecl:
 			assertEqualString(t, "foo", cursor.Spelling())
 
 			found++
-		case Cursor_ParmDecl:
+		case clang.Cursor_ParmDecl:
 			assertEqualString(t, "bar", cursor.Spelling())
 
 			found++
 		}
 
-		return ChildVisit_Recurse
+		return clang.ChildVisit_Recurse
 	})
 
 	assertEqualInt(t, 2, found)
 }
 
 func TestReparse(t *testing.T) {
-	us := []UnsavedFile{
-		NewUnsavedFile("hello.cpp", "int world();"),
+	us := []clang.UnsavedFile{
+		clang.NewUnsavedFile("hello.cpp", "int world();"),
 	}
 
-	idx := NewIndex(0, 0)
+	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("hello.cpp", nil, us, 0)
@@ -70,33 +72,33 @@ func TestReparse(t *testing.T) {
 	defer tu.Dispose()
 
 	ok := false
-	tu.TranslationUnitCursor().Visit(func(cursor, parent Cursor) ChildVisitResult {
+	tu.TranslationUnitCursor().Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
 		if cursor.Spelling() == "world" {
 			ok = true
 
-			return ChildVisit_Break
+			return clang.ChildVisit_Break
 		}
 
-		return ChildVisit_Continue
+		return clang.ChildVisit_Continue
 	})
 	if !ok {
 		t.Error("Expected to find 'world', but didn't")
 	}
 
-	us[0] = NewUnsavedFile("hello.cpp", "int world2();")
+	us[0] = clang.NewUnsavedFile("hello.cpp", "int world2();")
 	tu.ReparseTranslationUnit(us, 0)
 
 	ok = false
-	tu.TranslationUnitCursor().Visit(func(cursor, parent Cursor) ChildVisitResult {
+	tu.TranslationUnitCursor().Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
 		if s := cursor.Spelling(); s == "world2" {
 			ok = true
 
-			return ChildVisit_Break
+			return clang.ChildVisit_Break
 		} else if s == "world" {
 			t.Errorf("'world' should no longer be part of the translationunit, but it still is")
 		}
 
-		return ChildVisit_Continue
+		return clang.ChildVisit_Continue
 	})
 	if !ok {
 		t.Error("Expected to find 'world2', but didn't")

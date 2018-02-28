@@ -1,7 +1,9 @@
-package clang
+package clang_test
 
 import (
 	"testing"
+
+	"github.com/frankreh/go-clang-v5.0/clang"
 )
 
 func TestCompilationDatabaseError(t *testing.T) {
@@ -10,14 +12,14 @@ func TestCompilationDatabaseError(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test inn short mode.")
 	}
-	_, err := FromDirectory("../testdata-not-there")
-	if err != CanNotLoadDatabaseErr {
-		t.Fatalf("expected %v", CanNotLoadDatabaseErr)
+	_, err := clang.FromDirectory("../testdata-not-there")
+	if err != clang.CanNotLoadDatabaseErr {
+		t.Fatalf("expected %v", clang.CanNotLoadDatabaseErr)
 	}
 }
 
 func TestCompilationDatabase(t *testing.T) {
-	db, err := FromDirectory("../testdata")
+	db, err := clang.FromDirectory("../testdata")
 	if err != nil {
 		t.Fatalf("error loading compilation database: %v", err)
 	}

@@ -1,16 +1,18 @@
-package clang
+package clang_test
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/frankreh/go-clang-v5.0/clang"
 )
 
 func TestResourceUsage(t *testing.T) {
-	us := []UnsavedFile{
-		NewUnsavedFile("hello.cpp", "int world();"),
+	us := []clang.UnsavedFile{
+		clang.NewUnsavedFile("hello.cpp", "int world();"),
 	}
 
-	idx := NewIndex(0, 0)
+	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("hello.cpp", nil, us, 0)
@@ -21,7 +23,7 @@ func TestResourceUsage(t *testing.T) {
 
 	ru0_slice_str_a := fmt.Sprintf("%v", ru0_slice)
 
-	us[0] = NewUnsavedFile("hello.cpp", " int world2();")
+	us[0] = clang.NewUnsavedFile("hello.cpp", " int world2();")
 	tu.ReparseTranslationUnit(us, 0)
 	assertTrue(t, tu.IsValid())
 

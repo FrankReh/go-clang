@@ -1,11 +1,13 @@
-package clang
+package clang_test
 
 import (
 	"testing"
+
+	"github.com/frankreh/go-clang-v5.0/clang"
 )
 
 func TestTargetInfo(t *testing.T) {
-	idx := NewIndex(0, 0)
+	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
 	tu := idx.ParseTranslationUnit("cursor.c", nil, nil, 0)
