@@ -63,7 +63,7 @@ Once you have downloaded the repository:
 | 10.12 Darwin | clang+llvm 5.0.0 |
 | 10.13 Darwin | clang+llvm 5.0.1 |
 | 4.9 Debian | clang+llvm 5.0.1 built for Debian8 |
-| 11 FreeeBSD | clang+llvm 5.0.1 built for FreeBSD10 |
+| 11 FreeBSD | clang+llvm 5.0.1 built for FreeBSD10 |
 
 All builds done with go1.10. This was also found to build and test successfully with the new vgo command.
 
