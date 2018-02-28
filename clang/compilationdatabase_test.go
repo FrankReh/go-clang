@@ -5,6 +5,11 @@ import (
 )
 
 func TestCompilationDatabaseError(t *testing.T) {
+	// This isn't a long test, but the error message that libclang puts out to the console
+	// is very distracting, so skip it during short tests.
+	if testing.Short() {
+		t.Skip("skipping test inn short mode.")
+	}
 	_, err := FromDirectory("../testdata-not-there")
 	if err != CanNotLoadDatabaseErr {
 		t.Fatalf("expected %v", CanNotLoadDatabaseErr)
