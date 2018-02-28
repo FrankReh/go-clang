@@ -19,15 +19,11 @@ const (
 	SaveTranslationUnit_None SaveTranslationUnit_Flags = C.CXSaveTranslationUnit_None
 )
 
-func (stuf SaveTranslationUnit_Flags) Spelling() string {
+func (stuf SaveTranslationUnit_Flags) String() string {
 	switch stuf {
 	case SaveTranslationUnit_None:
-		return "SaveTranslationUnit=None"
+		return ""
 	}
 
-	return fmt.Sprintf("SaveTranslationUnit_Flags unkown %d", int(stuf))
-}
-
-func (stuf SaveTranslationUnit_Flags) String() string {
-	return stuf.Spelling()
+	return fmt.Sprintf("additional-bits(%x)", uint64(stuf))
 }

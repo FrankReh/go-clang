@@ -128,8 +128,8 @@ func (tu TranslationUnit) Spelling() string {
 	set contains an unspecified set of options that save translation units with
 	the most commonly-requested data.
 */
-func (tu TranslationUnit) DefaultSaveOptions() uint32 {
-	return uint32(C.clang_defaultSaveOptions(tu.c))
+func (tu TranslationUnit) DefaultSaveOptions() SaveTranslationUnit_Flags {
+	return SaveTranslationUnit_Flags(C.clang_defaultSaveOptions(tu.c))
 }
 
 /*
@@ -155,11 +155,11 @@ func (tu TranslationUnit) DefaultSaveOptions() uint32 {
 	enumeration. Zero (CXSaveError_None) indicates that the translation unit was
 	saved successfully, while a non-zero value indicates that a problem occurred.
 */
-func (tu TranslationUnit) SaveTranslationUnit(fileName string) error {
+func (tu TranslationUnit) SaveTranslationUnit(fileName string, options SaveTranslationUnit_Flags) error {
 	c_fileName := C.CString(fileName)
 	defer C.free(unsafe.Pointer(c_fileName))
 
-	return convertSaveErrorCode(C.enum_CXSaveError(C.clang_saveTranslationUnit(tu.c, c_fileName, C.uint(0))))
+	return convertSaveErrorCode(C.enum_CXSaveError(C.clang_saveTranslationUnit(tu.c, c_fileName, C.uint(options))))
 }
 
 /*
