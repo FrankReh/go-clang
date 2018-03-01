@@ -13,26 +13,22 @@ type IdxEntityCXXTemplateKind uint32
 
 const (
 	IdxEntity_NonTemplate                   IdxEntityCXXTemplateKind = C.CXIdxEntity_NonTemplate
-	IdxEntity_Template                                               = C.CXIdxEntity_Template
-	IdxEntity_TemplatePartialSpecialization                          = C.CXIdxEntity_TemplatePartialSpecialization
-	IdxEntity_TemplateSpecialization                                 = C.CXIdxEntity_TemplateSpecialization
+	IdxEntity_Template                      IdxEntityCXXTemplateKind = C.CXIdxEntity_Template
+	IdxEntity_TemplatePartialSpecialization IdxEntityCXXTemplateKind = C.CXIdxEntity_TemplatePartialSpecialization
+	IdxEntity_TemplateSpecialization        IdxEntityCXXTemplateKind = C.CXIdxEntity_TemplateSpecialization
 )
 
-func (iecxxtk IdxEntityCXXTemplateKind) Spelling() string {
+func (iecxxtk IdxEntityCXXTemplateKind) String() string {
 	switch iecxxtk {
 	case IdxEntity_NonTemplate:
-		return "IdxEntity=NonTemplate"
+		return "IdxEntity_NonTemplate"
 	case IdxEntity_Template:
-		return "IdxEntity=Template"
+		return "IdxEntity_Template"
 	case IdxEntity_TemplatePartialSpecialization:
-		return "IdxEntity=TemplatePartialSpecialization"
+		return "IdxEntity_TemplatePartialSpecialization"
 	case IdxEntity_TemplateSpecialization:
-		return "IdxEntity=TemplateSpecialization"
+		return "IdxEntity_TemplateSpecialization"
 	}
 
-	return fmt.Sprintf("IdxEntityCXXTemplateKind unkown %d", int(iecxxtk))
-}
-
-func (iecxxtk IdxEntityCXXTemplateKind) String() string {
-	return iecxxtk.Spelling()
+	return fmt.Sprintf("IdxEntityCXXTemplateKind unknown %d", int(iecxxtk))
 }
