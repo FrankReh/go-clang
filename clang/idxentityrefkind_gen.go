@@ -11,21 +11,18 @@ type IdxEntityRefKind uint32
 const (
 	// The entity is referenced directly in user's code.
 	IdxEntityRef_Direct IdxEntityRefKind = C.CXIdxEntityRef_Direct
+
 	// An implicit reference, e.g. a reference of an Objective-C method via the dot syntax.
-	IdxEntityRef_Implicit = C.CXIdxEntityRef_Implicit
+	IdxEntityRef_Implicit IdxEntityRefKind = C.CXIdxEntityRef_Implicit
 )
 
-func (ierk IdxEntityRefKind) Spelling() string {
+func (ierk IdxEntityRefKind) String() string {
 	switch ierk {
 	case IdxEntityRef_Direct:
-		return "IdxEntityRef=Direct"
+		return "IdxEntityRef_Direct"
 	case IdxEntityRef_Implicit:
-		return "IdxEntityRef=Implicit"
+		return "IdxEntityRef_Implicit"
 	}
 
-	return fmt.Sprintf("IdxEntityRefKind unkown %d", int(ierk))
-}
-
-func (ierk IdxEntityRefKind) String() string {
-	return ierk.Spelling()
+	return fmt.Sprintf("IdxEntityRefKind unknown %d", int(ierk))
 }
