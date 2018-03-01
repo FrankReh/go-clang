@@ -9,26 +9,22 @@ type IdxAttrKind uint32
 
 const (
 	IdxAttr_Unexposed          IdxAttrKind = C.CXIdxAttr_Unexposed
-	IdxAttr_IBAction                       = C.CXIdxAttr_IBAction
-	IdxAttr_IBOutlet                       = C.CXIdxAttr_IBOutlet
-	IdxAttr_IBOutletCollection             = C.CXIdxAttr_IBOutletCollection
+	IdxAttr_IBAction           IdxAttrKind = C.CXIdxAttr_IBAction
+	IdxAttr_IBOutlet           IdxAttrKind = C.CXIdxAttr_IBOutlet
+	IdxAttr_IBOutletCollection IdxAttrKind = C.CXIdxAttr_IBOutletCollection
 )
 
-func (iak IdxAttrKind) Spelling() string {
+func (iak IdxAttrKind) String() string {
 	switch iak {
 	case IdxAttr_Unexposed:
-		return "IdxAttr=Unexposed"
+		return "IdxAttr_Unexposed"
 	case IdxAttr_IBAction:
-		return "IdxAttr=IBAction"
+		return "IdxAttr_IBAction"
 	case IdxAttr_IBOutlet:
-		return "IdxAttr=IBOutlet"
+		return "IdxAttr_IBOutlet"
 	case IdxAttr_IBOutletCollection:
-		return "IdxAttr=IBOutletCollection"
+		return "IdxAttr_IBOutletCollection"
 	}
 
-	return fmt.Sprintf("IdxAttrKind unkown %d", int(iak))
-}
-
-func (iak IdxAttrKind) String() string {
-	return iak.Spelling()
+	return fmt.Sprintf("IdxAttrKind unknown %d", int(iak))
 }
