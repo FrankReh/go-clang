@@ -9,23 +9,19 @@ type IdxObjCContainerKind uint32
 
 const (
 	IdxObjCContainer_ForwardRef     IdxObjCContainerKind = C.CXIdxObjCContainer_ForwardRef
-	IdxObjCContainer_Interface                           = C.CXIdxObjCContainer_Interface
-	IdxObjCContainer_Implementation                      = C.CXIdxObjCContainer_Implementation
+	IdxObjCContainer_Interface      IdxObjCContainerKind = C.CXIdxObjCContainer_Interface
+	IdxObjCContainer_Implementation IdxObjCContainerKind = C.CXIdxObjCContainer_Implementation
 )
 
-func (iocck IdxObjCContainerKind) Spelling() string {
+func (iocck IdxObjCContainerKind) String() string {
 	switch iocck {
 	case IdxObjCContainer_ForwardRef:
-		return "IdxObjCContainer=ForwardRef"
+		return "IdxObjCContainer_ForwardRef"
 	case IdxObjCContainer_Interface:
-		return "IdxObjCContainer=Interface"
+		return "IdxObjCContainer_Interface"
 	case IdxObjCContainer_Implementation:
-		return "IdxObjCContainer=Implementation"
+		return "IdxObjCContainer_Implementation"
 	}
 
-	return fmt.Sprintf("IdxObjCContainerKind unkown %d", int(iocck))
-}
-
-func (iocck IdxObjCContainerKind) String() string {
-	return iocck.Spelling()
+	return fmt.Sprintf("IdxObjCContainerKind unknown %d", int(iocck))
 }
