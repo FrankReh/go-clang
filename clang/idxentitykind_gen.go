@@ -9,32 +9,32 @@ type IdxEntityKind uint32
 
 const (
 	IdxEntity_Unexposed             IdxEntityKind = C.CXIdxEntity_Unexposed
-	IdxEntity_Typedef                             = C.CXIdxEntity_Typedef
-	IdxEntity_Function                            = C.CXIdxEntity_Function
-	IdxEntity_Variable                            = C.CXIdxEntity_Variable
-	IdxEntity_Field                               = C.CXIdxEntity_Field
-	IdxEntity_EnumConstant                        = C.CXIdxEntity_EnumConstant
-	IdxEntity_ObjCClass                           = C.CXIdxEntity_ObjCClass
-	IdxEntity_ObjCProtocol                        = C.CXIdxEntity_ObjCProtocol
-	IdxEntity_ObjCCategory                        = C.CXIdxEntity_ObjCCategory
-	IdxEntity_ObjCInstanceMethod                  = C.CXIdxEntity_ObjCInstanceMethod
-	IdxEntity_ObjCClassMethod                     = C.CXIdxEntity_ObjCClassMethod
-	IdxEntity_ObjCProperty                        = C.CXIdxEntity_ObjCProperty
-	IdxEntity_ObjCIvar                            = C.CXIdxEntity_ObjCIvar
-	IdxEntity_Enum                                = C.CXIdxEntity_Enum
-	IdxEntity_Struct                              = C.CXIdxEntity_Struct
-	IdxEntity_Union                               = C.CXIdxEntity_Union
-	IdxEntity_CXXClass                            = C.CXIdxEntity_CXXClass
-	IdxEntity_CXXNamespace                        = C.CXIdxEntity_CXXNamespace
-	IdxEntity_CXXNamespaceAlias                   = C.CXIdxEntity_CXXNamespaceAlias
-	IdxEntity_CXXStaticVariable                   = C.CXIdxEntity_CXXStaticVariable
-	IdxEntity_CXXStaticMethod                     = C.CXIdxEntity_CXXStaticMethod
-	IdxEntity_CXXInstanceMethod                   = C.CXIdxEntity_CXXInstanceMethod
-	IdxEntity_CXXConstructor                      = C.CXIdxEntity_CXXConstructor
-	IdxEntity_CXXDestructor                       = C.CXIdxEntity_CXXDestructor
-	IdxEntity_CXXConversionFunction               = C.CXIdxEntity_CXXConversionFunction
-	IdxEntity_CXXTypeAlias                        = C.CXIdxEntity_CXXTypeAlias
-	IdxEntity_CXXInterface                        = C.CXIdxEntity_CXXInterface
+	IdxEntity_Typedef               IdxEntityKind = C.CXIdxEntity_Typedef
+	IdxEntity_Function              IdxEntityKind = C.CXIdxEntity_Function
+	IdxEntity_Variable              IdxEntityKind = C.CXIdxEntity_Variable
+	IdxEntity_Field                 IdxEntityKind = C.CXIdxEntity_Field
+	IdxEntity_EnumConstant          IdxEntityKind = C.CXIdxEntity_EnumConstant
+	IdxEntity_ObjCClass             IdxEntityKind = C.CXIdxEntity_ObjCClass
+	IdxEntity_ObjCProtocol          IdxEntityKind = C.CXIdxEntity_ObjCProtocol
+	IdxEntity_ObjCCategory          IdxEntityKind = C.CXIdxEntity_ObjCCategory
+	IdxEntity_ObjCInstanceMethod    IdxEntityKind = C.CXIdxEntity_ObjCInstanceMethod
+	IdxEntity_ObjCClassMethod       IdxEntityKind = C.CXIdxEntity_ObjCClassMethod
+	IdxEntity_ObjCProperty          IdxEntityKind = C.CXIdxEntity_ObjCProperty
+	IdxEntity_ObjCIvar              IdxEntityKind = C.CXIdxEntity_ObjCIvar
+	IdxEntity_Enum                  IdxEntityKind = C.CXIdxEntity_Enum
+	IdxEntity_Struct                IdxEntityKind = C.CXIdxEntity_Struct
+	IdxEntity_Union                 IdxEntityKind = C.CXIdxEntity_Union
+	IdxEntity_CXXClass              IdxEntityKind = C.CXIdxEntity_CXXClass
+	IdxEntity_CXXNamespace          IdxEntityKind = C.CXIdxEntity_CXXNamespace
+	IdxEntity_CXXNamespaceAlias     IdxEntityKind = C.CXIdxEntity_CXXNamespaceAlias
+	IdxEntity_CXXStaticVariable     IdxEntityKind = C.CXIdxEntity_CXXStaticVariable
+	IdxEntity_CXXStaticMethod       IdxEntityKind = C.CXIdxEntity_CXXStaticMethod
+	IdxEntity_CXXInstanceMethod     IdxEntityKind = C.CXIdxEntity_CXXInstanceMethod
+	IdxEntity_CXXConstructor        IdxEntityKind = C.CXIdxEntity_CXXConstructor
+	IdxEntity_CXXDestructor         IdxEntityKind = C.CXIdxEntity_CXXDestructor
+	IdxEntity_CXXConversionFunction IdxEntityKind = C.CXIdxEntity_CXXConversionFunction
+	IdxEntity_CXXTypeAlias          IdxEntityKind = C.CXIdxEntity_CXXTypeAlias
+	IdxEntity_CXXInterface          IdxEntityKind = C.CXIdxEntity_CXXInterface
 )
 
 func (iek IdxEntityKind) IsEntityObjCContainerKind() bool {
@@ -43,67 +43,63 @@ func (iek IdxEntityKind) IsEntityObjCContainerKind() bool {
 	return o != C.int(0)
 }
 
-func (iek IdxEntityKind) Spelling() string {
+func (iek IdxEntityKind) String() string {
 	switch iek {
 	case IdxEntity_Unexposed:
-		return "IdxEntity=Unexposed"
+		return "IdxEntity_Unexposed"
 	case IdxEntity_Typedef:
-		return "IdxEntity=Typedef"
+		return "IdxEntity_Typedef"
 	case IdxEntity_Function:
-		return "IdxEntity=Function"
+		return "IdxEntity_Function"
 	case IdxEntity_Variable:
-		return "IdxEntity=Variable"
+		return "IdxEntity_Variable"
 	case IdxEntity_Field:
-		return "IdxEntity=Field"
+		return "IdxEntity_Field"
 	case IdxEntity_EnumConstant:
-		return "IdxEntity=EnumConstant"
+		return "IdxEntity_EnumConstant"
 	case IdxEntity_ObjCClass:
-		return "IdxEntity=ObjCClass"
+		return "IdxEntity_ObjCClass"
 	case IdxEntity_ObjCProtocol:
-		return "IdxEntity=ObjCProtocol"
+		return "IdxEntity_ObjCProtocol"
 	case IdxEntity_ObjCCategory:
-		return "IdxEntity=ObjCCategory"
+		return "IdxEntity_ObjCCategory"
 	case IdxEntity_ObjCInstanceMethod:
-		return "IdxEntity=ObjCInstanceMethod"
+		return "IdxEntity_ObjCInstanceMethod"
 	case IdxEntity_ObjCClassMethod:
-		return "IdxEntity=ObjCClassMethod"
+		return "IdxEntity_ObjCClassMethod"
 	case IdxEntity_ObjCProperty:
-		return "IdxEntity=ObjCProperty"
+		return "IdxEntity_ObjCProperty"
 	case IdxEntity_ObjCIvar:
-		return "IdxEntity=ObjCIvar"
+		return "IdxEntity_ObjCIvar"
 	case IdxEntity_Enum:
-		return "IdxEntity=Enum"
+		return "IdxEntity_Enum"
 	case IdxEntity_Struct:
-		return "IdxEntity=Struct"
+		return "IdxEntity_Struct"
 	case IdxEntity_Union:
-		return "IdxEntity=Union"
+		return "IdxEntity_Union"
 	case IdxEntity_CXXClass:
-		return "IdxEntity=CXXClass"
+		return "IdxEntity_CXXClass"
 	case IdxEntity_CXXNamespace:
-		return "IdxEntity=CXXNamespace"
+		return "IdxEntity_CXXNamespace"
 	case IdxEntity_CXXNamespaceAlias:
-		return "IdxEntity=CXXNamespaceAlias"
+		return "IdxEntity_CXXNamespaceAlias"
 	case IdxEntity_CXXStaticVariable:
-		return "IdxEntity=CXXStaticVariable"
+		return "IdxEntity_CXXStaticVariable"
 	case IdxEntity_CXXStaticMethod:
-		return "IdxEntity=CXXStaticMethod"
+		return "IdxEntity_CXXStaticMethod"
 	case IdxEntity_CXXInstanceMethod:
-		return "IdxEntity=CXXInstanceMethod"
+		return "IdxEntity_CXXInstanceMethod"
 	case IdxEntity_CXXConstructor:
-		return "IdxEntity=CXXConstructor"
+		return "IdxEntity_CXXConstructor"
 	case IdxEntity_CXXDestructor:
-		return "IdxEntity=CXXDestructor"
+		return "IdxEntity_CXXDestructor"
 	case IdxEntity_CXXConversionFunction:
-		return "IdxEntity=CXXConversionFunction"
+		return "IdxEntity_CXXConversionFunction"
 	case IdxEntity_CXXTypeAlias:
-		return "IdxEntity=CXXTypeAlias"
+		return "IdxEntity_CXXTypeAlias"
 	case IdxEntity_CXXInterface:
-		return "IdxEntity=CXXInterface"
+		return "IdxEntity_CXXInterface"
 	}
 
-	return fmt.Sprintf("IdxEntityKind unkown %d", int(iek))
-}
-
-func (iek IdxEntityKind) String() string {
-	return iek.Spelling()
+	return fmt.Sprintf("IdxEntityKind unknown %d", int(iek))
 }
