@@ -3,7 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
 
 // Data for IndexerCallbacks#indexEntityReference.
 type IdxEntityRefKind uint32
@@ -15,14 +14,3 @@ const (
 	// An implicit reference, e.g. a reference of an Objective-C method via the dot syntax.
 	IdxEntityRef_Implicit IdxEntityRefKind = C.CXIdxEntityRef_Implicit
 )
-
-func (ierk IdxEntityRefKind) String() string {
-	switch ierk {
-	case IdxEntityRef_Direct:
-		return "IdxEntityRef_Direct"
-	case IdxEntityRef_Implicit:
-		return "IdxEntityRef_Implicit"
-	}
-
-	return fmt.Sprintf("IdxEntityRefKind unknown %d", int(ierk))
-}

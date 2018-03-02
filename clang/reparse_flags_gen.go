@@ -3,7 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
 
 /*
 	Flags that control the reparsing of translation units.
@@ -18,12 +17,3 @@ const (
 	// Used to indicate that no special reparsing options are needed.
 	Reparse_None Reparse_Flags = C.CXReparse_None
 )
-
-func (rf Reparse_Flags) String() string {
-	switch rf {
-	case Reparse_None:
-		return ""
-	}
-
-	return fmt.Sprintf("additional-bits(%x)", uint64(rf))
-}

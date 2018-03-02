@@ -3,7 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
 
 type IdxEntityKind uint32
 
@@ -41,65 +40,4 @@ func (iek IdxEntityKind) IsEntityObjCContainerKind() bool {
 	o := C.clang_index_isEntityObjCContainerKind(C.CXIdxEntityKind(iek))
 
 	return o != C.int(0)
-}
-
-func (iek IdxEntityKind) String() string {
-	switch iek {
-	case IdxEntity_Unexposed:
-		return "IdxEntity_Unexposed"
-	case IdxEntity_Typedef:
-		return "IdxEntity_Typedef"
-	case IdxEntity_Function:
-		return "IdxEntity_Function"
-	case IdxEntity_Variable:
-		return "IdxEntity_Variable"
-	case IdxEntity_Field:
-		return "IdxEntity_Field"
-	case IdxEntity_EnumConstant:
-		return "IdxEntity_EnumConstant"
-	case IdxEntity_ObjCClass:
-		return "IdxEntity_ObjCClass"
-	case IdxEntity_ObjCProtocol:
-		return "IdxEntity_ObjCProtocol"
-	case IdxEntity_ObjCCategory:
-		return "IdxEntity_ObjCCategory"
-	case IdxEntity_ObjCInstanceMethod:
-		return "IdxEntity_ObjCInstanceMethod"
-	case IdxEntity_ObjCClassMethod:
-		return "IdxEntity_ObjCClassMethod"
-	case IdxEntity_ObjCProperty:
-		return "IdxEntity_ObjCProperty"
-	case IdxEntity_ObjCIvar:
-		return "IdxEntity_ObjCIvar"
-	case IdxEntity_Enum:
-		return "IdxEntity_Enum"
-	case IdxEntity_Struct:
-		return "IdxEntity_Struct"
-	case IdxEntity_Union:
-		return "IdxEntity_Union"
-	case IdxEntity_CXXClass:
-		return "IdxEntity_CXXClass"
-	case IdxEntity_CXXNamespace:
-		return "IdxEntity_CXXNamespace"
-	case IdxEntity_CXXNamespaceAlias:
-		return "IdxEntity_CXXNamespaceAlias"
-	case IdxEntity_CXXStaticVariable:
-		return "IdxEntity_CXXStaticVariable"
-	case IdxEntity_CXXStaticMethod:
-		return "IdxEntity_CXXStaticMethod"
-	case IdxEntity_CXXInstanceMethod:
-		return "IdxEntity_CXXInstanceMethod"
-	case IdxEntity_CXXConstructor:
-		return "IdxEntity_CXXConstructor"
-	case IdxEntity_CXXDestructor:
-		return "IdxEntity_CXXDestructor"
-	case IdxEntity_CXXConversionFunction:
-		return "IdxEntity_CXXConversionFunction"
-	case IdxEntity_CXXTypeAlias:
-		return "IdxEntity_CXXTypeAlias"
-	case IdxEntity_CXXInterface:
-		return "IdxEntity_CXXInterface"
-	}
-
-	return fmt.Sprintf("IdxEntityKind unknown %d", int(iek))
 }

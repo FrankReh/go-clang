@@ -11,367 +11,363 @@ const (
 	// Represents an invalid type (e.g., where no type is available).
 	Type_Invalid TypeKind = C.CXType_Invalid
 	// A type whose specific kind is not exposed via this interface.
-	Type_Unexposed = C.CXType_Unexposed
+	Type_Unexposed TypeKind = C.CXType_Unexposed
 	// A type whose specific kind is not exposed via this interface.
-	Type_Void = C.CXType_Void
+	Type_Void TypeKind = C.CXType_Void
 	// A type whose specific kind is not exposed via this interface.
-	Type_Bool = C.CXType_Bool
+	Type_Bool TypeKind = C.CXType_Bool
 	// A type whose specific kind is not exposed via this interface.
-	Type_Char_U = C.CXType_Char_U
+	Type_Char_U TypeKind = C.CXType_Char_U
 	// A type whose specific kind is not exposed via this interface.
-	Type_UChar = C.CXType_UChar
+	Type_UChar TypeKind = C.CXType_UChar
 	// A type whose specific kind is not exposed via this interface.
-	Type_Char16 = C.CXType_Char16
+	Type_Char16 TypeKind = C.CXType_Char16
 	// A type whose specific kind is not exposed via this interface.
-	Type_Char32 = C.CXType_Char32
+	Type_Char32 TypeKind = C.CXType_Char32
 	// A type whose specific kind is not exposed via this interface.
-	Type_UShort = C.CXType_UShort
+	Type_UShort TypeKind = C.CXType_UShort
 	// A type whose specific kind is not exposed via this interface.
-	Type_UInt = C.CXType_UInt
+	Type_UInt TypeKind = C.CXType_UInt
 	// A type whose specific kind is not exposed via this interface.
-	Type_ULong = C.CXType_ULong
+	Type_ULong TypeKind = C.CXType_ULong
 	// A type whose specific kind is not exposed via this interface.
-	Type_ULongLong = C.CXType_ULongLong
+	Type_ULongLong TypeKind = C.CXType_ULongLong
 	// A type whose specific kind is not exposed via this interface.
-	Type_UInt128 = C.CXType_UInt128
+	Type_UInt128 TypeKind = C.CXType_UInt128
 	// A type whose specific kind is not exposed via this interface.
-	Type_Char_S = C.CXType_Char_S
+	Type_Char_S TypeKind = C.CXType_Char_S
 	// A type whose specific kind is not exposed via this interface.
-	Type_SChar = C.CXType_SChar
+	Type_SChar TypeKind = C.CXType_SChar
 	// A type whose specific kind is not exposed via this interface.
-	Type_WChar = C.CXType_WChar
+	Type_WChar TypeKind = C.CXType_WChar
 	// A type whose specific kind is not exposed via this interface.
-	Type_Short = C.CXType_Short
+	Type_Short TypeKind = C.CXType_Short
 	// A type whose specific kind is not exposed via this interface.
-	Type_Int = C.CXType_Int
+	Type_Int TypeKind = C.CXType_Int
 	// A type whose specific kind is not exposed via this interface.
-	Type_Long = C.CXType_Long
+	Type_Long TypeKind = C.CXType_Long
 	// A type whose specific kind is not exposed via this interface.
-	Type_LongLong = C.CXType_LongLong
+	Type_LongLong TypeKind = C.CXType_LongLong
 	// A type whose specific kind is not exposed via this interface.
-	Type_Int128 = C.CXType_Int128
+	Type_Int128 TypeKind = C.CXType_Int128
 	// A type whose specific kind is not exposed via this interface.
-	Type_Float = C.CXType_Float
+	Type_Float TypeKind = C.CXType_Float
 	// A type whose specific kind is not exposed via this interface.
-	Type_Double = C.CXType_Double
+	Type_Double TypeKind = C.CXType_Double
 	// A type whose specific kind is not exposed via this interface.
-	Type_LongDouble = C.CXType_LongDouble
+	Type_LongDouble TypeKind = C.CXType_LongDouble
 	// A type whose specific kind is not exposed via this interface.
-	Type_NullPtr = C.CXType_NullPtr
+	Type_NullPtr TypeKind = C.CXType_NullPtr
 	// A type whose specific kind is not exposed via this interface.
-	Type_Overload = C.CXType_Overload
+	Type_Overload TypeKind = C.CXType_Overload
 	// A type whose specific kind is not exposed via this interface.
-	Type_Dependent = C.CXType_Dependent
+	Type_Dependent TypeKind = C.CXType_Dependent
 	// A type whose specific kind is not exposed via this interface.
-	Type_ObjCId = C.CXType_ObjCId
+	Type_ObjCId TypeKind = C.CXType_ObjCId
 	// A type whose specific kind is not exposed via this interface.
-	Type_ObjCClass = C.CXType_ObjCClass
+	Type_ObjCClass TypeKind = C.CXType_ObjCClass
 	// A type whose specific kind is not exposed via this interface.
-	Type_ObjCSel = C.CXType_ObjCSel
+	Type_ObjCSel TypeKind = C.CXType_ObjCSel
 	// A type whose specific kind is not exposed via this interface.
-	Type_Float128 = C.CXType_Float128
+	Type_Float128 TypeKind = C.CXType_Float128
 	// A type whose specific kind is not exposed via this interface.
-	Type_Half = C.CXType_Half
+	Type_Half TypeKind = C.CXType_Half
 	// A type whose specific kind is not exposed via this interface.
-	Type_FirstBuiltin = C.CXType_FirstBuiltin
+	Type_FirstBuiltin TypeKind = C.CXType_FirstBuiltin
 	// A type whose specific kind is not exposed via this interface.
-	Type_LastBuiltin = C.CXType_LastBuiltin
+	Type_LastBuiltin TypeKind = C.CXType_LastBuiltin
 	// A type whose specific kind is not exposed via this interface.
-	Type_Complex = C.CXType_Complex
+	Type_Complex TypeKind = C.CXType_Complex
 	// A type whose specific kind is not exposed via this interface.
-	Type_Pointer = C.CXType_Pointer
+	Type_Pointer TypeKind = C.CXType_Pointer
 	// A type whose specific kind is not exposed via this interface.
-	Type_BlockPointer = C.CXType_BlockPointer
+	Type_BlockPointer TypeKind = C.CXType_BlockPointer
 	// A type whose specific kind is not exposed via this interface.
-	Type_LValueReference = C.CXType_LValueReference
+	Type_LValueReference TypeKind = C.CXType_LValueReference
 	// A type whose specific kind is not exposed via this interface.
-	Type_RValueReference = C.CXType_RValueReference
+	Type_RValueReference TypeKind = C.CXType_RValueReference
 	// A type whose specific kind is not exposed via this interface.
-	Type_Record = C.CXType_Record
+	Type_Record TypeKind = C.CXType_Record
 	// A type whose specific kind is not exposed via this interface.
-	Type_Enum = C.CXType_Enum
+	Type_Enum TypeKind = C.CXType_Enum
 	// A type whose specific kind is not exposed via this interface.
-	Type_Typedef = C.CXType_Typedef
+	Type_Typedef TypeKind = C.CXType_Typedef
 	// A type whose specific kind is not exposed via this interface.
-	Type_ObjCInterface = C.CXType_ObjCInterface
+	Type_ObjCInterface TypeKind = C.CXType_ObjCInterface
 	// A type whose specific kind is not exposed via this interface.
-	Type_ObjCObjectPointer = C.CXType_ObjCObjectPointer
+	Type_ObjCObjectPointer TypeKind = C.CXType_ObjCObjectPointer
 	// A type whose specific kind is not exposed via this interface.
-	Type_FunctionNoProto = C.CXType_FunctionNoProto
+	Type_FunctionNoProto TypeKind = C.CXType_FunctionNoProto
 	// A type whose specific kind is not exposed via this interface.
-	Type_FunctionProto = C.CXType_FunctionProto
+	Type_FunctionProto TypeKind = C.CXType_FunctionProto
 	// A type whose specific kind is not exposed via this interface.
-	Type_ConstantArray = C.CXType_ConstantArray
+	Type_ConstantArray TypeKind = C.CXType_ConstantArray
 	// A type whose specific kind is not exposed via this interface.
-	Type_Vector = C.CXType_Vector
+	Type_Vector TypeKind = C.CXType_Vector
 	// A type whose specific kind is not exposed via this interface.
-	Type_IncompleteArray = C.CXType_IncompleteArray
+	Type_IncompleteArray TypeKind = C.CXType_IncompleteArray
 	// A type whose specific kind is not exposed via this interface.
-	Type_VariableArray = C.CXType_VariableArray
+	Type_VariableArray TypeKind = C.CXType_VariableArray
 	// A type whose specific kind is not exposed via this interface.
-	Type_DependentSizedArray = C.CXType_DependentSizedArray
+	Type_DependentSizedArray TypeKind = C.CXType_DependentSizedArray
 	// A type whose specific kind is not exposed via this interface.
-	Type_MemberPointer = C.CXType_MemberPointer
+	Type_MemberPointer TypeKind = C.CXType_MemberPointer
 	// A type whose specific kind is not exposed via this interface.
-	Type_Auto = C.CXType_Auto
+	Type_Auto TypeKind = C.CXType_Auto
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_Elaborated = C.CXType_Elaborated
+	Type_Elaborated TypeKind = C.CXType_Elaborated
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_Pipe = C.CXType_Pipe
+	Type_Pipe TypeKind = C.CXType_Pipe
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dRO = C.CXType_OCLImage1dRO
+	Type_OCLImage1dRO TypeKind = C.CXType_OCLImage1dRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dArrayRO = C.CXType_OCLImage1dArrayRO
+	Type_OCLImage1dArrayRO TypeKind = C.CXType_OCLImage1dArrayRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dBufferRO = C.CXType_OCLImage1dBufferRO
+	Type_OCLImage1dBufferRO TypeKind = C.CXType_OCLImage1dBufferRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dRO = C.CXType_OCLImage2dRO
+	Type_OCLImage2dRO TypeKind = C.CXType_OCLImage2dRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayRO = C.CXType_OCLImage2dArrayRO
+	Type_OCLImage2dArrayRO TypeKind = C.CXType_OCLImage2dArrayRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dDepthRO = C.CXType_OCLImage2dDepthRO
+	Type_OCLImage2dDepthRO TypeKind = C.CXType_OCLImage2dDepthRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayDepthRO = C.CXType_OCLImage2dArrayDepthRO
+	Type_OCLImage2dArrayDepthRO TypeKind = C.CXType_OCLImage2dArrayDepthRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dMSAARO = C.CXType_OCLImage2dMSAARO
+	Type_OCLImage2dMSAARO TypeKind = C.CXType_OCLImage2dMSAARO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayMSAARO = C.CXType_OCLImage2dArrayMSAARO
+	Type_OCLImage2dArrayMSAARO TypeKind = C.CXType_OCLImage2dArrayMSAARO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dMSAADepthRO = C.CXType_OCLImage2dMSAADepthRO
+	Type_OCLImage2dMSAADepthRO TypeKind = C.CXType_OCLImage2dMSAADepthRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayMSAADepthRO = C.CXType_OCLImage2dArrayMSAADepthRO
+	Type_OCLImage2dArrayMSAADepthRO TypeKind = C.CXType_OCLImage2dArrayMSAADepthRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage3dRO = C.CXType_OCLImage3dRO
+	Type_OCLImage3dRO TypeKind = C.CXType_OCLImage3dRO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dWO = C.CXType_OCLImage1dWO
+	Type_OCLImage1dWO TypeKind = C.CXType_OCLImage1dWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dArrayWO = C.CXType_OCLImage1dArrayWO
+	Type_OCLImage1dArrayWO TypeKind = C.CXType_OCLImage1dArrayWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dBufferWO = C.CXType_OCLImage1dBufferWO
+	Type_OCLImage1dBufferWO TypeKind = C.CXType_OCLImage1dBufferWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dWO = C.CXType_OCLImage2dWO
+	Type_OCLImage2dWO TypeKind = C.CXType_OCLImage2dWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayWO = C.CXType_OCLImage2dArrayWO
+	Type_OCLImage2dArrayWO TypeKind = C.CXType_OCLImage2dArrayWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dDepthWO = C.CXType_OCLImage2dDepthWO
+	Type_OCLImage2dDepthWO TypeKind = C.CXType_OCLImage2dDepthWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayDepthWO = C.CXType_OCLImage2dArrayDepthWO
+	Type_OCLImage2dArrayDepthWO TypeKind = C.CXType_OCLImage2dArrayDepthWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dMSAAWO = C.CXType_OCLImage2dMSAAWO
+	Type_OCLImage2dMSAAWO TypeKind = C.CXType_OCLImage2dMSAAWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayMSAAWO = C.CXType_OCLImage2dArrayMSAAWO
+	Type_OCLImage2dArrayMSAAWO TypeKind = C.CXType_OCLImage2dArrayMSAAWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dMSAADepthWO = C.CXType_OCLImage2dMSAADepthWO
+	Type_OCLImage2dMSAADepthWO TypeKind = C.CXType_OCLImage2dMSAADepthWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayMSAADepthWO = C.CXType_OCLImage2dArrayMSAADepthWO
+	Type_OCLImage2dArrayMSAADepthWO TypeKind = C.CXType_OCLImage2dArrayMSAADepthWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage3dWO = C.CXType_OCLImage3dWO
+	Type_OCLImage3dWO TypeKind = C.CXType_OCLImage3dWO
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dRW = C.CXType_OCLImage1dRW
+	Type_OCLImage1dRW TypeKind = C.CXType_OCLImage1dRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dArrayRW = C.CXType_OCLImage1dArrayRW
+	Type_OCLImage1dArrayRW TypeKind = C.CXType_OCLImage1dArrayRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage1dBufferRW = C.CXType_OCLImage1dBufferRW
+	Type_OCLImage1dBufferRW TypeKind = C.CXType_OCLImage1dBufferRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dRW = C.CXType_OCLImage2dRW
+	Type_OCLImage2dRW TypeKind = C.CXType_OCLImage2dRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayRW = C.CXType_OCLImage2dArrayRW
+	Type_OCLImage2dArrayRW TypeKind = C.CXType_OCLImage2dArrayRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dDepthRW = C.CXType_OCLImage2dDepthRW
+	Type_OCLImage2dDepthRW TypeKind = C.CXType_OCLImage2dDepthRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayDepthRW = C.CXType_OCLImage2dArrayDepthRW
+	Type_OCLImage2dArrayDepthRW TypeKind = C.CXType_OCLImage2dArrayDepthRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dMSAARW = C.CXType_OCLImage2dMSAARW
+	Type_OCLImage2dMSAARW TypeKind = C.CXType_OCLImage2dMSAARW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayMSAARW = C.CXType_OCLImage2dArrayMSAARW
+	Type_OCLImage2dArrayMSAARW TypeKind = C.CXType_OCLImage2dArrayMSAARW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dMSAADepthRW = C.CXType_OCLImage2dMSAADepthRW
+	Type_OCLImage2dMSAADepthRW TypeKind = C.CXType_OCLImage2dMSAADepthRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage2dArrayMSAADepthRW = C.CXType_OCLImage2dArrayMSAADepthRW
+	Type_OCLImage2dArrayMSAADepthRW TypeKind = C.CXType_OCLImage2dArrayMSAADepthRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLImage3dRW = C.CXType_OCLImage3dRW
+	Type_OCLImage3dRW TypeKind = C.CXType_OCLImage3dRW
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLSampler = C.CXType_OCLSampler
+	Type_OCLSampler TypeKind = C.CXType_OCLSampler
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLEvent = C.CXType_OCLEvent
+	Type_OCLEvent TypeKind = C.CXType_OCLEvent
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLQueue = C.CXType_OCLQueue
+	Type_OCLQueue TypeKind = C.CXType_OCLQueue
 	/*
 		Represents a type that was referred to using an elaborated type keyword.
 
 		E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
 	*/
-	Type_OCLReserveID = C.CXType_OCLReserveID
+	Type_OCLReserveID TypeKind = C.CXType_OCLReserveID
 )
 
 func (tk TypeKind) Spelling() string {
 	return cx2GoString(C.clang_getTypeKindSpelling(C.enum_CXTypeKind(tk)))
-}
-
-func (tk TypeKind) String() string {
-	return tk.Spelling()
 }

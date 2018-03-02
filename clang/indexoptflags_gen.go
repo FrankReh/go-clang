@@ -3,7 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "fmt"
 
 type IndexOptFlags uint32
 
@@ -26,22 +25,3 @@ const (
 	// Skip a function/method body that was already parsed during an indexing session associated with a CXIndexAction object. Bodies in system headers are always skipped.
 	IndexOpt_SkipParsedBodiesInSession IndexOptFlags = C.CXIndexOpt_SkipParsedBodiesInSession
 )
-
-func (iof IndexOptFlags) String() string {
-	switch iof {
-	case IndexOpt_None:
-		return "IndexOpt_None"
-	case IndexOpt_SuppressRedundantRefs:
-		return "IndexOpt_SuppressRedundantRefs"
-	case IndexOpt_IndexFunctionLocalSymbols:
-		return "IndexOpt_IndexFunctionLocalSymbols"
-	case IndexOpt_IndexImplicitTemplateInstantiations:
-		return "IndexOpt_IndexImplicitTemplateInstantiations"
-	case IndexOpt_SuppressWarnings:
-		return "IndexOpt_SuppressWarnings"
-	case IndexOpt_SkipParsedBodiesInSession:
-		return "IndexOpt_SkipParsedBodiesInSession"
-	}
-
-	return fmt.Sprintf("IndexOptFlags unknown %d", int(iof))
-}
