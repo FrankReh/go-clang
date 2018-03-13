@@ -3,10 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import (
-	"fmt"
-	"strings"
-)
 
 /*
 	Flags that control the creation of translation units.
@@ -126,34 +122,3 @@ const (
 	*/
 	TranslationUnit_SingleFileParse TranslationUnit_Flags = C.CXTranslationUnit_SingleFileParse
 )
-
-func (tuf TranslationUnit_Flags) String() string {
-	var r []string
-	for _, t := range []struct {
-		flag TranslationUnit_Flags
-		name string
-	}{
-		{TranslationUnit_DetailedPreprocessingRecord, "DetailedPreprocessingRecord"},
-		{TranslationUnit_Incomplete, "Incomplete"},
-		{TranslationUnit_PrecompiledPreamble, "PrecompiledPreamble"},
-		{TranslationUnit_CacheCompletionResults, "CacheCompletionResults"},
-		{TranslationUnit_ForSerialization, "ForSerialization"},
-		{TranslationUnit_CXXChainedPCH, "CXXChainedPCH"},
-		{TranslationUnit_SkipFunctionBodies, "SkipFunctionBodies"},
-		{TranslationUnit_IncludeBriefCommentsInCodeCompletion, "IncludeBriefCommentsInCodeCompletion"},
-		{TranslationUnit_CreatePreambleOnFirstParse, "CreatePreambleOnFirstParse"},
-		{TranslationUnit_KeepGoing, "KeepGoing"},
-		{TranslationUnit_SingleFileParse, "SingleFileParse"},
-	} {
-		if tuf&t.flag == 0 {
-			continue
-		}
-		tuf &^= t.flag
-		r = append(r, t.name)
-	}
-	if tuf != 0 {
-		// This cast to a large intrinsic is important; it avoids recursive calls to String().
-		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(tuf)))
-	}
-	return strings.Join(r, ",")
-}

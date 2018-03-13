@@ -3,10 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import (
-	"fmt"
-	"strings"
-)
 
 /*
 	Options to control the display of diagnostics.
@@ -72,29 +68,3 @@ const (
 	*/
 	Diagnostic_DisplayCategoryName DiagnosticDisplayOptions = C.CXDiagnostic_DisplayCategoryName
 )
-
-func (ddo DiagnosticDisplayOptions) String() string {
-	var r []string
-	for _, t := range []struct {
-		flag DiagnosticDisplayOptions
-		name string
-	}{
-		{Diagnostic_DisplaySourceLocation, "DisplaySourceLocation"},
-		{Diagnostic_DisplayColumn, "DisplayColumn"},
-		{Diagnostic_DisplaySourceRanges, "DisplaySourceRanges"},
-		{Diagnostic_DisplayOption, "DisplayOption"},
-		{Diagnostic_DisplayCategoryId, "DisplayCategoryId"},
-		{Diagnostic_DisplayCategoryName, "DisplayCategoryName"},
-	} {
-		if ddo&t.flag == 0 {
-			continue
-		}
-		ddo &^= t.flag
-		r = append(r, t.name)
-	}
-	if ddo != 0 {
-		// This cast to a large intrinsic is important; it avoids recursive calls to String().
-		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(ddo)))
-	}
-	return strings.Join(r, ",")
-}

@@ -3,10 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import (
-	"fmt"
-	"strings"
-)
 
 type GlobalOptFlags uint32
 
@@ -37,27 +33,3 @@ const (
 	*/
 	GlobalOpt_ThreadBackgroundPriorityForAll GlobalOptFlags = C.CXGlobalOpt_ThreadBackgroundPriorityForAll
 )
-
-func (gof GlobalOptFlags) String() string {
-
-	var r []string
-	for _, t := range []struct {
-		flag GlobalOptFlags
-		name string
-	}{
-		{GlobalOpt_ThreadBackgroundPriorityForIndexing, "ThreadBackgroundPriorityForIndexing"},
-		{GlobalOpt_ThreadBackgroundPriorityForEditing, "ThreadBackgroundPriorityForEditing"},
-		// GlobalOpt_ThreadBackgroundPriorityForAll exists but it is an amalgamation of the other two.
-	} {
-		if gof&t.flag == 0 {
-			continue
-		}
-		gof &^= t.flag
-		r = append(r, t.name)
-	}
-	if gof != 0 {
-		// This cast to a large intrinsic is important; it avoids recursive calls to String().
-		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(gof)))
-	}
-	return strings.Join(r, ",")
-}

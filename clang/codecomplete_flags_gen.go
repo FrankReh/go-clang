@@ -3,10 +3,6 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import (
-	"fmt"
-	"strings"
-)
 
 // Flags that can be passed to clang_codeCompleteAt() to modify its behavior.
 //
@@ -24,26 +20,3 @@ const (
 	// Whether to include brief documentation within the set of code completions returned.
 	CodeComplete_IncludeBriefComments CodeComplete_Flags = C.CXCodeComplete_IncludeBriefComments
 )
-
-func (ccf CodeComplete_Flags) String() string {
-	var r []string
-	for _, t := range []struct {
-		flag CodeComplete_Flags
-		name string
-	}{
-		{CodeComplete_IncludeMacros, "IncludeMacros"},
-		{CodeComplete_IncludeCodePatterns, "IncludeCodePatterns"},
-		{CodeComplete_IncludeBriefComments, "IncludeBriefComments"},
-	} {
-		if ccf&t.flag == 0 {
-			continue
-		}
-		ccf &^= t.flag
-		r = append(r, t.name)
-	}
-	if ccf != 0 {
-		// This cast to a large intrinsic is important; it avoids recursive calls to String().
-		r = append(r, fmt.Sprintf("additional-bits(%x)", uint64(ccf)))
-	}
-	return strings.Join(r, ",")
-}
