@@ -16,6 +16,7 @@ import (
 	"os"
 
 	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 func main() {
@@ -46,7 +47,7 @@ func cmd(args []string) int {
 
 	cursor.Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
 		switch cursor.Kind() {
-		case clang.Cursor_InclusionDirective:
+		case cursorkind.InclusionDirective:
 			file := cursor.IncludedFile()
 			//uniqueID, _ := file.UniqueID()
 			//fmt.Printf("%s: %s\n", cursor.Kind().Spelling(), cursor.Spelling())

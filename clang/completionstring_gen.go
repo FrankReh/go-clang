@@ -3,6 +3,7 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
+import "github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 
 /*
 	A semantic string that describes a code-completion result.
@@ -140,9 +141,9 @@ func (cs CompletionString) Annotation(annotationNumber uint32) string {
 	Returns The name of the completion parent, e.g., "NSObject" if
 	the completion string represents a method in the NSObject class.
 */
-func (cs CompletionString) Parent(kind *CursorKind) string {
+func (cs CompletionString) Parent(kind *cursorkind.Kind) string {
 	var cp_kind C.enum_CXCursorKind
-	if kind != nil {
+	if kind != nil { // TBD This has a bizarre function signature. Maybe rewrite?
 		cp_kind = C.enum_CXCursorKind(*kind)
 	}
 

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 func assertTrue(t *testing.T, b bool) {
@@ -57,11 +58,11 @@ func TestBasicParsing(t *testing.T) {
 		}
 
 		switch cursor.Kind() {
-		case clang.Cursor_FunctionDecl:
+		case cursorkind.FunctionDecl:
 			assertEqualString(t, "foo", cursor.Spelling())
 
 			found++
-		case clang.Cursor_ParmDecl:
+		case cursorkind.ParmDecl:
 			assertEqualString(t, "bar", cursor.Spelling())
 
 			found++
