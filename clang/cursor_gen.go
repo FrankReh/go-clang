@@ -7,6 +7,8 @@ import "C"
 import (
 	"reflect"
 	"unsafe"
+
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 /*
@@ -61,8 +63,8 @@ func (c Cursor) HashCursor() uint32 {
 }
 
 // Retrieve the kind of the given cursor.
-func (c Cursor) Kind() CursorKind {
-	return CursorKind(C.clang_getCursorKind(c.c))
+func (c Cursor) Kind() cursorkind.Kind {
+	return cursorkind.MustValidate(int(C.clang_getCursorKind(c.c))) // TBD seems like kind can be pulled out of struct without calling into C.
 }
 
 // Determine whether the given cursor has any attributes.
@@ -976,8 +978,8 @@ func (c Cursor) CXXMethod_IsConst() bool {
 	by instantiating the template C. If C is not a template, returns
 	CXCursor_NoDeclFound.
 */
-func (c Cursor) TemplateCursorKind() CursorKind {
-	return CursorKind(C.clang_getTemplateCursorKind(c.c))
+func (c Cursor) TemplateCursorKind() cursorkind.Kind {
+	return cursorkind.MustValidate(int(C.clang_getTemplateCursorKind(c.c)))
 }
 
 /*

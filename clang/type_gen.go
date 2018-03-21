@@ -3,7 +3,11 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+
+	"github.com/frankreh/go-clang-v5.0/clang/typekind"
+)
 
 // The type of an element in the abstract syntax tree.
 type Type struct {
@@ -303,6 +307,6 @@ func (t Type) RefQualifier() RefQualifierKind {
 	return RefQualifierKind(C.clang_Type_getCXXRefQualifier(t.c))
 }
 
-func (t Type) Kind() TypeKind {
-	return TypeKind(t.c.kind)
+func (t Type) Kind() typekind.Kind {
+	return typekind.MustValidate(int(t.c.kind))
 }

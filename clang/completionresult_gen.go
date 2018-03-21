@@ -6,6 +6,8 @@ import "C"
 import (
 	"reflect"
 	"unsafe"
+
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 // A single result of code completion.
@@ -36,8 +38,8 @@ func SortCodeCompletionResults(results []CompletionResult) {
 	\todo In the future, we would like to provide a full cursor, to allow
 	the client to extract additional information from declaration.
 */
-func (cr CompletionResult) CursorKind() CursorKind {
-	return CursorKind(cr.c.CursorKind)
+func (cr CompletionResult) CursorKind() cursorkind.Kind {
+	return cursorkind.MustValidate(int(cr.c.CursorKind))
 }
 
 // The code-completion string that describes how to insert this code-completion result into the editing buffer.

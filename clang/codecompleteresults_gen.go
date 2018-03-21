@@ -6,6 +6,8 @@ import "C"
 import (
 	"reflect"
 	"unsafe"
+
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 // Contains the results of code-completion.
@@ -68,12 +70,12 @@ func (ccr *CodeCompleteResults) Contexts() uint64 {
 	Returns the container kind, or CXCursor_InvalidCode if there is not a
 	container
 */
-func (ccr *CodeCompleteResults) ContainerKind() (uint32, CursorKind) {
+func (ccr *CodeCompleteResults) ContainerKind() (uint32, cursorkind.Kind) {
 	var isIncomplete C.uint
 
-	o := CursorKind(C.clang_codeCompleteGetContainerKind(ccr.c, &isIncomplete))
+	o := cursorkind.MustValidate(int(C.clang_codeCompleteGetContainerKind(ccr.c, &isIncomplete)))
 
-	return uint32(isIncomplete), o
+	return uint32(isIncomplete), o // TBD swap and make this an error
 }
 
 /*

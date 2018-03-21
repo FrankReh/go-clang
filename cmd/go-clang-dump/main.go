@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 var fname = flag.String("fname", "", "the file to analyze")
@@ -59,7 +60,7 @@ func cmd(args []string) int {
 	cursor := tu.TranslationUnitCursor()
 	fmt.Printf("cursor-isnull: %v\n", cursor.IsNull())
 	fmt.Printf("cursor: %s\n", cursor.Spelling())
-	fmt.Printf("cursor-kind: %s\n", cursor.Kind().Spelling())
+	fmt.Printf("cursor-kind: %s\n", clang.CursorKindSpelling(cursor.Kind()))
 
 	fmt.Printf("tu-fname: %s\n", tu.File(*fname).Name())
 
@@ -70,10 +71,10 @@ func cmd(args []string) int {
 			return clang.ChildVisit_Continue
 		}
 
-		fmt.Printf("%s: %s (%s)\n", cursor.Kind().Spelling(), cursor.Spelling(), cursor.USR())
+		fmt.Printf("%s: %s (%s)\n", clang.CursorKindSpelling(cursor.Kind()), cursor.Spelling(), cursor.USR())
 
 		switch cursor.Kind() {
-		case clang.Cursor_ClassDecl, clang.Cursor_EnumDecl, clang.Cursor_StructDecl, clang.Cursor_Namespace:
+		case cursorkind.ClassDecl, cursorkind.EnumDecl, cursorkind.StructDecl, cursorkind.Namespace:
 			return clang.ChildVisit_Recurse
 		}
 
