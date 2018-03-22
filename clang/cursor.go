@@ -3,6 +3,7 @@ package clang
 // #include "go-clang.h"
 import "C"
 import (
+	//"fmt"
 	"sync"
 	"unsafe"
 )
@@ -102,6 +103,8 @@ func (fm *funcRegistry) lookup(index int) *CursorVisitor {
 	fm.RLock()
 	defer fm.RUnlock()
 
+	//_, ok := fm.funcs[index]
+	//fmt.Println("func (fm *funcRegistry) lookup(index int) *CursorVisitor", "index:", index, ok)
 	return fm.funcs[index]
 }
 
@@ -113,8 +116,8 @@ func (fm *funcRegistry) unregister(index int) {
 	fm.Unlock()
 }
 
-var visitors = &funcRegistry{
-	funcs: map[int]*CursorVisitor{},
+var visitors = funcRegistry{
+	funcs: make(map[int]*CursorVisitor),
 }
 
 // GoClangCursorVisitor calls the cursor visitor
@@ -153,10 +156,17 @@ func (c Cursor) Visit(visitor CursorVisitor) bool {
 	i := visitors.register(&visitor)
 	defer visitors.unregister(i)
 
+	//fmt.Println("func (c Cursor) Visit(visitor CursorVisitor) bool",
+	//"registered location i:", i)
+
 	// We need a pointer to the index because clang_visitChildren data parameter is a void pointer.
 	ci := C.int(i)
 
 	o := C.go_clang_visit_children(c.c, unsafe.Pointer(&ci))
 
-	return o == C.uint(0)
+	r := o == C.uint(0)
+	//if !r {
+	//fmt.Println("go_clang_visit_children returns break indication", o)
+	//}
+	return r
 }
