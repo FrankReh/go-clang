@@ -767,24 +767,27 @@ var testTupleData = []testTuple{
 		ExpectedGobSize1: 382,
 	},
 	{
-		Name:    "typedef_struct_SS",
-		Comment: `The 4th cursor encountered is the same as the first.`,
+		Name: "typedef_struct_TA",
+		Comment: `The 4th cursor encountered is the same as the first.
+			This is interesting because while the typedef appears first in the
+			source, libclang has the cursor for the struct itself visited first
+			at the top level.`,
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
 		SrcCode: `
-            typedef struct { int a; } SS;
-            SS ss;
+            typedef struct { int a; } TA;
+            TA ss;
         `,
 		ExpectedTopCursors: `
                StructDecl  IsDeclaration         Linkage_External
-            SS TypedefDecl IsDeclaration         Linkage_External
+            TA TypedefDecl IsDeclaration         Linkage_External
             ss VarDecl     IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            /StructDecl {Record SS}
+            /StructDecl {Record TA}
             . a/FieldDecl {Int int}
-            SS/TypedefDecl {Typedef(Record) SS}
+            TA/TypedefDecl {Typedef(Record) TA}
             . [0 backreference]
-            ss/VarDecl {Typedef(Record) SS}
-            . SS/TypeRef {Typedef(Record) SS}`,
+            ss/VarDecl {Typedef(Record) TA}
+            . TA/TypeRef {Typedef(Record) TA}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:5 9:7 10:8 11:5
@@ -792,15 +795,149 @@ var testTupleData = []testTuple{
             0:{Keyword 0} 1:{Keyword 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
             7:{Identifier 7} 8:{Identifier 8}
             TokenNameMap:
-            0:typedef 1:struct 2:{ 3:int 4:a 5:; 6:} 7:SS 8:ss
+            0:typedef 1:struct 2:{ 3:int 4:a 5:; 6:} 7:TA 8:ss
             Cursors:
             0:{TranslationUnit 1 -1 {1 3} {0 12}} 1:{StructDecl 0 0 {4 1} {1 6}} 2:{TypedefDecl 2 0 {5 1} {0 8}}
             3:{VarDecl 3 0 {6 1} {9 2}} 4:{FieldDecl 4 1 {0 0} {3 2}} 5:{Back 0 2 {0 0} {0 0}} 6:{TypeRef 2 3 {0 0} {9 1}}
             CursorNameMap:
-            0: 1:sample.c 2:SS 3:ss 4:a
+            0: 1:sample.c 2:TA 3:ss 4:a
             Back:
             5:1`,
 		ExpectedGobSize0: 744,
 		ExpectedGobSize1: 435,
+	},
+	{
+		Name: "typedefs_two_structs",
+		Comment: `
+			For each typedef, the unnamed struct appears first in ast, without a name.
+			Each TypedefDecl has a Back cursor.
+			The variables themselves do not use back references the first time.
+			x0 and x1 both have unique cursors although their types are for all intents
+			and purposes identical.
+			The y0 and y1 sahre the same cursor, they are declared in a single statement,
+			even though they are on separate lines.
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            typedef struct { int a; } TA;
+            typedef struct { int b; } TB;
+            TA x0;
+            TA x1;
+            TB y0,
+			   y1;
+        `,
+		ExpectedTopCursors: `
+               StructDecl  IsDeclaration         Linkage_External
+            TA TypedefDecl IsDeclaration         Linkage_External
+               StructDecl  IsDeclaration         Linkage_External
+            TB TypedefDecl IsDeclaration         Linkage_External
+            x0 VarDecl     IsDeclaration SC_None Linkage_External
+            x1 VarDecl     IsDeclaration SC_None Linkage_External
+            y0 VarDecl     IsDeclaration SC_None Linkage_External
+            y1 VarDecl     IsDeclaration SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            /StructDecl {Record TA}
+            . a/FieldDecl {Int int}
+            TA/TypedefDecl {Typedef(Record) TA}
+            . [0 backreference]
+            /StructDecl {Record TB}
+            . b/FieldDecl {Int int}
+            TB/TypedefDecl {Typedef(Record) TB}
+            . [4 backreference]
+            x0/VarDecl {Typedef(Record) TA}
+            . TA/TypeRef {Typedef(Record) TA}
+            x1/VarDecl {Typedef(Record) TA}
+            . TA/TypeRef {Typedef(Record) TA}
+            y0/VarDecl {Typedef(Record) TB}
+            . TB/TypeRef {Typedef(Record) TB}
+            y1/VarDecl {Typedef(Record) TB}
+            . [13 backreference]`,
+		ExpectedGobSize0: 970,
+		ExpectedGobSize1: 564,
+	},
+	{
+		Name: "compare_named_struct_with_typedef",
+		Comment: `A struct on its own needs a name. The cursor for it provides that name.
+            // The tree from below reorganized.
+            0:{TranslationUnit  1 -1 {1 7}  {0 28}}
+			  1:   {StructDecl  2  0 {8 1}  {0 7}}
+			    8: {FieldDecl   8  1 {0 0}  {3 2}}
+			  2:   {StructDecl  0  0 {9 1}  {9 6}}
+				9: {FieldDecl   9  2 {0 0}  {11 2}}
+              3:   {TypedefDecl 3  0 {10 1} {8 8}}
+                10:{Back        0  3 {0 0}  {0 0}} 
+			  4:   {VarDecl     4  0 {11 1} {17 3}}
+			    11:{TypeRef    10  4 {0 0}  {18 1}} 
+			  5:   {VarDecl     5  0 {12 1} {17 5}}
+			    12:{Back        0  5 {0 0}  {0 0}} 
+              6:   {VarDecl     6  0 {13 1} {23 2}}
+			    13:{TypeRef     3  6 {0 0}  {23 1}}
+			  7:   {VarDecl     7  0 {14 1} {23 4}}
+                14:{Back        0  7 {0 0}  {0 0}}
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            struct SA { int a; };
+            typedef struct { int b; } TB;
+            struct SA x0, x1;
+            TB y0, y1;
+        `,
+		ExpectedFullCursors: `
+            SA/StructDecl {Record struct SA}
+            . a/FieldDecl {Int int}
+            /StructDecl {Record TB}
+            . b/FieldDecl {Int int}
+            TB/TypedefDecl {Typedef(Record) TB}
+            . [2 backreference]
+            x0/VarDecl {Elaborated(Record) struct SA}
+            . struct SA/TypeRef {Record struct SA}
+            x1/VarDecl {Elaborated(Record) struct SA}
+            . [7 backreference]
+            y0/VarDecl {Typedef(Record) TB}
+            . TB/TypeRef {Typedef(Record) TB}
+            y1/VarDecl {Typedef(Record) TB}
+            . [11 backreference]`,
+		ExpectedGobSize0: 949,
+		ExpectedGobSize1: 563,
+	},
+	{
+		Name: "compare_named_struct_with_two_typedefs",
+		Comment: `
+			// Two typedefs are declared. The first for a named struct.
+			// libclang creates a sub ast for the unamed struct just as it
+			// does for the named one. The only difference I can see is
+			// the unnamed struct returns an empty string for Spelling().`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            struct SA { int a; };			// A named struct.
+            typedef struct SA TA;			// A typedef using that named struct.
+            typedef struct { int b; } TB;	// A new typedef for an unnamed struct.
+            struct SA x0, x1;				// Two variables for same struct, will share cursor.
+            TA y0, y1;
+            TB z0, z1;
+        `,
+		ExpectedFullCursors: `
+            SA/StructDecl {Record struct SA}
+            . a/FieldDecl {Int int}
+            TA/TypedefDecl {Typedef(Record) TA}
+            . struct SA/TypeRef {Record struct SA}
+            /StructDecl {Record TB}
+            . b/FieldDecl {Int int}
+            TB/TypedefDecl {Typedef(Record) TB}
+            . [4 backreference]
+            x0/VarDecl {Elaborated(Record) struct SA}
+            . struct SA/TypeRef {Record struct SA}
+            x1/VarDecl {Elaborated(Record) struct SA}
+            . [9 backreference]
+            y0/VarDecl {Typedef(Record) TA}
+            . TA/TypeRef {Typedef(Record) TA}
+            y1/VarDecl {Typedef(Record) TA}
+            . [13 backreference]
+            z0/VarDecl {Typedef(Record) TB}
+            . TB/TypeRef {Typedef(Record) TB}
+            z1/VarDecl {Typedef(Record) TB}
+            . [17 backreference]`,
+		ExpectedGobSize0: 1258,
+		ExpectedGobSize1: 813,
 	},
 }
