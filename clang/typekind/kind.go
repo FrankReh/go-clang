@@ -150,3 +150,7 @@ const InvalidErr Error = "Invalid value"
 func (e Error) Error() string {
 	return string(e)
 }
+
+func (k Kind) IsBuiltin() bool {
+	return FirstBuiltin <= k && k <= LastBuiltin
+}

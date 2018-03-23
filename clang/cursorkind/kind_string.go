@@ -5,54 +5,57 @@ package cursorkind
 import "strconv"
 
 const (
-	_Kind_name_0 = "UnexposedDeclStructDeclUnionDeclClassDeclEnumDeclFieldDeclEnumConstantDeclFunctionDeclVarDeclParmDeclObjCInterfaceDeclObjCCategoryDeclObjCProtocolDeclObjCPropertyDeclObjCIvarDeclObjCInstanceMethodDeclObjCClassMethodDeclObjCImplementationDeclObjCCategoryImplDeclTypedefDeclCXXMethodNamespaceLinkageSpecConstructorDestructorConversionFunctionTemplateTypeParameterNonTypeTemplateParameterTemplateTemplateParameterFunctionTemplateClassTemplateClassTemplatePartialSpecializationNamespaceAliasUsingDirectiveUsingDeclarationTypeAliasDeclObjCSynthesizeDeclObjCDynamicDeclCXXAccessSpecifierObjCSuperClassRefObjCProtocolRefObjCClassRefTypeRefCXXBaseSpecifierTemplateRefNamespaceRefMemberRefLabelRefOverloadedDeclRefVariableRef"
-	_Kind_name_1 = "InvalidFileNoDeclFoundNotImplementedInvalidCode"
-	_Kind_name_2 = "UnexposedExprDeclRefExprMemberRefExprCallExprObjCMessageExprBlockExprIntegerLiteralFloatingLiteralImaginaryLiteralStringLiteralCharacterLiteralParenExprUnaryOperatorArraySubscriptExprBinaryOperatorCompoundAssignOperatorConditionalOperatorCStyleCastExprCompoundLiteralExprInitListExprAddrLabelExprStmtExprGenericSelectionExprGNUNullExprCXXStaticCastExprCXXDynamicCastExprCXXReinterpretCastExprCXXConstCastExprCXXFunctionalCastExprCXXTypeidExprCXXBoolLiteralExprCXXNullPtrLiteralExprCXXThisExprCXXThrowExprCXXNewExprCXXDeleteExprUnaryExprObjCStringLiteralObjCEncodeExprObjCSelectorExprObjCProtocolExprObjCBridgedCastExprPackExpansionExprSizeOfPackExprLambdaExprObjCBoolLiteralExprObjCSelfExprOMPArraySectionExprObjCAvailabilityCheckExpr"
-	_Kind_name_3 = "UnexposedStmtLabelStmtCompoundStmtCaseStmtDefaultStmtIfStmtSwitchStmtWhileStmtDoStmtForStmtGotoStmtIndirectGotoStmtContinueStmtBreakStmtReturnStmtGCCAsmStmtObjCAtTryStmtObjCAtCatchStmtObjCAtFinallyStmtObjCAtThrowStmtObjCAtSynchronizedStmtObjCAutoreleasePoolStmtObjCForCollectionStmtCXXCatchStmtCXXTryStmtCXXForRangeStmtSEHTryStmtSEHExceptStmtSEHFinallyStmtMSAsmStmtNullStmtDeclStmtOMPParallelDirectiveOMPSimdDirectiveOMPForDirectiveOMPSectionsDirectiveOMPSectionDirectiveOMPSingleDirectiveOMPParallelForDirectiveOMPParallelSectionsDirectiveOMPTaskDirectiveOMPMasterDirectiveOMPCriticalDirectiveOMPTaskyieldDirectiveOMPBarrierDirectiveOMPTaskwaitDirectiveOMPFlushDirectiveSEHLeaveStmtOMPOrderedDirectiveOMPAtomicDirectiveOMPForSimdDirectiveOMPParallelForSimdDirectiveOMPTargetDirectiveOMPTeamsDirectiveOMPTaskgroupDirectiveOMPCancellationPointDirectiveOMPCancelDirectiveOMPTargetDataDirectiveOMPTaskLoopDirectiveOMPTaskLoopSimdDirectiveOMPDistributeDirectiveOMPTargetEnterDataDirectiveOMPTargetExitDataDirectiveOMPTargetParallelDirectiveOMPTargetParallelForDirectiveOMPTargetUpdateDirectiveOMPDistributeParallelForDirectiveOMPDistributeParallelForSimdDirectiveOMPDistributeSimdDirectiveOMPTargetParallelForSimdDirectiveOMPTargetSimdDirectiveOMPTeamsDistributeDirectiveOMPTeamsDistributeSimdDirectiveOMPTeamsDistributeParallelForSimdDirectiveOMPTeamsDistributeParallelForDirectiveOMPTargetTeamsDirectiveOMPTargetTeamsDistributeDirectiveOMPTargetTeamsDistributeParallelForDirectiveOMPTargetTeamsDistributeParallelForSimdDirectiveOMPTargetTeamsDistributeSimdDirective"
-	_Kind_name_4 = "TranslationUnit"
-	_Kind_name_5 = "UnexposedAttrIBActionAttrIBOutletAttrIBOutletCollectionAttrCXXFinalAttrCXXOverrideAttrAnnotateAttrAsmLabelAttrPackedAttrPureAttrConstAttrNoDuplicateAttrCUDAConstantAttrCUDADeviceAttrCUDAGlobalAttrCUDAHostAttrCUDASharedAttrVisibilityAttrDLLExportDLLImport"
-	_Kind_name_6 = "PreprocessingDirectiveMacroDefinitionMacroExpansionInclusionDirective"
-	_Kind_name_7 = "ModuleImportDeclTypeAliasTemplateDeclStaticAssertFriendDecl"
-	_Kind_name_8 = "OverloadCandidate"
+	_Kind_name_0 = "Back"
+	_Kind_name_1 = "UnexposedDeclStructDeclUnionDeclClassDeclEnumDeclFieldDeclEnumConstantDeclFunctionDeclVarDeclParmDeclObjCInterfaceDeclObjCCategoryDeclObjCProtocolDeclObjCPropertyDeclObjCIvarDeclObjCInstanceMethodDeclObjCClassMethodDeclObjCImplementationDeclObjCCategoryImplDeclTypedefDeclCXXMethodNamespaceLinkageSpecConstructorDestructorConversionFunctionTemplateTypeParameterNonTypeTemplateParameterTemplateTemplateParameterFunctionTemplateClassTemplateClassTemplatePartialSpecializationNamespaceAliasUsingDirectiveUsingDeclarationTypeAliasDeclObjCSynthesizeDeclObjCDynamicDeclCXXAccessSpecifierObjCSuperClassRefObjCProtocolRefObjCClassRefTypeRefCXXBaseSpecifierTemplateRefNamespaceRefMemberRefLabelRefOverloadedDeclRefVariableRef"
+	_Kind_name_2 = "InvalidFileNoDeclFoundNotImplementedInvalidCode"
+	_Kind_name_3 = "UnexposedExprDeclRefExprMemberRefExprCallExprObjCMessageExprBlockExprIntegerLiteralFloatingLiteralImaginaryLiteralStringLiteralCharacterLiteralParenExprUnaryOperatorArraySubscriptExprBinaryOperatorCompoundAssignOperatorConditionalOperatorCStyleCastExprCompoundLiteralExprInitListExprAddrLabelExprStmtExprGenericSelectionExprGNUNullExprCXXStaticCastExprCXXDynamicCastExprCXXReinterpretCastExprCXXConstCastExprCXXFunctionalCastExprCXXTypeidExprCXXBoolLiteralExprCXXNullPtrLiteralExprCXXThisExprCXXThrowExprCXXNewExprCXXDeleteExprUnaryExprObjCStringLiteralObjCEncodeExprObjCSelectorExprObjCProtocolExprObjCBridgedCastExprPackExpansionExprSizeOfPackExprLambdaExprObjCBoolLiteralExprObjCSelfExprOMPArraySectionExprObjCAvailabilityCheckExpr"
+	_Kind_name_4 = "UnexposedStmtLabelStmtCompoundStmtCaseStmtDefaultStmtIfStmtSwitchStmtWhileStmtDoStmtForStmtGotoStmtIndirectGotoStmtContinueStmtBreakStmtReturnStmtGCCAsmStmtObjCAtTryStmtObjCAtCatchStmtObjCAtFinallyStmtObjCAtThrowStmtObjCAtSynchronizedStmtObjCAutoreleasePoolStmtObjCForCollectionStmtCXXCatchStmtCXXTryStmtCXXForRangeStmtSEHTryStmtSEHExceptStmtSEHFinallyStmtMSAsmStmtNullStmtDeclStmtOMPParallelDirectiveOMPSimdDirectiveOMPForDirectiveOMPSectionsDirectiveOMPSectionDirectiveOMPSingleDirectiveOMPParallelForDirectiveOMPParallelSectionsDirectiveOMPTaskDirectiveOMPMasterDirectiveOMPCriticalDirectiveOMPTaskyieldDirectiveOMPBarrierDirectiveOMPTaskwaitDirectiveOMPFlushDirectiveSEHLeaveStmtOMPOrderedDirectiveOMPAtomicDirectiveOMPForSimdDirectiveOMPParallelForSimdDirectiveOMPTargetDirectiveOMPTeamsDirectiveOMPTaskgroupDirectiveOMPCancellationPointDirectiveOMPCancelDirectiveOMPTargetDataDirectiveOMPTaskLoopDirectiveOMPTaskLoopSimdDirectiveOMPDistributeDirectiveOMPTargetEnterDataDirectiveOMPTargetExitDataDirectiveOMPTargetParallelDirectiveOMPTargetParallelForDirectiveOMPTargetUpdateDirectiveOMPDistributeParallelForDirectiveOMPDistributeParallelForSimdDirectiveOMPDistributeSimdDirectiveOMPTargetParallelForSimdDirectiveOMPTargetSimdDirectiveOMPTeamsDistributeDirectiveOMPTeamsDistributeSimdDirectiveOMPTeamsDistributeParallelForSimdDirectiveOMPTeamsDistributeParallelForDirectiveOMPTargetTeamsDirectiveOMPTargetTeamsDistributeDirectiveOMPTargetTeamsDistributeParallelForDirectiveOMPTargetTeamsDistributeParallelForSimdDirectiveOMPTargetTeamsDistributeSimdDirective"
+	_Kind_name_5 = "TranslationUnit"
+	_Kind_name_6 = "UnexposedAttrIBActionAttrIBOutletAttrIBOutletCollectionAttrCXXFinalAttrCXXOverrideAttrAnnotateAttrAsmLabelAttrPackedAttrPureAttrConstAttrNoDuplicateAttrCUDAConstantAttrCUDADeviceAttrCUDAGlobalAttrCUDAHostAttrCUDASharedAttrVisibilityAttrDLLExportDLLImport"
+	_Kind_name_7 = "PreprocessingDirectiveMacroDefinitionMacroExpansionInclusionDirective"
+	_Kind_name_8 = "ModuleImportDeclTypeAliasTemplateDeclStaticAssertFriendDecl"
+	_Kind_name_9 = "OverloadCandidate"
 )
 
 var (
-	_Kind_index_0 = [...]uint16{0, 13, 23, 32, 41, 49, 58, 74, 86, 93, 101, 118, 134, 150, 166, 178, 200, 219, 241, 261, 272, 281, 290, 301, 312, 322, 340, 361, 385, 410, 426, 439, 473, 487, 501, 517, 530, 548, 563, 581, 598, 613, 625, 632, 648, 659, 671, 680, 688, 705, 716}
-	_Kind_index_1 = [...]uint8{0, 11, 22, 36, 47}
-	_Kind_index_2 = [...]uint16{0, 13, 24, 37, 45, 60, 69, 83, 98, 114, 127, 143, 152, 165, 183, 197, 219, 238, 252, 271, 283, 296, 304, 324, 335, 352, 370, 392, 408, 429, 442, 460, 481, 492, 504, 514, 527, 536, 553, 567, 583, 599, 618, 635, 649, 659, 678, 690, 709, 734}
-	_Kind_index_3 = [...]uint16{0, 13, 22, 34, 42, 53, 59, 69, 78, 84, 91, 99, 115, 127, 136, 146, 156, 169, 184, 201, 216, 238, 261, 282, 294, 304, 319, 329, 342, 356, 365, 373, 381, 401, 417, 432, 452, 471, 489, 512, 540, 556, 574, 594, 615, 634, 654, 671, 683, 702, 720, 739, 766, 784, 801, 822, 851, 869, 891, 911, 935, 957, 984, 1010, 1036, 1065, 1089, 1122, 1159, 1185, 1218, 1240, 1267, 1298, 1340, 1378, 1401, 1434, 1478, 1526, 1563}
-	_Kind_index_5 = [...]uint8{0, 13, 25, 37, 59, 71, 86, 98, 110, 120, 128, 137, 152, 168, 182, 196, 208, 222, 236, 245, 254}
-	_Kind_index_6 = [...]uint8{0, 22, 37, 51, 69}
-	_Kind_index_7 = [...]uint8{0, 16, 37, 49, 59}
+	_Kind_index_1 = [...]uint16{0, 13, 23, 32, 41, 49, 58, 74, 86, 93, 101, 118, 134, 150, 166, 178, 200, 219, 241, 261, 272, 281, 290, 301, 312, 322, 340, 361, 385, 410, 426, 439, 473, 487, 501, 517, 530, 548, 563, 581, 598, 613, 625, 632, 648, 659, 671, 680, 688, 705, 716}
+	_Kind_index_2 = [...]uint8{0, 11, 22, 36, 47}
+	_Kind_index_3 = [...]uint16{0, 13, 24, 37, 45, 60, 69, 83, 98, 114, 127, 143, 152, 165, 183, 197, 219, 238, 252, 271, 283, 296, 304, 324, 335, 352, 370, 392, 408, 429, 442, 460, 481, 492, 504, 514, 527, 536, 553, 567, 583, 599, 618, 635, 649, 659, 678, 690, 709, 734}
+	_Kind_index_4 = [...]uint16{0, 13, 22, 34, 42, 53, 59, 69, 78, 84, 91, 99, 115, 127, 136, 146, 156, 169, 184, 201, 216, 238, 261, 282, 294, 304, 319, 329, 342, 356, 365, 373, 381, 401, 417, 432, 452, 471, 489, 512, 540, 556, 574, 594, 615, 634, 654, 671, 683, 702, 720, 739, 766, 784, 801, 822, 851, 869, 891, 911, 935, 957, 984, 1010, 1036, 1065, 1089, 1122, 1159, 1185, 1218, 1240, 1267, 1298, 1340, 1378, 1401, 1434, 1478, 1526, 1563}
+	_Kind_index_6 = [...]uint8{0, 13, 25, 37, 59, 71, 86, 98, 110, 120, 128, 137, 152, 168, 182, 196, 208, 222, 236, 245, 254}
+	_Kind_index_7 = [...]uint8{0, 22, 37, 51, 69}
+	_Kind_index_8 = [...]uint8{0, 16, 37, 49, 59}
 )
 
 func (i Kind) String() string {
 	switch {
+	case i == -1:
+		return _Kind_name_0
 	case 1 <= i && i <= 50:
 		i -= 1
-		return _Kind_name_0[_Kind_index_0[i]:_Kind_index_0[i+1]]
+		return _Kind_name_1[_Kind_index_1[i]:_Kind_index_1[i+1]]
 	case 70 <= i && i <= 73:
 		i -= 70
-		return _Kind_name_1[_Kind_index_1[i]:_Kind_index_1[i+1]]
+		return _Kind_name_2[_Kind_index_2[i]:_Kind_index_2[i+1]]
 	case 100 <= i && i <= 148:
 		i -= 100
-		return _Kind_name_2[_Kind_index_2[i]:_Kind_index_2[i+1]]
+		return _Kind_name_3[_Kind_index_3[i]:_Kind_index_3[i+1]]
 	case 200 <= i && i <= 279:
 		i -= 200
-		return _Kind_name_3[_Kind_index_3[i]:_Kind_index_3[i+1]]
+		return _Kind_name_4[_Kind_index_4[i]:_Kind_index_4[i+1]]
 	case i == 300:
-		return _Kind_name_4
+		return _Kind_name_5
 	case 400 <= i && i <= 419:
 		i -= 400
-		return _Kind_name_5[_Kind_index_5[i]:_Kind_index_5[i+1]]
+		return _Kind_name_6[_Kind_index_6[i]:_Kind_index_6[i+1]]
 	case 500 <= i && i <= 503:
 		i -= 500
-		return _Kind_name_6[_Kind_index_6[i]:_Kind_index_6[i+1]]
+		return _Kind_name_7[_Kind_index_7[i]:_Kind_index_7[i+1]]
 	case 600 <= i && i <= 603:
 		i -= 600
-		return _Kind_name_7[_Kind_index_7[i]:_Kind_index_7[i+1]]
+		return _Kind_name_8[_Kind_index_8[i]:_Kind_index_8[i+1]]
 	case i == 700:
-		return _Kind_name_8
+		return _Kind_name_9
 	default:
 		return "Kind(" + strconv.FormatInt(int64(i), 10) + ")"
 	}

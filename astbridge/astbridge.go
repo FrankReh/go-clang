@@ -11,6 +11,7 @@ import (
 
 	"github.com/frankreh/go-clang-v5.0/ast"
 	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 )
 
 // ClangTranslationUnit references the clang package components.
@@ -62,6 +63,8 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 
 	mapTokenIndex := mapSourceLocationToIndex(tu, ctu.ClangTokens)
 
+	ctu.GoTu.Back = make(map[int]int)
+
 	// Layer children to end of list, one set of children at a time.
 
 	// Seed list with the root.
@@ -87,10 +90,22 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 		fmt.Printf("%[1]s %[1]d\n", clang.ChildVisit_Recurse)
 	}
 
+	// Map cursor to its index in the list being created.
+	cursorsSeen := make(map[clang.Cursor]int)
+	nullCursor := clang.NewNullCursor()
+
 	// Grow the list of clang cursors by visiting the list of clang cursors.
 	for parentIndex := 0; parentIndex < len(ctu.ClangCursors); parentIndex++ {
 
+		if ctu.ClangCursors[parentIndex] == nullCursor {
+			if debug {
+				fmt.Printf("for loop: parentIndex %d, nullCursor\n", parentIndex)
+			}
+			continue
+		}
+
 		childcount := 0
+
 		if debug {
 			fmt.Printf("for loop: parentIndex %d, hash %x len %d\n",
 				parentIndex,
@@ -98,56 +113,77 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 				len(ctu.ClangCursors))
 		}
 
-		// Why is there no visit called when parentIndex is 1 or 3 for
-		// the testcase under investigation?
-
 		ctu.ClangCursors[parentIndex].Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
 			childcount++
-			if debug {
-				fmt.Printf("parentIndex %d, visiting cursor hash %x, parent hash %x\n",
-					parentIndex,
-					cursor.HashCursor(),
-					parent.HashCursor())
-				fmt.Printf("childcount %d\n", childcount)
-			}
-
-			// Start to set newCursor.Tokens.
-			var tokenRange ast.IndexPair
-
-			// Get clang tokens for this cursor long enough to find them in
-			// the global tu list of tokens. It should be enough to get just
-			// the first token from the cursor, but there is no libclang call
-			// for that.
-			if tokens := tu.Tokenize(cursor.Extent()); len(tokens) > 0 {
-				// TBD work against the parent's list first to reduce the search times.
-				index, ok := mapTokenIndex[tu.TokenLocation(tokens[0])]
-				if !ok {
-					// oken location not found in map, skipping cursor
-					return clang.ChildVisit_Continue
-				}
-				tokenRange.Head = index
-				tokenRange.Len = len(tokens)
-			}
-			// End to set newCursor.Tokens.
 
 			ownIndex := len(ctu.GoTu.Cursors)
 
-			newCursor := ast.Cursor{
-				CursorKindId: cursor.Kind(),
-				CursorNameId: ctu.GoTu.CursorNameMap.Id(cursor.Spelling()),
-				ParentIndex:  parentIndex,
+			seenIndex, seen := cursorsSeen[cursor]
 
-				// Index can be set manually later but we do it here
-				// to better show what's going on.
-				// Index:  ownIndex,
-				Tokens: tokenRange,
+			if seen {
+				// If this cursor has been seen already, it means the AST clang is walking us through
+				// has an additional parent for the same child. Rather than traverse this child as a new
+				// cursor that needs to be recorded, along with its children, register this duplication in
+				// the tree by creating a cursorkind.Back entry.
+
+				ctu.GoTu.Back[ownIndex] = seenIndex
+
+				backCursor := ast.Cursor{
+					CursorKindId: cursorkind.Back,
+					ParentIndex:  parentIndex,
+				}
+				// Keep the lists the same length. Use the nullCursor as a place holder.
+				ctu.GoTu.Cursors = append(ctu.GoTu.Cursors, backCursor)
+				ctu.ClangCursors = append(ctu.ClangCursors, nullCursor)
+
+			} else {
+
+				if debug {
+					fmt.Printf("parentIndex %d, visiting cursor hash %x, parent hash %x\n",
+						parentIndex,
+						cursor.HashCursor(),
+						parent.HashCursor())
+					fmt.Printf("childcount %d\n", childcount)
+				}
+
+				// Start to set newCursor.Tokens.
+				var tokenRange ast.IndexPair
+
+				// Get clang tokens for this cursor long enough to find them in
+				// the global tu list of tokens. It should be enough to get just
+				// the first token from the cursor, but there is no libclang call
+				// for that.
+				if tokens := tu.Tokenize(cursor.Extent()); len(tokens) > 0 {
+					// TBD work against the parent's list first to reduce the search times.
+					index, ok := mapTokenIndex[tu.TokenLocation(tokens[0])]
+					if !ok {
+						// oken location not found in map, skipping cursor
+						return clang.ChildVisit_Continue
+					}
+					tokenRange.Head = index
+					tokenRange.Len = len(tokens)
+				}
+				// End to set newCursor.Tokens.
+
+				newCursor := ast.Cursor{
+					CursorKindId: cursor.Kind(),
+					CursorNameId: ctu.GoTu.CursorNameMap.Id(cursor.Spelling()),
+					ParentIndex:  parentIndex,
+
+					// Index can be set manually later but we do it here
+					// to better show what's going on.
+					// Index:  ownIndex,
+					Tokens: tokenRange,
+				}
+
+				cursorsSeen[cursor] = len(ctu.GoTu.Cursors) // Length of either list would suffice.
+
+				// N.B. Append to the two lists back to back, else risk
+				// a return getting added in between and having their
+				// lengths not match.
+				ctu.GoTu.Cursors = append(ctu.GoTu.Cursors, newCursor)
+				ctu.ClangCursors = append(ctu.ClangCursors, cursor)
 			}
-
-			// N.B. Append to the two lists back to back, else risk
-			// a return getting added in between and having their
-			// lengths not match.
-			ctu.GoTu.Cursors = append(ctu.GoTu.Cursors, newCursor)
-			ctu.ClangCursors = append(ctu.ClangCursors, cursor)
 
 			// Determining the children doesn't have to be done here.
 			// It is enough that the ParentIndex was set in this visit.
@@ -171,7 +207,11 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 		})
 	}
 
+	// These could also be called from DecodeFinish if we knew we just wanted them done
+	// after gob decoding and not when struct is first populated.
 	ctu.GoTu.SetBinaryOperatorNames()
+	// Maybe don't call this here either.
+	//ctu.GoTu.SetBackChildren()
 
 	return nil
 }

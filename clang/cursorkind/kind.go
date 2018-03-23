@@ -835,6 +835,13 @@ const (
 	 */
 	OverloadCandidate Kind = 700
 
+	/**
+	 * A go-clang value, created to represent a cursor that points back to a
+	 * previous cursor that has already been seen in the recursive walk.
+	 * This expressly does not come from the libclang header file.
+	 */
+	Back Kind = -1
+
 	FirstDecl          Kind = UnexposedDecl
 	LastDecl           Kind = CXXAccessSpecifier
 	FirstRef           Kind = ObjCSuperClassRef
@@ -856,6 +863,8 @@ const (
 func Validate(i int) (Kind, error) {
 	// switch logic taken from stringer output.
 	switch {
+	case -1 == i:
+		return Kind(i), nil
 	case 1 <= i && i <= 50:
 		return Kind(i), nil
 	case 70 <= i && i <= 73:

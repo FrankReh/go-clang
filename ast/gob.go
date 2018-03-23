@@ -64,23 +64,16 @@ func (tu *TranslationUnit) EncodeGobV1(w io.Writer) error {
 	if err := enc.Encode(tu.TokenIds); err != nil {
 		return err
 	}
-	/* gone
-	if err := enc.Encode(tu.CursorKindMap); err != nil {
-		return err
-	}
-	*/
 	if err := enc.Encode(tu.CursorNameMap); err != nil {
 		return err
 	}
 	if err := enc.Encode(tu.TokenMap); err != nil {
 		return err
 	}
-	/* gone
-	if err := enc.Encode(tu.TokenKindMap); err != nil {
+	if err := enc.Encode(tu.TokenNameMap); err != nil {
 		return err
 	}
-	*/
-	if err := enc.Encode(tu.TokenNameMap); err != nil {
+	if err := enc.Encode(tu.Back); err != nil {
 		return err
 	}
 	return nil
@@ -168,23 +161,16 @@ func (tu *TranslationUnit) DecodeGobV1(r io.Reader) error {
 	if err := dec.Decode(&tu.TokenIds); err != nil {
 		return err
 	}
-	/* gone
-	if err := dec.Decode(&tu.CursorKindMap); err != nil {
-		return err
-	}
-	*/
 	if err := dec.Decode(&tu.CursorNameMap); err != nil {
 		return err
 	}
 	if err := dec.Decode(&tu.TokenMap); err != nil {
 		return err
 	}
-	/* gone
-	if err := dec.Decode(&tu.TokenKindMap); err != nil {
+	if err := dec.Decode(&tu.TokenNameMap); err != nil {
 		return err
 	}
-	*/
-	if err := dec.Decode(&tu.TokenNameMap); err != nil {
+	if err := dec.Decode(&tu.Back); err != nil {
 		return err
 	}
 	tu.DecodeFinish()
