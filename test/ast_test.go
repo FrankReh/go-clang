@@ -2,7 +2,7 @@ package clang_test
 
 import (
 	"bytes"
-	//"flag"
+	"flag"
 	"fmt"
 	"go/format"
 	"io/ioutil"
@@ -23,7 +23,7 @@ import (
 	run "github.com/frankreh/go-clang-v5.0/clangrun"
 )
 
-// var updateFlag = flag.Bool("update", false, "update the table_test.got file.")
+var updateFlag = flag.Bool("update", false, "update the table_test.got file.")
 
 // alignOn returns string created by aligning strings by their common substr.
 func alignOn(list []string, substr string) string {
@@ -699,32 +699,46 @@ func TestAst(t *testing.T) {
 		if err := templ.Execute(&buf, testTupleData); err != nil {
 			t.Fatal(err)
 		}
-		if err := ioutil.WriteFile("table_test.got", formatBytes(t, buf.Bytes()), 0666); err != nil {
+		gotbytes := formatBytes(t, buf.Bytes())
+
+		// Don't create the got file unless it is going to be different from the golden file.
+		// So read the golden file first. Rather a file read every time, than a file write.
+		goldenbytes, err := ioutil.ReadFile(golden)
+		if err != nil {
 			t.Fatal(err)
 		}
-		// Compare got file with original.
-		var cmd *exec.Cmd
-		switch runtime.GOOS {
-		case "plan9":
-			cmd = exec.Command("/bin/diff", "-c", golden, gotfilename)
-		default:
-			cmd = exec.Command("/usr/bin/diff", "-u", golden, gotfilename)
-		}
-		cmdbuf := new(bytes.Buffer)
-		cmd.Stdout = cmdbuf
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
-			t.Errorf("diff test between %s and %s failed: %s\n%s\n",
-				golden, gotfilename, err, cmdbuf)
 
-			/*
+		if !bytes.Equal(goldenbytes, gotbytes) {
+
+			if err := ioutil.WriteFile("table_test.got", gotbytes, 0666); err != nil {
+				t.Fatal(err)
+			}
+			// Compare got file with original.
+			var cmd *exec.Cmd
+			switch runtime.GOOS {
+			case "plan9":
+				cmd = exec.Command("/bin/diff", "-c", golden, gotfilename)
+			default:
+				cmd = exec.Command("/usr/bin/diff", "-u", golden, gotfilename)
+			}
+			cmdbuf := new(bytes.Buffer)
+			cmd.Stdout = cmdbuf
+			cmd.Stderr = os.Stderr
+			if err := cmd.Run(); err != nil {
 				if *updateFlag {
+					t.Logf("diff test between %s and %s shows: %s\n%s\n",
+						golden, gotfilename, err, cmdbuf)
 					t.Logf("Updating %s...", golden)
 					if err := exec.Command("/bin/cp", gotfilename, golden).Run(); err != nil {
 						t.Errorf("Update failed: %s", err)
 					}
+				} else {
+					t.Errorf("diff test between %s and %s failed: %s\n%s\n",
+						golden, gotfilename, err, cmdbuf)
 				}
-			*/
+			}
+		} else {
+			t.Logf("golden bytes equal got bytes")
 		}
 	}
 }
