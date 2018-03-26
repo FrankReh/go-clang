@@ -243,21 +243,29 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 
 		// The type alignment.
 
-		alignof, err := ctype.AlignOf()
-		if err != nil {
-			panic(fmt.Sprintf("type %v %s %s: %s", ctype, tkind, typespelling, err))
+		alignof := uint64(0)
+		var err error
+		switch tkind {
+		case typekind.Void:
+			break
+		default:
+			alignof, err = ctype.AlignOf()
+			if err != nil {
+				panic(fmt.Sprintf("In calling AlignOf, type %v %s %s: %s", ctype, tkind, typespelling, err))
+			}
 		}
 
 		// The type size.
 
 		sizeof := uint64(0)
 		switch tkind {
-		case typekind.VariableArray:
+		case typekind.Void,
+			typekind.VariableArray:
 			break
 		default:
 			sizeof, err = ctype.SizeOf()
 			if err != nil {
-				panic(fmt.Sprintf("type %v %s %s: %s", ctype, tkind, typespelling, err))
+				panic(fmt.Sprintf("In calling SizeOf, type %v %s %s: %s", ctype, tkind, typespelling, err))
 			}
 		}
 
@@ -321,14 +329,26 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 		case typekind.FunctionNoProto,
 			typekind.FunctionProto:
 
-			typeIndex, err = ctu.GoTu.TypeMap.AddFunction(ast.TypeFunction{
-				TypeKindKind: ast.TypeKindKind{tkind},
-				TypeSpelling: typespelling,
-			})
-			if err != nil {
-				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
-				panic(errmsg + ": " + err.Error())
+			// Build list of argument types.
+			var argtypeindexes []int
+			numargs := ctype.NumArgTypes()
+			for i := int32(0); i < numargs; i++ {
+				at := ctype.ArgType(uint32(i))
+				ati := ctu.mustDetermineSubTypeIndex(tkind, at, "arg")
+				argtypeindexes = append(argtypeindexes, ati)
 			}
+
+			typeIndex = ctu.addSuperWithOneSubType(tkind,
+				ctype.ResultType(),
+
+				func(resulttypeindex int) (int, error) {
+					return ctu.GoTu.TypeMap.AddFunction(ast.TypeFunction{
+						TypeKindKind: ast.TypeKindKind{tkind},
+						ResultTypeId: resulttypeindex,
+						ArgIds:       argtypeindexes,
+						TypeSpelling: typespelling,
+					})
+				})
 
 		case typekind.ConstantArray:
 			numelem := ctype.NumElements()
@@ -336,7 +356,7 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 				panic(fmt.Sprintf("element count is negative?"))
 			}
 
-			typeIndex = ctu.determineTypeIndexForArray(tkind,
+			typeIndex = ctu.addSuperWithOneSubType(tkind,
 				ctype.ElementType(),
 
 				func(elemtypeindex int) (int, error) {
@@ -353,7 +373,7 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 
 		case typekind.VariableArray:
 
-			typeIndex = ctu.determineTypeIndexForArray(tkind,
+			typeIndex = ctu.addSuperWithOneSubType(tkind,
 				ctype.ElementType(),
 
 				func(elemtypeindex int) (int, error) {
@@ -377,8 +397,8 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 					panic(err)
 				}
 			} else {
-				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
-				panic(errmsg + ": type not yet handled")
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", tkind)
+				panic("ctu.determineTypeIndex type not yet handled: " + errmsg)
 				/*
 				 */
 				// TBD Stop gap measure while other type kinds are implemented.
@@ -387,6 +407,7 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 		}
 	}
 
+	// Cache typeIndex.
 	ctu.typeIndexes[ctype] = typeIndex
 	return typeIndex
 }
@@ -399,15 +420,9 @@ func (ctu *ClangTranslationUnit) determineTypeIndex2(tkind typekind.Kind,
 	if pointeetype.Kind() == typekind.Invalid {
 		panic(errname + " type is invalid?")
 	}
-	pointeetypeindex := ctu.determineTypeIndex(pointeetype)
-	if pointeetypeindex <= 1 {
-		// Would indicate a pointer to an Invalid or Unexposed type kind.
-		errmsg := fmt.Sprintf("%[1]s:%[1]d", tkind)
-		errmsg += fmt.Sprintf(" %s %[2]s:%[2]d", errname, pointeetype.Kind())
-		errmsg += fmt.Sprintf(" %s typeindex %d", errname, pointeetypeindex)
-		errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[pointeetypeindex])
-		panic(errmsg + ": " + errname + " typeindex <= 1")
-	}
+
+	pointeetypeindex := ctu.mustDetermineSubTypeIndex(tkind, pointeetype, errname)
+
 	typeIndex, err := addFn(pointeetypeindex)
 	if err != nil {
 		errmsg := fmt.Sprintf("%[1]s:%[1]d", tkind)
@@ -419,31 +434,35 @@ func (ctu *ClangTranslationUnit) determineTypeIndex2(tkind typekind.Kind,
 	return typeIndex
 }
 
-func (ctu *ClangTranslationUnit) determineTypeIndexForArray(tkind typekind.Kind,
-	elemtype clang.Type,
+func (ctu *ClangTranslationUnit) addSuperWithOneSubType(superTypeKind typekind.Kind,
+	subType clang.Type,
 	addFn func(pointeetypeindex int) (int, error)) int {
 
-	if elemtype.Kind() == typekind.Invalid {
+	if subType.Kind() == typekind.Invalid {
 		panic(fmt.Sprintf("element type is invalid?"))
 	}
 
-	elemtypeindex := ctu.determineTypeIndex(elemtype)
-	if elemtypeindex <= 1 {
-		// Would indicate an array of an Invalid or Unexposed type kind.
-		errmsg := fmt.Sprintf("%[1]s:%[1]d", tkind)
-		errmsg += fmt.Sprintf(" elemtype %[1]s:%[1]d", elemtype.Kind())
-		errmsg += fmt.Sprintf(" elemtypeindex %d", elemtypeindex)
-		errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[elemtypeindex])
-		errmsg += fmt.Sprintf(" elemtypeindex %d", elemtypeindex)
-		panic(errmsg + ": elemtypeindex <= 1")
-	}
-	typeIndex, err := addFn(elemtypeindex)
+	subtypeindex := ctu.mustDetermineSubTypeIndex(superTypeKind, subType, "subtype")
+
+	typeIndex, err := addFn(subtypeindex)
 	if err != nil {
-		errmsg := fmt.Sprintf("%[1]s:%[1]d", tkind)
-		errmsg += fmt.Sprintf(" elemtype %[1]s:%[1]d", elemtype.Kind())
-		errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[elemtypeindex])
-		errmsg += fmt.Sprintf(" elemtypeindex %d", elemtypeindex)
+		errmsg := fmt.Sprintf("%[1]s:%[1]d", superTypeKind)
+		errmsg += fmt.Sprintf(" subType %[1]s:%[1]d", subType.Kind())
+		errmsg += fmt.Sprintf(" Key[%d]%v", subtypeindex, ctu.GoTu.TypeMap.Keys[subtypeindex])
 		panic(errmsg + ": " + err.Error())
 	}
 	return typeIndex
+}
+
+func (ctu *ClangTranslationUnit) mustDetermineSubTypeIndex(superTypeKind typekind.Kind, subType clang.Type, errname string) int {
+	subtypeindex := ctu.determineTypeIndex(subType)
+	if subtypeindex <= 1 {
+		// Would indicate an array of an Invalid or Unexposed type kind.
+		errmsg := fmt.Sprintf("%[1]s:%[1]d", superTypeKind)
+		errmsg += fmt.Sprintf(" %s %[2]s:%[2]d", errname, subType.Kind())
+		errmsg += fmt.Sprintf(" %s typeindex %d", errname, subtypeindex)
+		errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[subtypeindex])
+		panic(errmsg + ": " + errname + " typeindex <= 1")
+	}
+	return subtypeindex
 }

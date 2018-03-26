@@ -80,7 +80,16 @@ func (p *TypeTypedef) Kind() typekind.Kind {
 
 type TypeFunction struct {
 	TypeKindKind
+	ResultTypeId int
+	ArgIds       []int // TBD this could be put into separate TypeMap category and indexed, to same some space for like signatures.
 	TypeSpelling string
+}
+
+func (a TypeFunction) Equal(b TypeFunction) bool {
+	return a.TypeKindKind == b.TypeKindKind &&
+		a.ResultTypeId == b.ResultTypeId &&
+		a.TypeSpelling == b.TypeSpelling &&
+		equalIntSlices(a.ArgIds, b.ArgIds)
 }
 
 type TypeConstantArray struct {
@@ -113,12 +122,19 @@ func (tm *TypeMap) AddIntrinsic(r TypeIntrinsic) (int, error) {
 		return -1, fmt.Errorf("TypeMap.AddIntrinsic.TypeSpelling is null")
 	}
 	if r.Align == 0 {
-		return -1, fmt.Errorf("TypeMap.AddIntrinsic.Align is 0")
+		// Allow a few type kinds to be coming in with an align of 0.
+		switch r.TypeKind {
+		case typekind.Void:
+			break
+		default:
+			return -1, fmt.Errorf("TypeMap.AddIntrinsic.Align is 0")
+		}
 	}
 	if r.Size == 0 {
 		// Allow a few type kinds to be coming in with a size of 0.
 		switch r.TypeKind {
-		case typekind.VariableArray:
+		case typekind.Void,
+			typekind.VariableArray:
 			break
 		default:
 			return -1, fmt.Errorf("TypeMap.AddIntrinsic.Size is 0")
@@ -236,7 +252,7 @@ func (tm *TypeMap) AddTypedef(r TypeTypedef) (int, error) {
 func (tm *TypeMap) AddFunction(r TypeFunction) (int, error) {
 	l := &tm.Functions
 	for i, e := range *l {
-		if r == e {
+		if r.Equal(e) {
 			panic(fmt.Sprintf("Entry already exists at %d", i))
 		}
 	}
@@ -334,7 +350,9 @@ func (tm *TypeMap) Type(i int) (Type, error) {
 	}
 	li := tm.Keys[i].TypeId
 
-	if tm.Keys[i].TypeKind.IsBuiltin() {
+	tkind := tm.Keys[i].TypeKind
+
+	if tkind.IsBuiltin() {
 		l := tm.Intrinsics
 		if err := indexCheck(li, len(l), "Intrinics"); err != nil {
 			return nil, err
@@ -342,7 +360,7 @@ func (tm *TypeMap) Type(i int) (Type, error) {
 		return &l[li], nil
 	}
 
-	switch tm.Keys[i].TypeKind {
+	switch tkind {
 	case typekind.Invalid:
 		return nil, nil
 	case typekind.Unexposed:
@@ -414,6 +432,8 @@ func (tm *TypeMap) Type(i int) (Type, error) {
 		}
 		return &l[li].TypeVariableArray, nil
 	}
+	errmsg := fmt.Sprintf("Type(i=%d) %[2]s:%[2]d", i, tkind)
+	panic("TypeMap.Type type not yet handled: " + errmsg)
 	return nil, nil
 }
 
@@ -608,7 +628,7 @@ func (a *TypeMap) assertEqualFunctions(b *TypeMap) error {
 	}
 	for i, v := range a.Functions {
 		v2 := b.Functions[i]
-		if v != v2 {
+		if !v.Equal(v2) {
 			return fmt.Errorf("TypeMap unequal Functions entry, %d %s %s",
 				i, v, v2)
 		}
@@ -698,4 +718,15 @@ func indexCheck(i, length int, name string) error {
 		return nil
 	}
 	return fmt.Errorf("out of range: %d %s:len:%d", i, name, length)
+}
+func equalIntSlices(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }

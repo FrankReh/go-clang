@@ -21,8 +21,8 @@ var testTupleData = []testTuple{
 
 	{
 		Name:             "empty_a1",
-		ExpectedGobSize0: 1509,
-		ExpectedGobSize1: 1243,
+		ExpectedGobSize0: 1558,
+		ExpectedGobSize1: 1279,
 	},
 	{
 		Name: "empty_a2",
@@ -41,8 +41,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {0 0} {0 0}}
             CursorNameMap:
             0: 1:sample.c`,
-		ExpectedGobSize0: 1509,
-		ExpectedGobSize1: 1243,
+		ExpectedGobSize0: 1558,
+		ExpectedGobSize1: 1279,
 	},
 	{
 		Name: "void_foo",
@@ -69,15 +69,16 @@ var testTupleData = []testTuple{
             0:void 1:foo 2:( 3:) 4:{ 5:}
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0}]
-                Functions: [{{FunctionNoProto} void ()}]
+                Keys: [{Invalid -1} {Unexposed -1} {Void 0} {FunctionNoProto 0}]
+                Intrinsics: [{{Void} void 0 0}]
+                Functions: [{{FunctionNoProto} 2 [] void ()}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{FunctionDecl 2 0 2 {2 1} {0 6}} 2:{CompoundStmt 0 1 0 {0 0} {4 2}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{FunctionDecl 2 0 3 {2 1} {0 6}} 2:{CompoundStmt 0 1 0 {0 0} {4 2}}
             CursorNameMap:
             0: 1:sample.c 2:foo`,
-		ExpectedGobSize0: 1622,
-		ExpectedGobSize1: 1329,
+		ExpectedGobSize0: 1689,
+		ExpectedGobSize1: 1383,
 	},
 	{
 		Name: "charp_foo_if",
@@ -134,21 +135,21 @@ var testTupleData = []testTuple{
             0:char 1:* 2:foo 3:( 4:int 5:i 6:) 7:{ 8:if 9:>= 10:0 11:return 12:"yes" 13:; 14:else 15:"no" 16:}
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0} {Char_S 1} {Pointer 4} {ConstantArray 0} {ConstantArray 1}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Char_S 1} {Pointer 3} {FunctionProto 0} {ConstantArray 0} {ConstantArray 1}]
                 Intrinsics: [{{Int} int 4 4} {{Char_S} char 1 1}]
-                Functions: [{{FunctionProto} char *(int)}]
-                Arrays: [{4 {4 1 4 char [4]}} {3 {4 1 3 char [3]}}]
+                Functions: [{{FunctionProto} 4 [2] char *(int)}]
+                Arrays: [{4 {3 1 4 char [4]}} {3 {3 1 3 char [3]}}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 22}} 1:{FunctionDecl 2 0 2 {2 2} {0 22}} 2:{ParmDecl 3 1 3 {0 0} {4 2}}
-            3:{CompoundStmt 0 1 0 {4 1} {7 15}} 4:{IfStmt 0 3 0 {5 3} {8 12}} 5:{BinaryOperator 6 4 3 {8 2} {10 3}}
-            6:{ReturnStmt 0 4 0 {10 1} {14 2}} 7:{ReturnStmt 0 4 0 {11 1} {18 2}} 8:{UnexposedExpr 3 5 3 {12 1} {10 1}}
-            9:{IntegerLiteral 0 5 3 {0 0} {12 1}} 10:{UnexposedExpr 0 6 5 {13 1} {15 1}} 11:{UnexposedExpr 0 7 5 {14 1} {19 1}}
-            12:{DeclRefExpr 3 8 3 {0 0} {10 1}} 13:{StringLiteral 4 10 6 {0 0} {15 1}} 14:{StringLiteral 5 11 7 {0 0} {19 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 22}} 1:{FunctionDecl 2 0 5 {2 2} {0 22}} 2:{ParmDecl 3 1 2 {0 0} {4 2}}
+            3:{CompoundStmt 0 1 0 {4 1} {7 15}} 4:{IfStmt 0 3 0 {5 3} {8 12}} 5:{BinaryOperator 6 4 2 {8 2} {10 3}}
+            6:{ReturnStmt 0 4 0 {10 1} {14 2}} 7:{ReturnStmt 0 4 0 {11 1} {18 2}} 8:{UnexposedExpr 3 5 2 {12 1} {10 1}}
+            9:{IntegerLiteral 0 5 2 {0 0} {12 1}} 10:{UnexposedExpr 0 6 4 {13 1} {15 1}} 11:{UnexposedExpr 0 7 4 {14 1} {19 1}}
+            12:{DeclRefExpr 3 8 2 {0 0} {10 1}} 13:{StringLiteral 4 10 6 {0 0} {15 1}} 14:{StringLiteral 5 11 7 {0 0} {19 1}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:i 4:"yes" 5:"no" 6:>=`,
-		ExpectedGobSize0: 2080,
-		ExpectedGobSize1: 1641,
+		ExpectedGobSize0: 2134,
+		ExpectedGobSize1: 1682,
 	},
 	{
 		Name: "int_foo_if_float",
@@ -166,8 +167,8 @@ var testTupleData = []testTuple{
             . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
             . . . ReturnStmt:IsStatement 
             . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1898,
-		ExpectedGobSize1: 1512,
+		ExpectedGobSize0: 1952,
+		ExpectedGobSize1: 1553,
 	},
 	{
 		Name:    "int_world",
@@ -307,8 +308,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {1 1} {0 5}} 1:{VarDecl 2 0 2 {2 1} {0 4}} 2:{IntegerLiteral 0 1 2 {0 0} {3 1}}
             CursorNameMap:
             0: 1:sample.c 2:a`,
-		ExpectedGobSize0: 1612,
-		ExpectedGobSize1: 1317,
+		ExpectedGobSize0: 1661,
+		ExpectedGobSize1: 1353,
 	},
 	{
 		Name:    "global_var_unsigned_int_a_is_0x1",
@@ -325,8 +326,8 @@ var testTupleData = []testTuple{
             a/VarDecl {first-seen:1 UInt 'unsigned int' align:4 size:4}
             . IsUnexposed(UnexposedExpr) {seen-before:1}
             . . 0x1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}`,
-		ExpectedGobSize0: 1677,
-		ExpectedGobSize1: 1369,
+		ExpectedGobSize0: 1726,
+		ExpectedGobSize1: 1405,
 	},
 	{
 		Name:    "global_var_a_is_0_001",
@@ -341,8 +342,8 @@ var testTupleData = []testTuple{
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Double 'double' align:8 size:8}
             . 0.001/FloatingLiteral:IsLiteral/ {seen-before:1}`,
-		ExpectedGobSize0: 1622,
-		ExpectedGobSize1: 1327,
+		ExpectedGobSize0: 1671,
+		ExpectedGobSize1: 1363,
 	},
 	{
 		Name: "function_storage_comparison",
@@ -368,21 +369,21 @@ var testTupleData = []testTuple{
             0:int 1:A 2:( 3:) 4:{ 5:return 6:1 7:; 8:} 9:extern 10:B 11:2 12:static 13:C 14:3 15:inline 16:D 17:4
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {Int 0}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
                 Intrinsics: [{{Int} int 4 4}]
-                Functions: [{{FunctionNoProto} int ()}]
+                Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 4} {0 39}} 1:{FunctionDecl 2 0 2 {5 1} {0 9}} 2:{FunctionDecl 3 0 2 {6 1} {9 10}}
-            3:{FunctionDecl 4 0 2 {7 1} {19 10}} 4:{FunctionDecl 5 0 2 {8 1} {29 10}} 5:{CompoundStmt 0 1 0 {9 1} {4 5}}
+            0:{TranslationUnit 1 -1 1 {1 4} {0 39}} 1:{FunctionDecl 2 0 3 {5 1} {0 9}} 2:{FunctionDecl 3 0 3 {6 1} {9 10}}
+            3:{FunctionDecl 4 0 3 {7 1} {19 10}} 4:{FunctionDecl 5 0 3 {8 1} {29 10}} 5:{CompoundStmt 0 1 0 {9 1} {4 5}}
             6:{CompoundStmt 0 2 0 {10 1} {14 5}} 7:{CompoundStmt 0 3 0 {11 1} {24 5}} 8:{CompoundStmt 0 4 0 {12 1} {34 5}}
             9:{ReturnStmt 0 5 0 {13 1} {5 2}} 10:{ReturnStmt 0 6 0 {14 1} {15 2}} 11:{ReturnStmt 0 7 0 {15 1} {25 2}}
-            12:{ReturnStmt 0 8 0 {16 1} {35 2}} 13:{IntegerLiteral 0 9 3 {0 0} {6 1}} 14:{IntegerLiteral 0 10 3 {0 0} {16 1}}
-            15:{IntegerLiteral 0 11 3 {0 0} {26 1}} 16:{IntegerLiteral 0 12 3 {0 0} {36 1}}
+            12:{ReturnStmt 0 8 0 {16 1} {35 2}} 13:{IntegerLiteral 0 9 2 {0 0} {6 1}} 14:{IntegerLiteral 0 10 2 {0 0} {16 1}}
+            15:{IntegerLiteral 0 11 2 {0 0} {26 1}} 16:{IntegerLiteral 0 12 2 {0 0} {36 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:B 4:C 5:D`,
-		ExpectedGobSize0: 2035,
-		ExpectedGobSize1: 1585,
+		ExpectedGobSize0: 2086,
+		ExpectedGobSize1: 1623,
 	},
 	{
 		Name:    "void_function_and_return",
@@ -401,8 +402,8 @@ var testTupleData = []testTuple{
             A/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
             . CompoundStmt:IsStatement 
             . . ReturnStmt:IsStatement `,
-		ExpectedGobSize0: 1656,
-		ExpectedGobSize1: 1352,
+		ExpectedGobSize0: 1723,
+		ExpectedGobSize1: 1406,
 	},
 	{
 		Name:    "int_function_and_return_1",
@@ -412,8 +413,8 @@ var testTupleData = []testTuple{
             . CompoundStmt:IsStatement 
             . . ReturnStmt:IsStatement 
             . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1701,
-		ExpectedGobSize1: 1384,
+		ExpectedGobSize0: 1752,
+		ExpectedGobSize1: 1422,
 	},
 	{
 		Name: "parenthesis_comparison",
@@ -437,8 +438,8 @@ var testTupleData = []testTuple{
             . . . ParenExpr:IsExpression:[( : Punctuation, ( : Punctuation, 2 : Literal, ) : Punctuation, ) : Punctuation]/ {seen-before:2}
             . . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {seen-before:2}
             . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1957,
-		ExpectedGobSize1: 1512,
+		ExpectedGobSize0: 2008,
+		ExpectedGobSize1: 1550,
 	},
 	{
 		Name: "func_sub_77_and_78",
@@ -473,18 +474,18 @@ var testTupleData = []testTuple{
             0:int 1:A 2:( 3:) 4:{ 5:return 6:77 7:- 8:78 9:; 10:}
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {Int 0}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
                 Intrinsics: [{{Int} int 4 4}]
-                Functions: [{{FunctionNoProto} int ()}]
+                Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 11}} 1:{FunctionDecl 2 0 2 {2 1} {0 11}} 2:{CompoundStmt 0 1 0 {3 1} {4 7}}
-            3:{ReturnStmt 0 2 0 {4 1} {5 4}} 4:{BinaryOperator 3 3 3 {5 2} {6 3}} 5:{IntegerLiteral 0 4 3 {0 0} {6 1}}
-            6:{IntegerLiteral 0 4 3 {0 0} {8 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 11}} 1:{FunctionDecl 2 0 3 {2 1} {0 11}} 2:{CompoundStmt 0 1 0 {3 1} {4 7}}
+            3:{ReturnStmt 0 2 0 {4 1} {5 4}} 4:{BinaryOperator 3 3 2 {5 2} {6 3}} 5:{IntegerLiteral 0 4 2 {0 0} {6 1}}
+            6:{IntegerLiteral 0 4 2 {0 0} {8 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:-`,
-		ExpectedGobSize0: 1758,
-		ExpectedGobSize1: 1416,
+		ExpectedGobSize0: 1809,
+		ExpectedGobSize1: 1454,
 	},
 	{
 		Name:    "var_sub_77_and_78",
@@ -519,8 +520,8 @@ var testTupleData = []testTuple{
             3:{IntegerLiteral 0 2 2 {0 0} {3 1}} 4:{IntegerLiteral 0 2 2 {0 0} {5 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 1668,
-		ExpectedGobSize1: 1349,
+		ExpectedGobSize0: 1717,
+		ExpectedGobSize1: 1385,
 	},
 	{
 		Name:    "var_sub_p77p_and_78",
@@ -560,8 +561,8 @@ var testTupleData = []testTuple{
             3:{ParenExpr 0 2 2 {5 1} {3 3}} 4:{IntegerLiteral 0 2 2 {0 0} {7 1}} 5:{IntegerLiteral 0 3 2 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 1700,
-		ExpectedGobSize1: 1368,
+		ExpectedGobSize0: 1749,
+		ExpectedGobSize1: 1404,
 	},
 	{
 		Name:    "var_a_is_minus_b",
@@ -605,8 +606,8 @@ var testTupleData = []testTuple{
             6:{DeclRefExpr 2 5 2 {0 0} {9 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:b`,
-		ExpectedGobSize0: 1712,
-		ExpectedGobSize1: 1365,
+		ExpectedGobSize0: 1761,
+		ExpectedGobSize1: 1401,
 	},
 	{
 		Name: "add_sub_mul_div",
@@ -654,20 +655,20 @@ var testTupleData = []testTuple{
             0:int 1:A 2:( 3:) 4:{ 5:return 6:1 7:+ 8:2 9:- 10:3 11:* 12:4 13:/ 14:5 15:; 16:}
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {Int 0}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
                 Intrinsics: [{{Int} int 4 4}]
-                Functions: [{{FunctionNoProto} int ()}]
+                Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 17}} 1:{FunctionDecl 2 0 2 {2 1} {0 17}} 2:{CompoundStmt 0 1 0 {3 1} {4 13}}
-            3:{ReturnStmt 0 2 0 {4 1} {5 10}} 4:{BinaryOperator 3 3 3 {5 2} {6 9}} 5:{BinaryOperator 4 4 3 {7 2} {6 3}}
-            6:{BinaryOperator 5 4 3 {9 2} {10 5}} 7:{IntegerLiteral 0 5 3 {0 0} {6 1}} 8:{IntegerLiteral 0 5 3 {0 0} {8 1}}
-            9:{BinaryOperator 6 6 3 {11 2} {10 3}} 10:{IntegerLiteral 0 6 3 {0 0} {14 1}} 11:{IntegerLiteral 0 9 3 {0 0} {10 1}}
-            12:{IntegerLiteral 0 9 3 {0 0} {12 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 17}} 1:{FunctionDecl 2 0 3 {2 1} {0 17}} 2:{CompoundStmt 0 1 0 {3 1} {4 13}}
+            3:{ReturnStmt 0 2 0 {4 1} {5 10}} 4:{BinaryOperator 3 3 2 {5 2} {6 9}} 5:{BinaryOperator 4 4 2 {7 2} {6 3}}
+            6:{BinaryOperator 5 4 2 {9 2} {10 5}} 7:{IntegerLiteral 0 5 2 {0 0} {6 1}} 8:{IntegerLiteral 0 5 2 {0 0} {8 1}}
+            9:{BinaryOperator 6 6 2 {11 2} {10 3}} 10:{IntegerLiteral 0 6 2 {0 0} {14 1}} 11:{IntegerLiteral 0 9 2 {0 0} {10 1}}
+            12:{IntegerLiteral 0 9 2 {0 0} {12 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:- 4:+ 5:/ 6:*`,
-		ExpectedGobSize0: 1918,
-		ExpectedGobSize1: 1504,
+		ExpectedGobSize0: 1969,
+		ExpectedGobSize1: 1542,
 	},
 	{
 		Name: "add_and_double_add",
@@ -689,8 +690,8 @@ var testTupleData = []testTuple{
             . . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
             . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
             . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1934,
-		ExpectedGobSize1: 1500,
+		ExpectedGobSize0: 1985,
+		ExpectedGobSize1: 1538,
 	},
 	{
 		Name:    "hdr_processing_only",
@@ -707,8 +708,8 @@ var testTupleData = []testTuple{
 			  int hdr_glo_f()	           { return 13; }
 			  static inline int hdr_si_f() { return 14; }
 			  `,
-		ExpectedGobSize0: 1572,
-		ExpectedGobSize1: 1293,
+		ExpectedGobSize0: 1621,
+		ExpectedGobSize1: 1329,
 	},
 	{
 		Name:    "hdr_and_source",
@@ -743,8 +744,8 @@ var testTupleData = []testTuple{
             . CompoundStmt:IsStatement 
             . . ReturnStmt:IsStatement 
             . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 2090,
-		ExpectedGobSize1: 1633,
+		ExpectedGobSize0: 2141,
+		ExpectedGobSize1: 1671,
 	},
 	{
 		Name:    "struct_a_b",
@@ -798,8 +799,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:StructS 3:VarS 4:a 5:b
             Back:
             5:1`,
-		ExpectedGobSize0: 1784,
-		ExpectedGobSize1: 1461,
+		ExpectedGobSize0: 1833,
+		ExpectedGobSize1: 1497,
 	},
 	{
 		Name:    "typedef_int_II",
@@ -841,8 +842,8 @@ var testTupleData = []testTuple{
             3:{TypeRef 2 2 3 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:II 3:ii`,
-		ExpectedGobSize0: 1657,
-		ExpectedGobSize1: 1351,
+		ExpectedGobSize0: 1706,
+		ExpectedGobSize1: 1387,
 	},
 	{
 		Name: "typedef_struct_TA",
@@ -888,8 +889,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:TA 3:ss 4:a
             Back:
             5:1`,
-		ExpectedGobSize0: 1758,
-		ExpectedGobSize1: 1422,
+		ExpectedGobSize0: 1807,
+		ExpectedGobSize1: 1458,
 	},
 	{
 		Name: "typedefs_two_structs",
@@ -965,8 +966,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:TA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b
             Back:
             10:1 12:3 16:15`,
-		ExpectedGobSize0: 2027,
-		ExpectedGobSize1: 1589,
+		ExpectedGobSize0: 2076,
+		ExpectedGobSize1: 1625,
 	},
 	{
 		Name: "compare_named_struct_with_typedef",
@@ -1037,8 +1038,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:SA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b 10:struct SA
             Back:
             10:2 12:11 14:13`,
-		ExpectedGobSize0: 2002,
-		ExpectedGobSize1: 1586,
+		ExpectedGobSize0: 2051,
+		ExpectedGobSize1: 1622,
 	},
 	{
 		Name: "compare_named_struct_with_two_typedefs",
@@ -1109,8 +1110,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:SA 3:TA 4:TB 5:x0 6:x1 7:y0 8:y1 9:z0 10:z1 11:a 12:struct SA 13:b
             Back:
             14:3 16:15 18:17 20:19`,
-		ExpectedGobSize0: 2334,
-		ExpectedGobSize1: 1855,
+		ExpectedGobSize0: 2383,
+		ExpectedGobSize1: 1891,
 	},
 	{
 		Name: "cascade_int_pointers",
@@ -1229,15 +1230,15 @@ var testTupleData = []testTuple{
             0:void 1:foo 2:( 3:int 4:n 5:) 6:{ 7:arr 8:[ 9:] 10:; 11:}
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0} {VariableArray 0}]
-                Intrinsics: [{{Int} int 4 4}]
-                Functions: [{{FunctionProto} void (int)}]
-                Arrays: [{-1 {3 4 0 int [n]}}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Void 1} {FunctionProto 0} {VariableArray 0}]
+                Intrinsics: [{{Int} int 4 4} {{Void} void 0 0}]
+                Functions: [{{FunctionProto} 3 [2] void (int)}]
+                Arrays: [{-1 {2 4 0 int [n]}}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 14}} 1:{FunctionDecl 2 0 2 {2 2} {0 14}} 2:{ParmDecl 3 1 3 {0 0} {3 2}}
-            3:{CompoundStmt 0 1 0 {4 1} {6 8}} 4:{DeclStmt 0 3 0 {5 1} {7 6}} 5:{VarDecl 4 4 4 {6 1} {7 5}}
-            6:{DeclRefExpr 3 5 3 {0 0} {10 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 14}} 1:{FunctionDecl 2 0 4 {2 2} {0 14}} 2:{ParmDecl 3 1 2 {0 0} {3 2}}
+            3:{CompoundStmt 0 1 0 {4 1} {6 8}} 4:{DeclStmt 0 3 0 {5 1} {7 6}} 5:{VarDecl 4 4 5 {6 1} {7 5}}
+            6:{DeclRefExpr 3 5 2 {0 0} {10 1}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:n 4:arr`,
 	},
@@ -1412,12 +1413,13 @@ var testTupleData = []testTuple{
             0:void 1:foo 2:( 3:) 4:{ 5:} 6:bar 7:;
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {FunctionProto 1}]
-                Functions: [{{FunctionNoProto} void ()} {{FunctionProto} void (void)}]
+                Keys: [{Invalid -1} {Unexposed -1} {Void 0} {FunctionNoProto 0} {FunctionProto 1}]
+                Intrinsics: [{{Void} void 0 0}]
+                Functions: [{{FunctionNoProto} 2 [] void ()} {{FunctionProto} 2 [] void (void)}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 3} {0 18}} 1:{FunctionDecl 2 0 2 {4 1} {0 6}} 2:{FunctionDecl 3 0 3 {0 0} {6 5}}
-            3:{FunctionDecl 3 0 3 {5 1} {12 6}} 4:{CompoundStmt 0 1 0 {0 0} {4 2}} 5:{CompoundStmt 0 3 0 {0 0} {16 2}}
+            0:{TranslationUnit 1 -1 1 {1 3} {0 18}} 1:{FunctionDecl 2 0 3 {4 1} {0 6}} 2:{FunctionDecl 3 0 4 {0 0} {6 5}}
+            3:{FunctionDecl 3 0 4 {5 1} {12 6}} 4:{CompoundStmt 0 1 0 {0 0} {4 2}} 5:{CompoundStmt 0 3 0 {0 0} {16 2}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:bar`,
 	},
