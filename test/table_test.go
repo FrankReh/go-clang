@@ -21,8 +21,8 @@ var testTupleData = []testTuple{
 
 	{
 		Name:             "empty_a1",
-		ExpectedGobSize0: 1453,
-		ExpectedGobSize1: 1187,
+		ExpectedGobSize0: 1509,
+		ExpectedGobSize1: 1243,
 	},
 	{
 		Name: "empty_a2",
@@ -41,8 +41,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {0 0} {0 0}}
             CursorNameMap:
             0: 1:sample.c`,
-		ExpectedGobSize0: 1453,
-		ExpectedGobSize1: 1187,
+		ExpectedGobSize0: 1509,
+		ExpectedGobSize1: 1243,
 	},
 	{
 		Name: "void_foo",
@@ -76,8 +76,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{FunctionDecl 2 0 2 {2 1} {0 6}} 2:{CompoundStmt 0 1 0 {0 0} {4 2}}
             CursorNameMap:
             0: 1:sample.c 2:foo`,
-		ExpectedGobSize0: 1566,
-		ExpectedGobSize1: 1273,
+		ExpectedGobSize0: 1622,
+		ExpectedGobSize1: 1329,
 	},
 	{
 		Name: "charp_foo_if",
@@ -137,7 +137,7 @@ var testTupleData = []testTuple{
                 Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0} {Char_S 1} {Pointer 4} {ConstantArray 0} {ConstantArray 1}]
                 Intrinsics: [{{Int} int 4 4} {{Char_S} char 1 1}]
                 Functions: [{{FunctionProto} char *(int)}]
-                ConstArrays: [{4 4 1 4 char [4]} {4 3 1 3 char [3]}]
+                Arrays: [{4 {4 1 4 char [4]}} {3 {4 1 3 char [3]}}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 1} {0 22}} 1:{FunctionDecl 2 0 2 {2 2} {0 22}} 2:{ParmDecl 3 1 3 {0 0} {4 2}}
@@ -147,8 +147,8 @@ var testTupleData = []testTuple{
             12:{DeclRefExpr 3 8 3 {0 0} {10 1}} 13:{StringLiteral 4 10 6 {0 0} {15 1}} 14:{StringLiteral 5 11 7 {0 0} {19 1}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:i 4:"yes" 5:"no" 6:>=`,
-		ExpectedGobSize0: 2020,
-		ExpectedGobSize1: 1581,
+		ExpectedGobSize0: 2080,
+		ExpectedGobSize1: 1641,
 	},
 	{
 		Name: "int_foo_if_float",
@@ -166,8 +166,8 @@ var testTupleData = []testTuple{
             . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
             . . . ReturnStmt:IsStatement 
             . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1842,
-		ExpectedGobSize1: 1456,
+		ExpectedGobSize0: 1898,
+		ExpectedGobSize1: 1512,
 	},
 	{
 		Name:    "int_world",
@@ -307,8 +307,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {1 1} {0 5}} 1:{VarDecl 2 0 2 {2 1} {0 4}} 2:{IntegerLiteral 0 1 2 {0 0} {3 1}}
             CursorNameMap:
             0: 1:sample.c 2:a`,
-		ExpectedGobSize0: 1556,
-		ExpectedGobSize1: 1261,
+		ExpectedGobSize0: 1612,
+		ExpectedGobSize1: 1317,
 	},
 	{
 		Name:    "global_var_unsigned_int_a_is_0x1",
@@ -325,8 +325,8 @@ var testTupleData = []testTuple{
             a/VarDecl {first-seen:1 UInt 'unsigned int' align:4 size:4}
             . IsUnexposed(UnexposedExpr) {seen-before:1}
             . . 0x1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}`,
-		ExpectedGobSize0: 1621,
-		ExpectedGobSize1: 1313,
+		ExpectedGobSize0: 1677,
+		ExpectedGobSize1: 1369,
 	},
 	{
 		Name:    "global_var_a_is_0_001",
@@ -341,8 +341,8 @@ var testTupleData = []testTuple{
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Double 'double' align:8 size:8}
             . 0.001/FloatingLiteral:IsLiteral/ {seen-before:1}`,
-		ExpectedGobSize0: 1566,
-		ExpectedGobSize1: 1271,
+		ExpectedGobSize0: 1622,
+		ExpectedGobSize1: 1327,
 	},
 	{
 		Name: "function_storage_comparison",
@@ -381,8 +381,8 @@ var testTupleData = []testTuple{
             15:{IntegerLiteral 0 11 3 {0 0} {26 1}} 16:{IntegerLiteral 0 12 3 {0 0} {36 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:B 4:C 5:D`,
-		ExpectedGobSize0: 1979,
-		ExpectedGobSize1: 1529,
+		ExpectedGobSize0: 2035,
+		ExpectedGobSize1: 1585,
 	},
 	{
 		Name:    "void_function_and_return",
@@ -401,8 +401,8 @@ var testTupleData = []testTuple{
             A/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
             . CompoundStmt:IsStatement 
             . . ReturnStmt:IsStatement `,
-		ExpectedGobSize0: 1600,
-		ExpectedGobSize1: 1296,
+		ExpectedGobSize0: 1656,
+		ExpectedGobSize1: 1352,
 	},
 	{
 		Name:    "int_function_and_return_1",
@@ -412,8 +412,8 @@ var testTupleData = []testTuple{
             . CompoundStmt:IsStatement 
             . . ReturnStmt:IsStatement 
             . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1645,
-		ExpectedGobSize1: 1328,
+		ExpectedGobSize0: 1701,
+		ExpectedGobSize1: 1384,
 	},
 	{
 		Name: "parenthesis_comparison",
@@ -437,8 +437,8 @@ var testTupleData = []testTuple{
             . . . ParenExpr:IsExpression:[( : Punctuation, ( : Punctuation, 2 : Literal, ) : Punctuation, ) : Punctuation]/ {seen-before:2}
             . . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {seen-before:2}
             . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1901,
-		ExpectedGobSize1: 1456,
+		ExpectedGobSize0: 1957,
+		ExpectedGobSize1: 1512,
 	},
 	{
 		Name: "func_sub_77_and_78",
@@ -483,8 +483,8 @@ var testTupleData = []testTuple{
             6:{IntegerLiteral 0 4 3 {0 0} {8 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:-`,
-		ExpectedGobSize0: 1702,
-		ExpectedGobSize1: 1360,
+		ExpectedGobSize0: 1758,
+		ExpectedGobSize1: 1416,
 	},
 	{
 		Name:    "var_sub_77_and_78",
@@ -519,8 +519,8 @@ var testTupleData = []testTuple{
             3:{IntegerLiteral 0 2 2 {0 0} {3 1}} 4:{IntegerLiteral 0 2 2 {0 0} {5 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 1612,
-		ExpectedGobSize1: 1293,
+		ExpectedGobSize0: 1668,
+		ExpectedGobSize1: 1349,
 	},
 	{
 		Name:    "var_sub_p77p_and_78",
@@ -560,8 +560,8 @@ var testTupleData = []testTuple{
             3:{ParenExpr 0 2 2 {5 1} {3 3}} 4:{IntegerLiteral 0 2 2 {0 0} {7 1}} 5:{IntegerLiteral 0 3 2 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 1644,
-		ExpectedGobSize1: 1312,
+		ExpectedGobSize0: 1700,
+		ExpectedGobSize1: 1368,
 	},
 	{
 		Name:    "var_a_is_minus_b",
@@ -605,8 +605,8 @@ var testTupleData = []testTuple{
             6:{DeclRefExpr 2 5 2 {0 0} {9 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:b`,
-		ExpectedGobSize0: 1656,
-		ExpectedGobSize1: 1309,
+		ExpectedGobSize0: 1712,
+		ExpectedGobSize1: 1365,
 	},
 	{
 		Name: "add_sub_mul_div",
@@ -666,8 +666,8 @@ var testTupleData = []testTuple{
             12:{IntegerLiteral 0 9 3 {0 0} {12 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:- 4:+ 5:/ 6:*`,
-		ExpectedGobSize0: 1862,
-		ExpectedGobSize1: 1448,
+		ExpectedGobSize0: 1918,
+		ExpectedGobSize1: 1504,
 	},
 	{
 		Name: "add_and_double_add",
@@ -689,8 +689,8 @@ var testTupleData = []testTuple{
             . . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
             . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
             . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 1878,
-		ExpectedGobSize1: 1444,
+		ExpectedGobSize0: 1934,
+		ExpectedGobSize1: 1500,
 	},
 	{
 		Name:    "hdr_processing_only",
@@ -707,8 +707,8 @@ var testTupleData = []testTuple{
 			  int hdr_glo_f()	           { return 13; }
 			  static inline int hdr_si_f() { return 14; }
 			  `,
-		ExpectedGobSize0: 1516,
-		ExpectedGobSize1: 1237,
+		ExpectedGobSize0: 1572,
+		ExpectedGobSize1: 1293,
 	},
 	{
 		Name:    "hdr_and_source",
@@ -743,8 +743,8 @@ var testTupleData = []testTuple{
             . CompoundStmt:IsStatement 
             . . ReturnStmt:IsStatement 
             . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}`,
-		ExpectedGobSize0: 2034,
-		ExpectedGobSize1: 1577,
+		ExpectedGobSize0: 2090,
+		ExpectedGobSize1: 1633,
 	},
 	{
 		Name:    "struct_a_b",
@@ -798,8 +798,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:StructS 3:VarS 4:a 5:b
             Back:
             5:1`,
-		ExpectedGobSize0: 1728,
-		ExpectedGobSize1: 1405,
+		ExpectedGobSize0: 1784,
+		ExpectedGobSize1: 1461,
 	},
 	{
 		Name:    "typedef_int_II",
@@ -841,8 +841,8 @@ var testTupleData = []testTuple{
             3:{TypeRef 2 2 3 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:II 3:ii`,
-		ExpectedGobSize0: 1601,
-		ExpectedGobSize1: 1295,
+		ExpectedGobSize0: 1657,
+		ExpectedGobSize1: 1351,
 	},
 	{
 		Name: "typedef_struct_TA",
@@ -888,8 +888,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:TA 3:ss 4:a
             Back:
             5:1`,
-		ExpectedGobSize0: 1702,
-		ExpectedGobSize1: 1366,
+		ExpectedGobSize0: 1758,
+		ExpectedGobSize1: 1422,
 	},
 	{
 		Name: "typedefs_two_structs",
@@ -965,8 +965,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:TA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b
             Back:
             10:1 12:3 16:15`,
-		ExpectedGobSize0: 1971,
-		ExpectedGobSize1: 1533,
+		ExpectedGobSize0: 2027,
+		ExpectedGobSize1: 1589,
 	},
 	{
 		Name: "compare_named_struct_with_typedef",
@@ -1037,8 +1037,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:SA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b 10:struct SA
             Back:
             10:2 12:11 14:13`,
-		ExpectedGobSize0: 1946,
-		ExpectedGobSize1: 1530,
+		ExpectedGobSize0: 2002,
+		ExpectedGobSize1: 1586,
 	},
 	{
 		Name: "compare_named_struct_with_two_typedefs",
@@ -1109,8 +1109,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:SA 3:TA 4:TB 5:x0 6:x1 7:y0 8:y1 9:z0 10:z1 11:a 12:struct SA 13:b
             Back:
             14:3 16:15 18:17 20:19`,
-		ExpectedGobSize0: 2278,
-		ExpectedGobSize1: 1799,
+		ExpectedGobSize0: 2334,
+		ExpectedGobSize1: 1855,
 	},
 	{
 		Name: "cascade_int_pointers",
@@ -1190,7 +1190,7 @@ var testTupleData = []testTuple{
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {ConstantArray 0} {ConstantArray 1} {ConstantArray 2} {ConstantArray 3} {ConstantArray 4} {ConstantArray 5}]
                 Intrinsics: [{{Int} int 4 4}]
-                ConstArrays: [{2 1 4 4 int [1]} {2 3 4 12 int [3]} {4 2 4 24 int [2][3]} {2 6 4 24 int [6]} {6 5 4 120 int [5][6]} {7 4 4 480 int [4][5][6]}]
+                Arrays: [{1 {2 4 4 int [1]}} {3 {2 4 12 int [3]}} {2 {4 4 24 int [2][3]}} {6 {2 4 24 int [6]}} {5 {6 4 120 int [5][6]}} {4 {7 4 480 int [4][5][6]}}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 5} {0 36}} 1:{VarDecl 2 0 2 {0 0} {0 2}} 2:{VarDecl 3 0 3 {6 1} {3 5}}
@@ -1229,13 +1229,14 @@ var testTupleData = []testTuple{
             0:void 1:foo 2:( 3:int 4:n 5:) 6:{ 7:arr 8:[ 9:] 10:; 11:}
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0}]
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0} {VariableArray 0}]
                 Intrinsics: [{{Int} int 4 4}]
                 Functions: [{{FunctionProto} void (int)}]
+                Arrays: [{-1 {3 4 0 int [n]}}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 1} {0 14}} 1:{FunctionDecl 2 0 2 {2 2} {0 14}} 2:{ParmDecl 3 1 3 {0 0} {3 2}}
-            3:{CompoundStmt 0 1 0 {4 1} {6 8}} 4:{DeclStmt 0 3 0 {5 1} {7 6}} 5:{VarDecl 4 4 1 {6 1} {7 5}}
+            3:{CompoundStmt 0 1 0 {4 1} {6 8}} 4:{DeclStmt 0 3 0 {5 1} {7 6}} 5:{VarDecl 4 4 4 {6 1} {7 5}}
             6:{DeclRefExpr 3 5 3 {0 0} {10 1}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:n 4:arr`,

@@ -83,16 +83,24 @@ type TypeFunction struct {
 	TypeSpelling string
 }
 
-type TypeConstArray struct {
+type TypeConstantArray struct {
+	ElemCount int
+	TypeVariableArray
+}
+
+func (p *TypeConstantArray) Kind() typekind.Kind {
+	return typekind.ConstantArray
+}
+
+type TypeVariableArray struct {
 	ElemTypeId   int
-	ElemCount    int
 	Align        int
 	Size         int
 	TypeSpelling string
 }
 
-func (p *TypeConstArray) Kind() typekind.Kind {
-	return typekind.ConstantArray
+func (p *TypeVariableArray) Kind() typekind.Kind {
+	return typekind.VariableArray
 }
 
 // AddIntrinsic adds TypeIntrinsic to its mapping and returns the new key index for it.
@@ -224,7 +232,7 @@ func (tm *TypeMap) AddTypedef(r TypeTypedef) (int, error) {
 	return tm.addToKeys(typekind.Typedef, len(*l)-1), nil
 }
 
-// AddConstArray adds TypeFunction to its mapping and returns the new key index for it.
+// AddFunction adds TypeFunction to its mapping and returns the new key index for it.
 func (tm *TypeMap) AddFunction(r TypeFunction) (int, error) {
 	l := &tm.Functions
 	for i, e := range *l {
@@ -236,9 +244,9 @@ func (tm *TypeMap) AddFunction(r TypeFunction) (int, error) {
 	return tm.addToKeys(r.TypeKind, len(*l)-1), nil
 }
 
-// AddConstArray adds TypeConstArray to its mapping and returns the new key index for it.
-func (tm *TypeMap) AddConstArray(r TypeConstArray) (int, error) {
-	l := &tm.ConstArrays
+// AddConstantArray adds TypeConstantArray to its mapping and returns the new key index for it.
+func (tm *TypeMap) AddConstantArray(r TypeConstantArray) (int, error) {
+	l := &tm.Arrays
 	for i, e := range *l {
 		if r == e {
 			panic(fmt.Sprintf("Entry already exists at %d", i))
@@ -248,17 +256,35 @@ func (tm *TypeMap) AddConstArray(r TypeConstArray) (int, error) {
 	return tm.addToKeys(typekind.ConstantArray, len(*l)-1), nil
 }
 
+// AddVariableArray adds TypeVariableArray to its mapping and returns the new key index for it.
+// It is stored along with TypeConstantArray structs but the ElemCount of -1 and more
+// importantly, the type kind of VariableArray in []Keys differentiates it.
+func (tm *TypeMap) AddVariableArray(v TypeVariableArray) (int, error) {
+	r := TypeConstantArray{
+		ElemCount:         -1,
+		TypeVariableArray: v,
+	}
+	l := &tm.Arrays // Store TypeVariableArray in same slice with TypeConstantArray..
+	for i, e := range *l {
+		if r == e {
+			panic(fmt.Sprintf("Entry already exists at %d", i))
+		}
+	}
+	*l = append(*l, r)
+	return tm.addToKeys(typekind.VariableArray, len(*l)-1), nil
+}
+
 // TypeMap maps a Cursor.TypeIndex (an int) to a Type.
 type TypeMap struct {
 	Keys       []TypeKey
 	Intrinsics []TypeIntrinsic
 	//Pointers   []TypePointer
 	//Elaborateds   []TypeElaborated
-	Records     []TypeRecord
-	Enums       []TypeEnum
-	Typedefs    []TypeTypedef
-	Functions   []TypeFunction
-	ConstArrays []TypeConstArray
+	Records   []TypeRecord
+	Enums     []TypeEnum
+	Typedefs  []TypeTypedef
+	Functions []TypeFunction
+	Arrays    []TypeConstantArray
 }
 
 // Init ensures the struct is setup properly before first use.
@@ -376,11 +402,17 @@ func (tm *TypeMap) Type(i int) (Type, error) {
 		}
 		return &l[li], nil
 	case typekind.ConstantArray:
-		l := tm.ConstArrays
-		if err := indexCheck(li, len(l), "ConstArrays"); err != nil {
+		l := tm.Arrays
+		if err := indexCheck(li, len(l), "Arrays"); err != nil {
 			return nil, err
 		}
 		return &l[li], nil
+	case typekind.VariableArray:
+		l := tm.Arrays
+		if err := indexCheck(li, len(l), "Arrays"); err != nil {
+			return nil, err
+		}
+		return &l[li].TypeVariableArray, nil
 	}
 	return nil, nil
 }
@@ -414,8 +446,8 @@ func (tm TypeMap) GoString() string {
 	if len(tm.Functions) > 0 {
 		fmt.Fprintf(b, "    Functions: %v\n", tm.Functions)
 	}
-	if len(tm.ConstArrays) > 0 {
-		fmt.Fprintf(b, "    ConstArrays: %v\n", tm.ConstArrays)
+	if len(tm.Arrays) > 0 {
+		fmt.Fprintf(b, "    Arrays: %v\n", tm.Arrays)
 	}
 	fmt.Fprintf(b, "}")
 
@@ -457,7 +489,7 @@ func (a *TypeMap) AssertEqual(b *TypeMap) error {
 	if err := a.assertEqualFunctions(b); err != nil {
 		return err
 	}
-	if err := a.assertEqualConstArrays(b); err != nil {
+	if err := a.assertEqualConstantArrays(b); err != nil {
 		return err
 	}
 	return nil
@@ -584,15 +616,15 @@ func (a *TypeMap) assertEqualFunctions(b *TypeMap) error {
 	return nil
 }
 
-func (a *TypeMap) assertEqualConstArrays(b *TypeMap) error {
-	if len(a.ConstArrays) != len(b.ConstArrays) {
-		return fmt.Errorf("TypeMap unequal ConstArrays lengths, %d %d",
-			len(a.ConstArrays), len(b.ConstArrays))
+func (a *TypeMap) assertEqualConstantArrays(b *TypeMap) error {
+	if len(a.Arrays) != len(b.Arrays) {
+		return fmt.Errorf("TypeMap unequal Arrays lengths, %d %d",
+			len(a.Arrays), len(b.Arrays))
 	}
-	for i, v := range a.ConstArrays {
-		v2 := b.ConstArrays[i]
+	for i, v := range a.Arrays {
+		v2 := b.Arrays[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal ConstArrays entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Arrays entry, %d %s %s",
 				i, v, v2)
 		}
 	}
