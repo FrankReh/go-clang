@@ -21,8 +21,8 @@ var testTupleData = []testTuple{
 
 	{
 		Name:             "empty_a1",
-		ExpectedGobSize0: 553,
-		ExpectedGobSize1: 309,
+		ExpectedGobSize0: 1453,
+		ExpectedGobSize1: 1187,
 	},
 	{
 		Name: "empty_a2",
@@ -33,12 +33,16 @@ var testTupleData = []testTuple{
 
             TokenNameMap:
 
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {0 0} {0 0}}
+            0:{TranslationUnit 1 -1 1 {0 0} {0 0}}
             CursorNameMap:
             0: 1:sample.c`,
-		ExpectedGobSize0: 553,
-		ExpectedGobSize1: 309,
+		ExpectedGobSize0: 1453,
+		ExpectedGobSize1: 1187,
 	},
 	{
 		Name: "void_foo",
@@ -54,8 +58,8 @@ var testTupleData = []testTuple{
                } : Punctuation`,
 		ExpectedTopCursors: `foo FunctionDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            foo/FunctionDecl {FunctionNoProto void ()}
-            . CompoundStmt:IsStatement {no type}`,
+            foo/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement `,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5
@@ -63,12 +67,17 @@ var testTupleData = []testTuple{
             0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Punctuation 3} 4:{Punctuation 4} 5:{Punctuation 5}
             TokenNameMap:
             0:void 1:foo 2:( 3:) 4:{ 5:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0}]
+                Functions: [{{FunctionNoProto} void ()}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 6}} 1:{FunctionDecl 2 0 {2 1} {0 6}} 2:{CompoundStmt 0 1 {0 0} {4 2}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{FunctionDecl 2 0 2 {2 1} {0 6}} 2:{CompoundStmt 0 1 0 {0 0} {4 2}}
             CursorNameMap:
             0: 1:sample.c 2:foo`,
-		ExpectedGobSize0: 642,
-		ExpectedGobSize1: 372,
+		ExpectedGobSize0: 1566,
+		ExpectedGobSize1: 1273,
 	},
 	{
 		Name: "charp_foo_if",
@@ -100,20 +109,20 @@ var testTupleData = []testTuple{
                  } : Punctuation`,
 		ExpectedTopCursors: `foo FunctionDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            foo/FunctionDecl {FunctionProto char *(int)}
-            . i/ParmDecl {Int int}
-            . CompoundStmt:IsStatement {no type}
-            . . IfStmt:IsStatement {no type}
-            . . . BinaryOperator:IsExpression:[i : Identifier, >= : Punctuation, 0 : Literal]/ {Int int}
-            . . . . IsUnexposed(UnexposedExpr) {Int int}
-            . . . . . DeclRefExpr:IsExpression:[i : Identifier]/i {Int int}
-            . . . . 0/IntegerLiteral:IsLiteral/ {Int int}
-            . . . ReturnStmt:IsStatement {no type}
-            . . . . IsUnexposed(UnexposedExpr) {Pointer char *}
-            . . . . . "yes"/StringLiteral:IsLiteral/"yes" {ConstantArray char [4]}
-            . . . ReturnStmt:IsStatement {no type}
-            . . . . IsUnexposed(UnexposedExpr) {Pointer char *}
-            . . . . . "no"/StringLiteral:IsLiteral/"no" {ConstantArray char [3]}`,
+            foo/FunctionDecl {first-seen:1 FunctionProto 'char *(int)' !POD numargs:1 result:{first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8} align:4 size:1}
+            . i/ParmDecl {first-seen:4 Int 'int' align:4 size:4}
+            . CompoundStmt:IsStatement 
+            . . IfStmt:IsStatement 
+            . . . BinaryOperator:IsExpression:[i : Identifier, >= : Punctuation, 0 : Literal]/ {seen-before:4}
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:4}
+            . . . . . DeclRefExpr:IsExpression:[i : Identifier]/i {seen-before:4}
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:4}
+            . . . ReturnStmt:IsStatement 
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+            . . . . . "yes"/StringLiteral:IsLiteral/"yes" {first-seen:5 ConstantArray 'char [4]' align:1 size:4 len:4 elem:{seen-before:3}}
+            . . . ReturnStmt:IsStatement 
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+            . . . . . "no"/StringLiteral:IsLiteral/"no" {first-seen:6 ConstantArray 'char [3]' align:1 size:3 len:3 elem:{seen-before:3}}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:3 10:5 11:9 12:10 13:6 14:11 15:12 16:13 17:14 18:11 19:15 20:13 21:16
@@ -123,16 +132,23 @@ var testTupleData = []testTuple{
             14:{Keyword 14} 15:{Literal 15} 16:{Punctuation 16}
             TokenNameMap:
             0:char 1:* 2:foo 3:( 4:int 5:i 6:) 7:{ 8:if 9:>= 10:0 11:return 12:"yes" 13:; 14:else 15:"no" 16:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0} {Char_S 1} {Pointer 4} {ConstantArray 0} {ConstantArray 1}]
+                Intrinsics: [{{Int} int 4 4} {{Char_S} char 1 1}]
+                Functions: [{{FunctionProto} char *(int)}]
+                ConstArrays: [{4 4 1 4 char [4]} {4 3 1 3 char [3]}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 22}} 1:{FunctionDecl 2 0 {2 2} {0 22}} 2:{ParmDecl 3 1 {0 0} {4 2}}
-            3:{CompoundStmt 0 1 {4 1} {7 15}} 4:{IfStmt 0 3 {5 3} {8 12}} 5:{BinaryOperator 6 4 {8 2} {10 3}}
-            6:{ReturnStmt 0 4 {10 1} {14 2}} 7:{ReturnStmt 0 4 {11 1} {18 2}} 8:{UnexposedExpr 3 5 {12 1} {10 1}}
-            9:{IntegerLiteral 0 5 {0 0} {12 1}} 10:{UnexposedExpr 0 6 {13 1} {15 1}} 11:{UnexposedExpr 0 7 {14 1} {19 1}}
-            12:{DeclRefExpr 3 8 {0 0} {10 1}} 13:{StringLiteral 4 10 {0 0} {15 1}} 14:{StringLiteral 5 11 {0 0} {19 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 22}} 1:{FunctionDecl 2 0 2 {2 2} {0 22}} 2:{ParmDecl 3 1 3 {0 0} {4 2}}
+            3:{CompoundStmt 0 1 0 {4 1} {7 15}} 4:{IfStmt 0 3 0 {5 3} {8 12}} 5:{BinaryOperator 6 4 3 {8 2} {10 3}}
+            6:{ReturnStmt 0 4 0 {10 1} {14 2}} 7:{ReturnStmt 0 4 0 {11 1} {18 2}} 8:{UnexposedExpr 3 5 3 {12 1} {10 1}}
+            9:{IntegerLiteral 0 5 3 {0 0} {12 1}} 10:{UnexposedExpr 0 6 5 {13 1} {15 1}} 11:{UnexposedExpr 0 7 5 {14 1} {19 1}}
+            12:{DeclRefExpr 3 8 3 {0 0} {10 1}} 13:{StringLiteral 4 10 6 {0 0} {15 1}} 14:{StringLiteral 5 11 7 {0 0} {19 1}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:i 4:"yes" 5:"no" 6:>=`,
-		ExpectedGobSize0: 980,
-		ExpectedGobSize1: 568,
+		ExpectedGobSize0: 2020,
+		ExpectedGobSize1: 1581,
 	},
 	{
 		Name: "int_foo_if_float",
@@ -140,18 +156,18 @@ var testTupleData = []testTuple{
 			int foo(float i) { if (i) return 1; else return 0; }
 			`,
 		ExpectedFullCursors: `
-            foo/FunctionDecl {FunctionProto int (float)}
-            . i/ParmDecl {Float float}
-            . CompoundStmt:IsStatement {no type}
-            . . IfStmt:IsStatement {no type}
-            . . . IsUnexposed(UnexposedExpr) {Float float}
-            . . . . DeclRefExpr:IsExpression:[i : Identifier]/i {Float float}
-            . . . ReturnStmt:IsStatement {no type}
-            . . . . 1/IntegerLiteral:IsLiteral/ {Int int}
-            . . . ReturnStmt:IsStatement {no type}
-            . . . . 0/IntegerLiteral:IsLiteral/ {Int int}`,
-		ExpectedGobSize0: 865,
-		ExpectedGobSize1: 503,
+            foo/FunctionDecl {first-seen:1 FunctionProto 'int (float)' !POD numargs:1 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1}
+            . i/ParmDecl {first-seen:3 Float 'float' align:4 size:4}
+            . CompoundStmt:IsStatement 
+            . . IfStmt:IsStatement 
+            . . . IsUnexposed(UnexposedExpr) {seen-before:3}
+            . . . . DeclRefExpr:IsExpression:[i : Identifier]/i {seen-before:3}
+            . . . ReturnStmt:IsStatement 
+            . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . ReturnStmt:IsStatement 
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+		ExpectedGobSize0: 1842,
+		ExpectedGobSize1: 1456,
 	},
 	{
 		Name:    "int_world",
@@ -273,8 +289,8 @@ var testTupleData = []testTuple{
               ; : Punctuation`,
 		ExpectedTopCursors: `a VarDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            a/VarDecl {Int int}
-            . 1/IntegerLiteral:IsLiteral/ {Int int}`,
+            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4
@@ -282,12 +298,17 @@ var testTupleData = []testTuple{
             0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Literal 3} 4:{Punctuation 4}
             TokenNameMap:
             0:int 1:a 2:= 3:1 4:;
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 5}} 1:{VarDecl 2 0 {2 1} {0 4}} 2:{IntegerLiteral 0 1 {0 0} {3 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 5}} 1:{VarDecl 2 0 2 {2 1} {0 4}} 2:{IntegerLiteral 0 1 2 {0 0} {3 1}}
             CursorNameMap:
             0: 1:sample.c 2:a`,
-		ExpectedGobSize0: 632,
-		ExpectedGobSize1: 362,
+		ExpectedGobSize0: 1556,
+		ExpectedGobSize1: 1261,
 	},
 	{
 		Name:    "global_var_unsigned_int_a_is_0x1",
@@ -301,11 +322,11 @@ var testTupleData = []testTuple{
                    ; : Punctuation`,
 		ExpectedTopCursors: `a VarDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            a/VarDecl {UInt unsigned int}
-            . IsUnexposed(UnexposedExpr) {UInt unsigned int}
-            . . 0x1/IntegerLiteral:IsLiteral/ {Int int}`,
-		ExpectedGobSize0: 668,
-		ExpectedGobSize1: 385,
+            a/VarDecl {first-seen:1 UInt 'unsigned int' align:4 size:4}
+            . IsUnexposed(UnexposedExpr) {seen-before:1}
+            . . 0x1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}`,
+		ExpectedGobSize0: 1621,
+		ExpectedGobSize1: 1313,
 	},
 	{
 		Name:    "global_var_a_is_0_001",
@@ -318,10 +339,10 @@ var testTupleData = []testTuple{
                  ; : Punctuation`,
 		ExpectedTopCursors: `a VarDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            a/VarDecl {Double double}
-            . 0.001/FloatingLiteral:IsLiteral/ {Double double}`,
-		ExpectedGobSize0: 639,
-		ExpectedGobSize1: 369,
+            a/VarDecl {first-seen:1 Double 'double' align:8 size:8}
+            . 0.001/FloatingLiteral:IsLiteral/ {seen-before:1}`,
+		ExpectedGobSize0: 1566,
+		ExpectedGobSize1: 1271,
 	},
 	{
 		Name: "function_storage_comparison",
@@ -345,17 +366,23 @@ var testTupleData = []testTuple{
             14:{Literal 14} 15:{Keyword 15} 16:{Identifier 16} 17:{Literal 17}
             TokenNameMap:
             0:int 1:A 2:( 3:) 4:{ 5:return 6:1 7:; 8:} 9:extern 10:B 11:2 12:static 13:C 14:3 15:inline 16:D 17:4
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Functions: [{{FunctionNoProto} int ()}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 4} {0 39}} 1:{FunctionDecl 2 0 {5 1} {0 9}} 2:{FunctionDecl 3 0 {6 1} {9 10}}
-            3:{FunctionDecl 4 0 {7 1} {19 10}} 4:{FunctionDecl 5 0 {8 1} {29 10}} 5:{CompoundStmt 0 1 {9 1} {4 5}}
-            6:{CompoundStmt 0 2 {10 1} {14 5}} 7:{CompoundStmt 0 3 {11 1} {24 5}} 8:{CompoundStmt 0 4 {12 1} {34 5}}
-            9:{ReturnStmt 0 5 {13 1} {5 2}} 10:{ReturnStmt 0 6 {14 1} {15 2}} 11:{ReturnStmt 0 7 {15 1} {25 2}}
-            12:{ReturnStmt 0 8 {16 1} {35 2}} 13:{IntegerLiteral 0 9 {0 0} {6 1}} 14:{IntegerLiteral 0 10 {0 0} {16 1}}
-            15:{IntegerLiteral 0 11 {0 0} {26 1}} 16:{IntegerLiteral 0 12 {0 0} {36 1}}
+            0:{TranslationUnit 1 -1 1 {1 4} {0 39}} 1:{FunctionDecl 2 0 2 {5 1} {0 9}} 2:{FunctionDecl 3 0 2 {6 1} {9 10}}
+            3:{FunctionDecl 4 0 2 {7 1} {19 10}} 4:{FunctionDecl 5 0 2 {8 1} {29 10}} 5:{CompoundStmt 0 1 0 {9 1} {4 5}}
+            6:{CompoundStmt 0 2 0 {10 1} {14 5}} 7:{CompoundStmt 0 3 0 {11 1} {24 5}} 8:{CompoundStmt 0 4 0 {12 1} {34 5}}
+            9:{ReturnStmt 0 5 0 {13 1} {5 2}} 10:{ReturnStmt 0 6 0 {14 1} {15 2}} 11:{ReturnStmt 0 7 0 {15 1} {25 2}}
+            12:{ReturnStmt 0 8 0 {16 1} {35 2}} 13:{IntegerLiteral 0 9 3 {0 0} {6 1}} 14:{IntegerLiteral 0 10 3 {0 0} {16 1}}
+            15:{IntegerLiteral 0 11 3 {0 0} {26 1}} 16:{IntegerLiteral 0 12 3 {0 0} {36 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:B 4:C 5:D`,
-		ExpectedGobSize0: 1024,
-		ExpectedGobSize1: 596,
+		ExpectedGobSize0: 1979,
+		ExpectedGobSize1: 1529,
 	},
 	{
 		Name:    "void_function_and_return",
@@ -371,22 +398,22 @@ var testTupleData = []testTuple{
                  } : Punctuation`,
 		ExpectedTopCursors: `A FunctionDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto void ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}`,
-		ExpectedGobSize0: 677,
-		ExpectedGobSize1: 394,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement `,
+		ExpectedGobSize0: 1600,
+		ExpectedGobSize1: 1296,
 	},
 	{
 		Name:    "int_function_and_return_1",
 		SrcCode: `int A() { return 1; }`,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . 1/IntegerLiteral:IsLiteral/ {Int int}`,
-		ExpectedGobSize0: 702,
-		ExpectedGobSize1: 407,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+		ExpectedGobSize0: 1645,
+		ExpectedGobSize1: 1328,
 	},
 	{
 		Name: "parenthesis_comparison",
@@ -395,23 +422,23 @@ var testTupleData = []testTuple{
 					  int C() { return ((2)); }
 					  `,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . 1/IntegerLiteral:IsLiteral/ {Int int}
-            B/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {Int int}
-            . . . . 2/IntegerLiteral:IsLiteral/ {Int int}
-            C/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . ParenExpr:IsExpression:[( : Punctuation, ( : Punctuation, 2 : Literal, ) : Punctuation, ) : Punctuation]/ {Int int}
-            . . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {Int int}
-            . . . . . 2/IntegerLiteral:IsLiteral/ {Int int}`,
-		ExpectedGobSize0: 944,
-		ExpectedGobSize1: 524,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+            B/FunctionDecl {seen-before:1}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {seen-before:2}
+            . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+            C/FunctionDecl {seen-before:1}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . ParenExpr:IsExpression:[( : Punctuation, ( : Punctuation, 2 : Literal, ) : Punctuation, ) : Punctuation]/ {seen-before:2}
+            . . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {seen-before:2}
+            . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+		ExpectedGobSize0: 1901,
+		ExpectedGobSize1: 1456,
 	},
 	{
 		Name: "func_sub_77_and_78",
@@ -430,12 +457,12 @@ var testTupleData = []testTuple{
                  ; : Punctuation
                  } : Punctuation`,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . BinaryOperator:IsExpression:[77 : Literal, - : Punctuation, 78 : Literal]/ {Int int}
-            . . . . 77/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . 78/IntegerLiteral:IsLiteral/ {Int int}`,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . BinaryOperator:IsExpression:[77 : Literal, - : Punctuation, 78 : Literal]/ {seen-before:2}
+            . . . . 77/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . 78/IntegerLiteral:IsLiteral/ {seen-before:2}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10
@@ -444,14 +471,20 @@ var testTupleData = []testTuple{
             7:{Punctuation 7} 8:{Literal 8} 9:{Punctuation 9} 10:{Punctuation 10}
             TokenNameMap:
             0:int 1:A 2:( 3:) 4:{ 5:return 6:77 7:- 8:78 9:; 10:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Functions: [{{FunctionNoProto} int ()}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 11}} 1:{FunctionDecl 2 0 {2 1} {0 11}} 2:{CompoundStmt 0 1 {3 1} {4 7}}
-            3:{ReturnStmt 0 2 {4 1} {5 4}} 4:{BinaryOperator 3 3 {5 2} {6 3}} 5:{IntegerLiteral 0 4 {0 0} {6 1}}
-            6:{IntegerLiteral 0 4 {0 0} {8 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 11}} 1:{FunctionDecl 2 0 2 {2 1} {0 11}} 2:{CompoundStmt 0 1 0 {3 1} {4 7}}
+            3:{ReturnStmt 0 2 0 {4 1} {5 4}} 4:{BinaryOperator 3 3 3 {5 2} {6 3}} 5:{IntegerLiteral 0 4 3 {0 0} {6 1}}
+            6:{IntegerLiteral 0 4 3 {0 0} {8 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:-`,
-		ExpectedGobSize0: 754,
-		ExpectedGobSize1: 437,
+		ExpectedGobSize0: 1702,
+		ExpectedGobSize1: 1360,
 	},
 	{
 		Name:    "var_sub_77_and_78",
@@ -465,10 +498,10 @@ var testTupleData = []testTuple{
              78 : Literal
               ; : Punctuation`,
 		ExpectedFullCursors: `
-            a/VarDecl {Int int}
-            . BinaryOperator:IsExpression:[77 : Literal, - : Punctuation, 78 : Literal]/ {Int int}
-            . . 77/IntegerLiteral:IsLiteral/ {Int int}
-            . . 78/IntegerLiteral:IsLiteral/ {Int int}`,
+            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            . BinaryOperator:IsExpression:[77 : Literal, - : Punctuation, 78 : Literal]/ {seen-before:1}
+            . . 77/IntegerLiteral:IsLiteral/ {seen-before:1}
+            . . 78/IntegerLiteral:IsLiteral/ {seen-before:1}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6
@@ -476,13 +509,18 @@ var testTupleData = []testTuple{
             0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Literal 3} 4:{Punctuation 4} 5:{Literal 5} 6:{Punctuation 6}
             TokenNameMap:
             0:int 1:a 2:= 3:77 4:- 5:78 6:;
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 7}} 1:{VarDecl 2 0 {2 1} {0 6}} 2:{BinaryOperator 3 1 {3 2} {3 3}}
-            3:{IntegerLiteral 0 2 {0 0} {3 1}} 4:{IntegerLiteral 0 2 {0 0} {5 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 7}} 1:{VarDecl 2 0 2 {2 1} {0 6}} 2:{BinaryOperator 3 1 2 {3 2} {3 3}}
+            3:{IntegerLiteral 0 2 2 {0 0} {3 1}} 4:{IntegerLiteral 0 2 2 {0 0} {5 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 685,
-		ExpectedGobSize1: 392,
+		ExpectedGobSize0: 1612,
+		ExpectedGobSize1: 1293,
 	},
 	{
 		Name:    "var_sub_p77p_and_78",
@@ -499,11 +537,11 @@ var testTupleData = []testTuple{
              78 : Literal
               ; : Punctuation`,
 		ExpectedFullCursors: `
-            a/VarDecl {Int int}
-            . BinaryOperator:IsExpression:[( : Punctuation, 77 : Literal, ) : Punctuation, - : Punctuation, 78 : Literal]/ {Int int}
-            . . ParenExpr:IsExpression:[( : Punctuation, 77 : Literal, ) : Punctuation]/ {Int int}
-            . . . 77/IntegerLiteral:IsLiteral/ {Int int}
-            . . 78/IntegerLiteral:IsLiteral/ {Int int}`,
+            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            . BinaryOperator:IsExpression:[( : Punctuation, 77 : Literal, ) : Punctuation, - : Punctuation, 78 : Literal]/ {seen-before:1}
+            . . ParenExpr:IsExpression:[( : Punctuation, 77 : Literal, ) : Punctuation]/ {seen-before:1}
+            . . . 77/IntegerLiteral:IsLiteral/ {seen-before:1}
+            . . 78/IntegerLiteral:IsLiteral/ {seen-before:1}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8
@@ -512,13 +550,18 @@ var testTupleData = []testTuple{
             7:{Literal 7} 8:{Punctuation 8}
             TokenNameMap:
             0:int 1:a 2:= 3:( 4:77 5:) 6:- 7:78 8:;
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 9}} 1:{VarDecl 2 0 {2 1} {0 8}} 2:{BinaryOperator 3 1 {3 2} {3 5}}
-            3:{ParenExpr 0 2 {5 1} {3 3}} 4:{IntegerLiteral 0 2 {0 0} {7 1}} 5:{IntegerLiteral 0 3 {0 0} {4 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 9}} 1:{VarDecl 2 0 2 {2 1} {0 8}} 2:{BinaryOperator 3 1 2 {3 2} {3 5}}
+            3:{ParenExpr 0 2 2 {5 1} {3 3}} 4:{IntegerLiteral 0 2 2 {0 0} {7 1}} 5:{IntegerLiteral 0 3 2 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 715,
-		ExpectedGobSize1: 410,
+		ExpectedGobSize0: 1644,
+		ExpectedGobSize1: 1312,
 	},
 	{
 		Name:    "var_a_is_minus_b",
@@ -538,12 +581,12 @@ var testTupleData = []testTuple{
               a : Identifier
               ; : Punctuation`,
 		ExpectedFullCursors: `
-            a/VarDecl {Int int}
-            . 99/IntegerLiteral:IsLiteral/ {Int int}
-            b/VarDecl {Int int}
-            . UnaryOperator:IsExpression:[- : Punctuation, a : Identifier]/ {Int int}
-            . . IsUnexposed(UnexposedExpr) {Int int}
-            . . . DeclRefExpr:IsExpression:[a : Identifier]/a {Int int}`,
+            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            . 99/IntegerLiteral:IsLiteral/ {seen-before:1}
+            b/VarDecl {seen-before:1}
+            . UnaryOperator:IsExpression:[- : Punctuation, a : Identifier]/ {seen-before:1}
+            . . IsUnexposed(UnexposedExpr) {seen-before:1}
+            . . . DeclRefExpr:IsExpression:[a : Identifier]/a {seen-before:1}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:0 6:5 7:2 8:6 9:1 10:4
@@ -551,14 +594,19 @@ var testTupleData = []testTuple{
             0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Literal 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
             TokenNameMap:
             0:int 1:a 2:= 3:99 4:; 5:b 6:-
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 2} {0 11}} 1:{VarDecl 2 0 {3 1} {0 4}} 2:{VarDecl 3 0 {4 1} {5 5}}
-            3:{IntegerLiteral 0 1 {0 0} {3 1}} 4:{UnaryOperator 0 2 {5 1} {8 2}} 5:{UnexposedExpr 2 4 {6 1} {9 1}}
-            6:{DeclRefExpr 2 5 {0 0} {9 1}}
+            0:{TranslationUnit 1 -1 1 {1 2} {0 11}} 1:{VarDecl 2 0 2 {3 1} {0 4}} 2:{VarDecl 3 0 2 {4 1} {5 5}}
+            3:{IntegerLiteral 0 1 2 {0 0} {3 1}} 4:{UnaryOperator 0 2 2 {5 1} {8 2}} 5:{UnexposedExpr 2 4 2 {6 1} {9 1}}
+            6:{DeclRefExpr 2 5 2 {0 0} {9 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:b`,
-		ExpectedGobSize0: 725,
-		ExpectedGobSize1: 406,
+		ExpectedGobSize0: 1656,
+		ExpectedGobSize1: 1309,
 	},
 	{
 		Name: "add_sub_mul_div",
@@ -583,18 +631,18 @@ var testTupleData = []testTuple{
                  ; : Punctuation
                  } : Punctuation`,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal, - : Punctuation, 3 : Literal, * : Punctuation, 4 : Literal, / : Punctuation, 5 : Literal]/ {Int int}
-            . . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {Int int}
-            . . . . . 1/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . . 2/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . BinaryOperator:IsExpression:[3 : Literal, * : Punctuation, 4 : Literal, / : Punctuation, 5 : Literal]/ {Int int}
-            . . . . . BinaryOperator:IsExpression:[3 : Literal, * : Punctuation, 4 : Literal]/ {Int int}
-            . . . . . . 3/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . . . 4/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . . 5/IntegerLiteral:IsLiteral/ {Int int}`,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal, - : Punctuation, 3 : Literal, * : Punctuation, 4 : Literal, / : Punctuation, 5 : Literal]/ {seen-before:2}
+            . . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {seen-before:2}
+            . . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . BinaryOperator:IsExpression:[3 : Literal, * : Punctuation, 4 : Literal, / : Punctuation, 5 : Literal]/ {seen-before:2}
+            . . . . . BinaryOperator:IsExpression:[3 : Literal, * : Punctuation, 4 : Literal]/ {seen-before:2}
+            . . . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . . 5/IntegerLiteral:IsLiteral/ {seen-before:2}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:12 13:13 14:14 15:15 16:16
@@ -604,16 +652,22 @@ var testTupleData = []testTuple{
             13:{Punctuation 13} 14:{Literal 14} 15:{Punctuation 15} 16:{Punctuation 16}
             TokenNameMap:
             0:int 1:A 2:( 3:) 4:{ 5:return 6:1 7:+ 8:2 9:- 10:3 11:* 12:4 13:/ 14:5 15:; 16:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Functions: [{{FunctionNoProto} int ()}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 1} {0 17}} 1:{FunctionDecl 2 0 {2 1} {0 17}} 2:{CompoundStmt 0 1 {3 1} {4 13}}
-            3:{ReturnStmt 0 2 {4 1} {5 10}} 4:{BinaryOperator 3 3 {5 2} {6 9}} 5:{BinaryOperator 4 4 {7 2} {6 3}}
-            6:{BinaryOperator 5 4 {9 2} {10 5}} 7:{IntegerLiteral 0 5 {0 0} {6 1}} 8:{IntegerLiteral 0 5 {0 0} {8 1}}
-            9:{BinaryOperator 6 6 {11 2} {10 3}} 10:{IntegerLiteral 0 6 {0 0} {14 1}} 11:{IntegerLiteral 0 9 {0 0} {10 1}}
-            12:{IntegerLiteral 0 9 {0 0} {12 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 17}} 1:{FunctionDecl 2 0 2 {2 1} {0 17}} 2:{CompoundStmt 0 1 0 {3 1} {4 13}}
+            3:{ReturnStmt 0 2 0 {4 1} {5 10}} 4:{BinaryOperator 3 3 3 {5 2} {6 9}} 5:{BinaryOperator 4 4 3 {7 2} {6 3}}
+            6:{BinaryOperator 5 4 3 {9 2} {10 5}} 7:{IntegerLiteral 0 5 3 {0 0} {6 1}} 8:{IntegerLiteral 0 5 3 {0 0} {8 1}}
+            9:{BinaryOperator 6 6 3 {11 2} {10 3}} 10:{IntegerLiteral 0 6 3 {0 0} {14 1}} 11:{IntegerLiteral 0 9 3 {0 0} {10 1}}
+            12:{IntegerLiteral 0 9 3 {0 0} {12 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:- 4:+ 5:/ 6:*`,
-		ExpectedGobSize0: 903,
-		ExpectedGobSize1: 519,
+		ExpectedGobSize0: 1862,
+		ExpectedGobSize1: 1448,
 	},
 	{
 		Name: "add_and_double_add",
@@ -621,22 +675,22 @@ var testTupleData = []testTuple{
 					  int B() { return 1 + 2 + 3; }
 					  `,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {Int int}
-            . . . . 1/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . 2/IntegerLiteral:IsLiteral/ {Int int}
-            B/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal, + : Punctuation, 3 : Literal]/ {Int int}
-            . . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {Int int}
-            . . . . . 1/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . . 2/IntegerLiteral:IsLiteral/ {Int int}
-            . . . . 3/IntegerLiteral:IsLiteral/ {Int int}`,
-		ExpectedGobSize0: 919,
-		ExpectedGobSize1: 513,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {seen-before:2}
+            . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+            B/FunctionDecl {seen-before:1}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal, + : Punctuation, 3 : Literal]/ {seen-before:2}
+            . . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {seen-before:2}
+            . . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+            . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+		ExpectedGobSize0: 1878,
+		ExpectedGobSize1: 1444,
 	},
 	{
 		Name:    "hdr_processing_only",
@@ -653,8 +707,8 @@ var testTupleData = []testTuple{
 			  int hdr_glo_f()	           { return 13; }
 			  static inline int hdr_si_f() { return 14; }
 			  `,
-		ExpectedGobSize0: 616,
-		ExpectedGobSize1: 358,
+		ExpectedGobSize0: 1516,
+		ExpectedGobSize1: 1237,
 	},
 	{
 		Name:    "hdr_and_source",
@@ -673,24 +727,24 @@ var testTupleData = []testTuple{
             C FunctionDecl IsDeclaration SC_Static Linkage_Internal
             D FunctionDecl IsDeclaration SC_None   Linkage_External`,
 		ExpectedFullCursors: `
-            A/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . 1/IntegerLiteral:IsLiteral/ {Int int}
-            B/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . 2/IntegerLiteral:IsLiteral/ {Int int}
-            C/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . 3/IntegerLiteral:IsLiteral/ {Int int}
-            D/FunctionDecl {FunctionNoProto int ()}
-            . CompoundStmt:IsStatement {no type}
-            . . ReturnStmt:IsStatement {no type}
-            . . . 4/IntegerLiteral:IsLiteral/ {Int int}`,
-		ExpectedGobSize0: 1079,
-		ExpectedGobSize1: 643,
+            A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+            B/FunctionDecl {seen-before:1}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+            C/FunctionDecl {seen-before:1}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}
+            D/FunctionDecl {seen-before:1}
+            . CompoundStmt:IsStatement 
+            . . ReturnStmt:IsStatement 
+            . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+		ExpectedGobSize0: 2034,
+		ExpectedGobSize1: 1577,
 	},
 	{
 		Name:    "struct_a_b",
@@ -718,10 +772,10 @@ var testTupleData = []testTuple{
             StructS StructDecl IsDeclaration         Linkage_External
             VarS    VarDecl    IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            StructS/StructDecl {Record struct StructS}
-            . a/FieldDecl {Int int}
-            . b/FieldDecl {Char_S char}
-            VarS/VarDecl {Elaborated(Record) struct StructS}
+            StructS/StructDecl {first-seen:1 Record 'struct StructS' align:4 size:8}
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+            . b/FieldDecl {first-seen:3 Char_S 'char' align:1 size:1}
+            VarS/VarDecl {first-seen:4 Elaborated 'struct StructS' Canon:{seen-before:1} align:4 size:8}
             . [0 backreference]`,
 		ExpectedTUPopulate: `
             Tokens:
@@ -731,15 +785,21 @@ var testTupleData = []testTuple{
             7:{Identifier 7} 8:{Punctuation 8} 9:{Identifier 9}
             TokenNameMap:
             0:struct 1:StructS 2:{ 3:int 4:a 5:; 6:char 7:b 8:} 9:VarS
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Elaborated 2} {Int 0} {Char_S 1}]
+                Intrinsics: [{{Int} int 4 4} {{Char_S} char 1 1}]
+                Records: [{4 8 struct StructS}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 2} {0 12}} 1:{StructDecl 2 0 {3 2} {0 10}} 2:{VarDecl 3 0 {5 1} {0 11}}
-            3:{FieldDecl 4 1 {0 0} {3 2}} 4:{FieldDecl 5 1 {0 0} {6 2}} 5:{Back 0 2 {0 0} {0 0}}
+            0:{TranslationUnit 1 -1 1 {1 2} {0 12}} 1:{StructDecl 2 0 2 {3 2} {0 10}} 2:{VarDecl 3 0 3 {5 1} {0 11}}
+            3:{FieldDecl 4 1 4 {0 0} {3 2}} 4:{FieldDecl 5 1 5 {0 0} {6 2}} 5:{Back 0 2 0 {0 0} {0 0}}
             CursorNameMap:
             0: 1:sample.c 2:StructS 3:VarS 4:a 5:b
             Back:
             5:1`,
-		ExpectedGobSize0: 747,
-		ExpectedGobSize1: 450,
+		ExpectedGobSize0: 1728,
+		ExpectedGobSize1: 1405,
 	},
 	{
 		Name:    "typedef_int_II",
@@ -760,11 +820,29 @@ var testTupleData = []testTuple{
             II TypedefDecl IsDeclaration         Linkage_NoLinkage
             ii VarDecl     IsDeclaration SC_None Linkage_External `,
 		ExpectedFullCursors: `
-            II/TypedefDecl {Typedef(Int) II}
-            ii/VarDecl {Typedef(Int) II}
-            . II/TypeRef {Typedef(Int) II}`,
-		ExpectedGobSize0: 663,
-		ExpectedGobSize1: 382,
+            II/TypedefDecl {first-seen:1 Typedef 'II' Canon:{first-seen:2 Int 'int' align:4 size:4} align:4 size:4}
+            ii/VarDecl {seen-before:1}
+            . II/TypeRef {seen-before:1}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:2 5:4 6:3
+            TokenMap:
+            0:{Keyword 0} 1:{Keyword 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Identifier 4}
+            TokenNameMap:
+            0:typedef 1:int 2:II 3:; 4:ii
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Typedef 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Typedefs: [{2 II}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 2} {0 7}} 1:{TypedefDecl 2 0 3 {0 0} {0 3}} 2:{VarDecl 3 0 3 {3 1} {4 2}}
+            3:{TypeRef 2 2 3 {0 0} {4 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:II 3:ii`,
+		ExpectedGobSize0: 1601,
+		ExpectedGobSize1: 1295,
 	},
 	{
 		Name: "typedef_struct_TA",
@@ -782,12 +860,12 @@ var testTupleData = []testTuple{
             TA TypedefDecl IsDeclaration         Linkage_External
             ss VarDecl     IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            /StructDecl {Record TA}
-            . a/FieldDecl {Int int}
-            TA/TypedefDecl {Typedef(Record) TA}
+            /StructDecl {first-seen:1 Record 'TA' align:4 size:4}
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+            TA/TypedefDecl {first-seen:3 Typedef 'TA' Canon:{seen-before:1} align:4 size:4}
             . [0 backreference]
-            ss/VarDecl {Typedef(Record) TA}
-            . TA/TypeRef {Typedef(Record) TA}`,
+            ss/VarDecl {seen-before:3}
+            . TA/TypeRef {seen-before:3}`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:5 9:7 10:8 11:5
@@ -796,15 +874,22 @@ var testTupleData = []testTuple{
             7:{Identifier 7} 8:{Identifier 8}
             TokenNameMap:
             0:typedef 1:struct 2:{ 3:int 4:a 5:; 6:} 7:TA 8:ss
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Typedef 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Records: [{4 4 TA}]
+                Typedefs: [{2 TA}]
+            }
             Cursors:
-            0:{TranslationUnit 1 -1 {1 3} {0 12}} 1:{StructDecl 0 0 {4 1} {1 6}} 2:{TypedefDecl 2 0 {5 1} {0 8}}
-            3:{VarDecl 3 0 {6 1} {9 2}} 4:{FieldDecl 4 1 {0 0} {3 2}} 5:{Back 0 2 {0 0} {0 0}} 6:{TypeRef 2 3 {0 0} {9 1}}
+            0:{TranslationUnit 1 -1 1 {1 3} {0 12}} 1:{StructDecl 0 0 2 {4 1} {1 6}} 2:{TypedefDecl 2 0 3 {5 1} {0 8}}
+            3:{VarDecl 3 0 3 {6 1} {9 2}} 4:{FieldDecl 4 1 4 {0 0} {3 2}} 5:{Back 0 2 0 {0 0} {0 0}} 6:{TypeRef 2 3 3 {0 0} {9 1}}
             CursorNameMap:
             0: 1:sample.c 2:TA 3:ss 4:a
             Back:
             5:1`,
-		ExpectedGobSize0: 744,
-		ExpectedGobSize1: 435,
+		ExpectedGobSize0: 1702,
+		ExpectedGobSize1: 1366,
 	},
 	{
 		Name: "typedefs_two_structs",
@@ -836,24 +921,52 @@ var testTupleData = []testTuple{
             y0 VarDecl     IsDeclaration SC_None Linkage_External
             y1 VarDecl     IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
-            /StructDecl {Record TA}
-            . a/FieldDecl {Int int}
-            TA/TypedefDecl {Typedef(Record) TA}
+            /StructDecl {first-seen:1 Record 'TA' align:4 size:4}
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+            TA/TypedefDecl {first-seen:3 Typedef 'TA' Canon:{seen-before:1} align:4 size:4}
             . [0 backreference]
-            /StructDecl {Record TB}
-            . b/FieldDecl {Int int}
-            TB/TypedefDecl {Typedef(Record) TB}
+            /StructDecl {first-seen:4 Record 'TB' align:4 size:4}
+            . b/FieldDecl {seen-before:2}
+            TB/TypedefDecl {first-seen:5 Typedef 'TB' Canon:{seen-before:4} align:4 size:4}
             . [4 backreference]
-            x0/VarDecl {Typedef(Record) TA}
-            . TA/TypeRef {Typedef(Record) TA}
-            x1/VarDecl {Typedef(Record) TA}
-            . TA/TypeRef {Typedef(Record) TA}
-            y0/VarDecl {Typedef(Record) TB}
-            . TB/TypeRef {Typedef(Record) TB}
-            y1/VarDecl {Typedef(Record) TB}
+            x0/VarDecl {seen-before:3}
+            . TA/TypeRef {seen-before:3}
+            x1/VarDecl {seen-before:3}
+            . TA/TypeRef {seen-before:3}
+            y0/VarDecl {seen-before:5}
+            . TB/TypeRef {seen-before:5}
+            y1/VarDecl {seen-before:5}
             . [13 backreference]`,
-		ExpectedGobSize0: 970,
-		ExpectedGobSize1: 564,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:5 9:0 10:1 11:2 12:3 13:8 14:5 15:6 16:9 17:5 18:7 19:10 20:5 21:7 22:11 23:5 24:9
+            25:12 26:13 27:14 28:5
+            TokenMap:
+            0:{Keyword 0} 1:{Keyword 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
+            7:{Identifier 7} 8:{Identifier 8} 9:{Identifier 9} 10:{Identifier 10} 11:{Identifier 11} 12:{Identifier 12}
+            13:{Punctuation 13} 14:{Identifier 14}
+            TokenNameMap:
+            0:typedef 1:struct 2:{ 3:int 4:a 5:; 6:} 7:TA 8:b 9:TB 10:x0 11:x1 12:y0 13:, 14:y1
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Typedef 0} {Record 1} {Typedef 1} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Records: [{4 4 TA} {4 4 TB}]
+                Typedefs: [{2 TA} {4 TB}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 8} {0 29}} 1:{StructDecl 0 0 2 {9 1} {1 6}} 2:{TypedefDecl 2 0 3 {10 1} {0 8}}
+            3:{StructDecl 0 0 4 {11 1} {10 6}} 4:{TypedefDecl 3 0 5 {12 1} {9 8}} 5:{VarDecl 4 0 3 {13 1} {18 2}}
+            6:{VarDecl 5 0 3 {14 1} {21 2}} 7:{VarDecl 6 0 5 {15 1} {24 2}} 8:{VarDecl 7 0 5 {16 1} {24 4}}
+            9:{FieldDecl 8 1 6 {0 0} {3 2}} 10:{Back 0 2 0 {0 0} {0 0}} 11:{FieldDecl 9 3 6 {0 0} {12 2}}
+            12:{Back 0 4 0 {0 0} {0 0}} 13:{TypeRef 2 5 3 {0 0} {18 1}} 14:{TypeRef 2 6 3 {0 0} {21 1}}
+            15:{TypeRef 3 7 5 {0 0} {24 1}} 16:{Back 0 8 0 {0 0} {0 0}}
+            CursorNameMap:
+            0: 1:sample.c 2:TA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b
+            Back:
+            10:1 12:3 16:15`,
+		ExpectedGobSize0: 1971,
+		ExpectedGobSize1: 1533,
 	},
 	{
 		Name: "compare_named_struct_with_typedef",
@@ -883,22 +996,49 @@ var testTupleData = []testTuple{
             TB y0, y1;
         `,
 		ExpectedFullCursors: `
-            SA/StructDecl {Record struct SA}
-            . a/FieldDecl {Int int}
-            /StructDecl {Record TB}
-            . b/FieldDecl {Int int}
-            TB/TypedefDecl {Typedef(Record) TB}
+            SA/StructDecl {first-seen:1 Record 'struct SA' align:4 size:4}
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+            /StructDecl {first-seen:3 Record 'TB' align:4 size:4}
+            . b/FieldDecl {seen-before:2}
+            TB/TypedefDecl {first-seen:4 Typedef 'TB' Canon:{seen-before:3} align:4 size:4}
             . [2 backreference]
-            x0/VarDecl {Elaborated(Record) struct SA}
-            . struct SA/TypeRef {Record struct SA}
-            x1/VarDecl {Elaborated(Record) struct SA}
+            x0/VarDecl {first-seen:5 Elaborated 'struct SA' Canon:{seen-before:1} align:4 size:4}
+            . struct SA/TypeRef {seen-before:1}
+            x1/VarDecl {seen-before:5}
             . [7 backreference]
-            y0/VarDecl {Typedef(Record) TB}
-            . TB/TypeRef {Typedef(Record) TB}
-            y1/VarDecl {Typedef(Record) TB}
+            y0/VarDecl {seen-before:4}
+            . TB/TypeRef {seen-before:4}
+            y1/VarDecl {seen-before:4}
             . [11 backreference]`,
-		ExpectedGobSize0: 949,
-		ExpectedGobSize1: 563,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:5 8:7 9:0 10:2 11:3 12:8 13:5 14:6 15:9 16:5 17:0 18:1 19:10 20:11 21:12 22:5 23:9 24:13
+            25:11 26:14 27:5
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
+            7:{Keyword 7} 8:{Identifier 8} 9:{Identifier 9} 10:{Identifier 10} 11:{Punctuation 11} 12:{Identifier 12}
+            13:{Identifier 13} 14:{Identifier 14}
+            TokenNameMap:
+            0:struct 1:SA 2:{ 3:int 4:a 5:; 6:} 7:typedef 8:b 9:TB 10:x0 11:, 12:x1 13:y0 14:y1
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Record 1} {Typedef 0} {Elaborated 2} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Records: [{4 4 struct SA} {4 4 TB}]
+                Typedefs: [{3 TB}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 7} {0 28}} 1:{StructDecl 2 0 2 {8 1} {0 7}} 2:{StructDecl 0 0 3 {9 1} {9 6}}
+            3:{TypedefDecl 3 0 4 {10 1} {8 8}} 4:{VarDecl 4 0 5 {11 1} {17 3}} 5:{VarDecl 5 0 5 {12 1} {17 5}}
+            6:{VarDecl 6 0 4 {13 1} {23 2}} 7:{VarDecl 7 0 4 {14 1} {23 4}} 8:{FieldDecl 8 1 6 {0 0} {3 2}}
+            9:{FieldDecl 9 2 6 {0 0} {11 2}} 10:{Back 0 3 0 {0 0} {0 0}} 11:{TypeRef 10 4 2 {0 0} {18 1}}
+            12:{Back 0 5 0 {0 0} {0 0}} 13:{TypeRef 3 6 4 {0 0} {23 1}} 14:{Back 0 7 0 {0 0} {0 0}}
+            CursorNameMap:
+            0: 1:sample.c 2:SA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b 10:struct SA
+            Back:
+            10:2 12:11 14:13`,
+		ExpectedGobSize0: 1946,
+		ExpectedGobSize1: 1530,
 	},
 	{
 		Name: "compare_named_struct_with_two_typedefs",
@@ -917,27 +1057,367 @@ var testTupleData = []testTuple{
             TB z0, z1;
         `,
 		ExpectedFullCursors: `
-            SA/StructDecl {Record struct SA}
-            . a/FieldDecl {Int int}
-            TA/TypedefDecl {Typedef(Record) TA}
-            . struct SA/TypeRef {Record struct SA}
-            /StructDecl {Record TB}
-            . b/FieldDecl {Int int}
-            TB/TypedefDecl {Typedef(Record) TB}
+            SA/StructDecl {first-seen:1 Record 'struct SA' align:4 size:4}
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+            TA/TypedefDecl {first-seen:3 Typedef 'TA' Canon:{seen-before:1} align:4 size:4}
+            . struct SA/TypeRef {seen-before:1}
+            /StructDecl {first-seen:4 Record 'TB' align:4 size:4}
+            . b/FieldDecl {seen-before:2}
+            TB/TypedefDecl {first-seen:5 Typedef 'TB' Canon:{seen-before:4} align:4 size:4}
             . [4 backreference]
-            x0/VarDecl {Elaborated(Record) struct SA}
-            . struct SA/TypeRef {Record struct SA}
-            x1/VarDecl {Elaborated(Record) struct SA}
+            x0/VarDecl {first-seen:6 Elaborated 'struct SA' Canon:{seen-before:1} align:4 size:4}
+            . struct SA/TypeRef {seen-before:1}
+            x1/VarDecl {seen-before:6}
             . [9 backreference]
-            y0/VarDecl {Typedef(Record) TA}
-            . TA/TypeRef {Typedef(Record) TA}
-            y1/VarDecl {Typedef(Record) TA}
+            y0/VarDecl {seen-before:3}
+            . TA/TypeRef {seen-before:3}
+            y1/VarDecl {seen-before:3}
             . [13 backreference]
-            z0/VarDecl {Typedef(Record) TB}
-            . TB/TypeRef {Typedef(Record) TB}
-            z1/VarDecl {Typedef(Record) TB}
+            z0/VarDecl {seen-before:5}
+            . TB/TypeRef {seen-before:5}
+            z1/VarDecl {seen-before:5}
             . [17 backreference]`,
-		ExpectedGobSize0: 1258,
-		ExpectedGobSize1: 813,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:5 8:7 9:8 10:0 11:1 12:9 13:5 14:10 15:8 16:0 17:2 18:3 19:11 20:5 21:6 22:12 23:5 24:13
+            25:0 26:1 27:14 28:15 29:16 30:5 31:17 32:9 33:18 34:15 35:19 36:5 37:12 38:20 39:15 40:21 41:5
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
+            7:{Comment 7} 8:{Keyword 8} 9:{Identifier 9} 10:{Comment 10} 11:{Identifier 11} 12:{Identifier 12} 13:{Comment 13}
+            14:{Identifier 14} 15:{Punctuation 15} 16:{Identifier 16} 17:{Comment 17} 18:{Identifier 18} 19:{Identifier 19}
+            20:{Identifier 20} 21:{Identifier 21}
+            TokenNameMap:
+            0:struct 1:SA 2:{ 3:int 4:a 5:; 6:} 7:// A named struct. 8:typedef 9:TA 10:// A typedef using that named struct. 11:b
+            12:TB 13:// A new typedef for an unnamed struct. 14:x0 15:, 16:x1
+            17:// Two variables for same struct, will share cursor. 18:y0 19:y1 20:z0 21:z1
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Typedef 0} {Record 1} {Typedef 1} {Elaborated 2} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Records: [{4 4 struct SA} {4 4 TB}]
+                Typedefs: [{2 TA} {4 TB}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 10} {0 42}} 1:{StructDecl 2 0 2 {11 1} {0 7}} 2:{TypedefDecl 3 0 3 {12 1} {9 4}}
+            3:{StructDecl 0 0 4 {13 1} {16 6}} 4:{TypedefDecl 4 0 5 {14 1} {15 8}} 5:{VarDecl 5 0 6 {15 1} {25 3}}
+            6:{VarDecl 6 0 6 {16 1} {25 5}} 7:{VarDecl 7 0 3 {17 1} {32 2}} 8:{VarDecl 8 0 3 {18 1} {32 4}}
+            9:{VarDecl 9 0 5 {19 1} {37 2}} 10:{VarDecl 10 0 5 {20 1} {37 4}} 11:{FieldDecl 11 1 7 {0 0} {3 2}}
+            12:{TypeRef 12 2 2 {0 0} {11 1}} 13:{FieldDecl 13 3 7 {0 0} {18 2}} 14:{Back 0 4 0 {0 0} {0 0}}
+            15:{TypeRef 12 5 2 {0 0} {26 1}} 16:{Back 0 6 0 {0 0} {0 0}} 17:{TypeRef 3 7 3 {0 0} {32 1}} 18:{Back 0 8 0 {0 0} {0 0}}
+            19:{TypeRef 4 9 5 {0 0} {37 1}} 20:{Back 0 10 0 {0 0} {0 0}}
+            CursorNameMap:
+            0: 1:sample.c 2:SA 3:TA 4:TB 5:x0 6:x1 7:y0 8:y1 9:z0 10:z1 11:a 12:struct SA 13:b
+            Back:
+            14:3 16:15 18:17 20:19`,
+		ExpectedGobSize0: 2278,
+		ExpectedGobSize1: 1799,
+	},
+	{
+		Name: "cascade_int_pointers",
+		Comment: `
+			// What do the simple types and their pointers and arrays look like.
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            int a;
+            int *b;
+            int **c;
+            int ***d;
+        `,
+		ExpectedFullCursors: `
+            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            b/VarDecl {first-seen:2 Pointer 'int *' *{seen-before:1} align:8 size:8}
+            c/VarDecl {first-seen:3 Pointer 'int **' *{seen-before:2} align:8 size:8}
+            d/VarDecl {first-seen:4 Pointer 'int ***' *{seen-before:3} align:8 size:8}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:0 4:3 5:4 6:2 7:0 8:3 9:3 10:5 11:2 12:0 13:3 14:3 15:3 16:6 17:2
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Punctuation 3} 4:{Identifier 4} 5:{Identifier 5} 6:{Identifier 6}
+            TokenNameMap:
+            0:int 1:a 2:; 3:* 4:b 5:c 6:d
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Pointer 2} {Pointer 3} {Pointer 4}]
+                Intrinsics: [{{Int} int 4 4}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 4} {0 18}} 1:{VarDecl 2 0 2 {0 0} {0 2}} 2:{VarDecl 3 0 3 {0 0} {3 3}}
+            3:{VarDecl 4 0 4 {0 0} {7 4}} 4:{VarDecl 5 0 5 {0 0} {12 5}}
+            CursorNameMap:
+            0: 1:sample.c 2:a 3:b 4:c 5:d`,
+	},
+	{
+		Name: "cascade_int_arrays",
+		Comment: `
+			// What do the simple types and their arrays look like.
+			// Look at d. Three levels of ContantArray, each with an ElementType, the first two hadn't been seen before. The third one had (it being int).
+			// Look at e. The type was seen before for b, even though each had their own int[1] type.
+			//   - seen-before kindtype:ContantArray spelling:'int [1]'
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            int a;
+            int b[1];
+            int c[2][3];
+            int d[4][5][6];
+            int e[1];
+        `,
+		ExpectedFullCursors: `
+            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            b/VarDecl {first-seen:2 ConstantArray 'int [1]' align:4 size:4 len:1 elem:{seen-before:1}}
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}
+            c/VarDecl {first-seen:3 ConstantArray 'int [2][3]' align:4 size:24 len:2 elem:{first-seen:4 ConstantArray 'int [3]' align:4 size:12 len:3 elem:{seen-before:1}}}
+            . 3/IntegerLiteral:IsLiteral/ {seen-before:1}
+            . 2/IntegerLiteral:IsLiteral/ {seen-before:1}
+            d/VarDecl {first-seen:5 ConstantArray 'int [4][5][6]' align:4 size:480 len:4 elem:{first-seen:6 ConstantArray 'int [5][6]' align:4 size:120 len:5 elem:{first-seen:7 ConstantArray 'int [6]' align:4 size:24 len:6 elem:{seen-before:1}}}}
+            . 6/IntegerLiteral:IsLiteral/ {seen-before:1}
+            . 5/IntegerLiteral:IsLiteral/ {seen-before:1}
+            . 4/IntegerLiteral:IsLiteral/ {seen-before:1}
+            e/VarDecl {seen-before:2}
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:0 4:3 5:4 6:5 7:6 8:2 9:0 10:7 11:4 12:8 13:6 14:4 15:9 16:6 17:2 18:0 19:10 20:4 21:11 22:6 23:4 24:12
+            25:6 26:4 27:13 28:6 29:2 30:0 31:14 32:4 33:5 34:6 35:2
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Identifier 3} 4:{Punctuation 4} 5:{Literal 5} 6:{Punctuation 6}
+            7:{Identifier 7} 8:{Literal 8} 9:{Literal 9} 10:{Identifier 10} 11:{Literal 11} 12:{Literal 12} 13:{Literal 13}
+            14:{Identifier 14}
+            TokenNameMap:
+            0:int 1:a 2:; 3:b 4:[ 5:1 6:] 7:c 8:2 9:3 10:d 11:4 12:5 13:6 14:e
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {ConstantArray 0} {ConstantArray 1} {ConstantArray 2} {ConstantArray 3} {ConstantArray 4} {ConstantArray 5}]
+                Intrinsics: [{{Int} int 4 4}]
+                ConstArrays: [{2 1 4 4 int [1]} {2 3 4 12 int [3]} {4 2 4 24 int [2][3]} {2 6 4 24 int [6]} {6 5 4 120 int [5][6]} {7 4 4 480 int [4][5][6]}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 5} {0 36}} 1:{VarDecl 2 0 2 {0 0} {0 2}} 2:{VarDecl 3 0 3 {6 1} {3 5}}
+            3:{VarDecl 4 0 5 {7 2} {9 8}} 4:{VarDecl 5 0 8 {9 3} {18 11}} 5:{VarDecl 6 0 3 {12 1} {30 5}}
+            6:{IntegerLiteral 0 2 2 {0 0} {6 1}} 7:{IntegerLiteral 0 3 2 {0 0} {15 1}} 8:{IntegerLiteral 0 3 2 {0 0} {12 1}}
+            9:{IntegerLiteral 0 4 2 {0 0} {27 1}} 10:{IntegerLiteral 0 4 2 {0 0} {24 1}} 11:{IntegerLiteral 0 4 2 {0 0} {21 1}}
+            12:{IntegerLiteral 0 5 2 {0 0} {33 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:a 3:b 4:c 5:d 6:e`,
+	},
+	{
+		Name: "typekind_VariableArray",
+		Comment: `
+			// int arr[n] is a VariableArray, as such NumElements() returns -1. No 'len:n' displayed.
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            void foo(int n) {
+				int arr[n];
+			}
+        `,
+		ExpectedFullCursors: `
+            foo/FunctionDecl {first-seen:1 FunctionProto 'void (int)' !POD numargs:1 result:{first-seen:2 Void 'void' !POD} align:4 size:1}
+            . n/ParmDecl {first-seen:3 Int 'int' align:4 size:4}
+            . CompoundStmt:IsStatement 
+            . . DeclStmt:IsStatement 
+            . . . arr/VarDecl {first-seen:4 VariableArray 'int [n]' align:4 elem:{seen-before:3}}
+            . . . . DeclRefExpr:IsExpression:[n : Identifier]/n {seen-before:3}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:3 8:7 9:8 10:4 11:9 12:10 13:11
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
+            7:{Identifier 7} 8:{Punctuation 8} 9:{Punctuation 9} 10:{Punctuation 10} 11:{Punctuation 11}
+            TokenNameMap:
+            0:void 1:foo 2:( 3:int 4:n 5:) 6:{ 7:arr 8:[ 9:] 10:; 11:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionProto 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Functions: [{{FunctionProto} void (int)}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 1} {0 14}} 1:{FunctionDecl 2 0 2 {2 2} {0 14}} 2:{ParmDecl 3 1 3 {0 0} {3 2}}
+            3:{CompoundStmt 0 1 0 {4 1} {6 8}} 4:{DeclStmt 0 3 0 {5 1} {7 6}} 5:{VarDecl 4 4 1 {6 1} {7 5}}
+            6:{DeclRefExpr 3 5 3 {0 0} {10 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:foo 3:n 4:arr`,
+	},
+	{
+		Name: "type_enum_anonymous",
+		Comment: `
+			// 
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            enum {
+				A,
+				B
+			}
+        `,
+		ExpectedFullCursors: `
+            /EnumDecl {first-seen:1 Enum 'enum (anonymous at sample.c:2:13)' align:4 size:4}
+            . A/EnumConstantDecl {first-seen:2 Int 'int' align:4 size:4}
+            . B/EnumConstantDecl {seen-before:2}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5
+            TokenMap:
+            0:{Keyword 0} 1:{Punctuation 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Identifier 4} 5:{Punctuation 5}
+            TokenNameMap:
+            0:enum 1:{ 2:A 3:, 4:B 5:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Enum 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Enums: [{4 4 enum (anonymous at sample.c:2:13)}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{EnumDecl 0 0 2 {2 2} {0 6}} 2:{EnumConstantDecl 2 1 3 {0 0} {2 1}}
+            3:{EnumConstantDecl 3 1 3 {0 0} {4 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:A 3:B`,
+	},
+	{
+		Name: "type_enum_named",
+		Comment: `
+			// 
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            enum MyEnum {
+				A,
+				B
+			}
+        `,
+		ExpectedFullCursors: `
+            MyEnum/EnumDecl {first-seen:1 Enum 'enum MyEnum' align:4 size:4}
+            . A/EnumConstantDecl {first-seen:2 Int 'int' align:4 size:4}
+            . B/EnumConstantDecl {seen-before:2}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Identifier 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            TokenNameMap:
+            0:enum 1:MyEnum 2:{ 3:A 4:, 5:B 6:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Enum 0} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Enums: [{4 4 enum MyEnum}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 1} {0 7}} 1:{EnumDecl 2 0 2 {2 2} {0 7}} 2:{EnumConstantDecl 3 1 3 {0 0} {3 1}}
+            3:{EnumConstantDecl 4 1 3 {0 0} {5 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:MyEnum 3:A 4:B`,
+	},
+	{
+		Name: "type_enum_named_with_var",
+		Comment: `
+			// x is declared without the enum keyword but appears to be handled the same as y.
+			`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            enum MyEnum {
+				A,
+				B
+			}
+			MyEnum x;
+			enum MyEnum y;
+        `,
+		ExpectedFullCursors: `
+            MyEnum/EnumDecl {first-seen:1 Enum 'enum MyEnum' align:4 size:4}
+            . A/EnumConstantDecl {first-seen:2 Int 'int' align:4 size:4}
+            . B/EnumConstantDecl {seen-before:2}
+            x/VarDecl {first-seen:3 Elaborated 'enum MyEnum' Canon:{seen-before:1} align:4 size:4}
+            . enum MyEnum/TypeRef {seen-before:1}
+            y/VarDecl {seen-before:3}
+            . enum MyEnum/TypeRef {seen-before:1}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:1 8:7 9:8 10:0 11:1 12:9 13:8
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Identifier 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            7:{Identifier 7} 8:{Punctuation 8} 9:{Identifier 9}
+            TokenNameMap:
+            0:enum 1:MyEnum 2:{ 3:A 4:, 5:B 6:} 7:x 8:; 9:y
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Enum 0} {Elaborated 2} {Int 0}]
+                Intrinsics: [{{Int} int 4 4}]
+                Enums: [{4 4 enum MyEnum}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 3} {0 14}} 1:{EnumDecl 2 0 2 {4 2} {0 7}} 2:{VarDecl 3 0 3 {6 1} {7 2}}
+            3:{VarDecl 4 0 3 {7 1} {10 3}} 4:{EnumConstantDecl 5 1 4 {0 0} {3 1}} 5:{EnumConstantDecl 6 1 4 {0 0} {5 1}}
+            6:{TypeRef 7 2 2 {0 0} {7 1}} 7:{TypeRef 7 3 2 {0 0} {11 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:MyEnum 3:x 4:y 5:A 6:B 7:enum MyEnum`,
+	},
+	{
+		Name:    "const_and_volatile",
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		SrcCode: `
+            const int i = 1;
+            volatile int j = 1;
+        `,
+		ExpectedFullCursors: `
+            i/VarDecl {first-seen:1 Int 'const int' align:4 size:4 Const}
+            . 1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}
+            j/VarDecl {first-seen:3 Int 'volatile int' align:4 size:4 Volatile}
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:1 8:7 9:3 10:4 11:5
+            TokenMap:
+            0:{Keyword 0} 1:{Keyword 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Literal 4} 5:{Punctuation 5} 6:{Keyword 6}
+            7:{Identifier 7}
+            TokenNameMap:
+            0:const 1:int 2:i 3:= 4:1 5:; 6:volatile 7:j
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Int 1} {Int 2}]
+                Intrinsics: [{{Int} const int 4 4} {{Int} volatile int 4 4} {{Int} int 4 4}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 2} {0 12}} 1:{VarDecl 2 0 2 {3 1} {0 5}} 2:{VarDecl 3 0 3 {4 1} {6 5}}
+            3:{IntegerLiteral 0 1 4 {0 0} {4 1}} 4:{IntegerLiteral 0 2 4 {0 0} {10 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:i 3:j`,
+	},
+	{
+		Name: "foo_bar_variadic_and_not",
+		Comment: `
+			// foo is functionNoProto and assumed Variadic.
+			// bar is functionProto and not Variadic.
+			`,
+		SrcCode: `
+			void foo() { }
+			void bar(void);
+			void bar() { }
+			`,
+		ExpectedFullCursors: `
+            foo/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
+            . CompoundStmt:IsStatement 
+            bar/FunctionDecl {first-seen:3 FunctionProto 'void (void)' !POD numargs:0 result:{seen-before:2} align:4 size:1}
+            bar/FunctionDecl {seen-before:3}
+            . CompoundStmt:IsStatement `,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:0 7:6 8:2 9:0 10:3 11:7 12:0 13:6 14:2 15:3 16:4 17:5
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Punctuation 3} 4:{Punctuation 4} 5:{Punctuation 5} 6:{Identifier 6}
+            7:{Punctuation 7}
+            TokenNameMap:
+            0:void 1:foo 2:( 3:) 4:{ 5:} 6:bar 7:;
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {FunctionNoProto 0} {FunctionProto 1}]
+                Functions: [{{FunctionNoProto} void ()} {{FunctionProto} void (void)}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 3} {0 18}} 1:{FunctionDecl 2 0 2 {4 1} {0 6}} 2:{FunctionDecl 3 0 3 {0 0} {6 5}}
+            3:{FunctionDecl 3 0 3 {5 1} {12 6}} 4:{CompoundStmt 0 1 0 {0 0} {4 2}} 5:{CompoundStmt 0 3 0 {0 0} {16 2}}
+            CursorNameMap:
+            0: 1:sample.c 2:foo 3:bar`,
 	},
 }

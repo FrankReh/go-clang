@@ -18,10 +18,12 @@ type Cursor struct {
 	CursorKindId cursorkind.Kind
 	CursorNameId int // Id into CursorNameMap
 	ParentIndex  int //- 1 if Cursor is root.
+	TypeIndex    int // Index into TypeSlice
 	Children     IndexPair
 	Tokens       IndexPair
 
-	// Index and Children don't have to be initialized within Visit and they don't
-	// have to be serialized. They can be recomputed from the Cursor position in
-	// the overall list, and the ParentIndex.
+	// Children does not have to be initialized within Visit and does not have
+	// to be serialized. It can be recomputed from the Cursor position in the
+	// overall list, and the ParentIndex.
+
 }

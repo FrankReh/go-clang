@@ -42,6 +42,13 @@ func (tu *TranslationUnit) EncodeGobV1(w io.Writer) error {
 	if err := enc.Encode(ints); err != nil {
 		return err
 	}
+	// TypeIndex
+	for i := range ints {
+		ints[i] = tu.Cursors[i].TypeIndex
+	}
+	if err := enc.Encode(ints); err != nil {
+		return err
+	}
 	// Tokens.Head
 	for i := range ints {
 		ints[i] = tu.Cursors[i].Tokens.Head
@@ -71,6 +78,9 @@ func (tu *TranslationUnit) EncodeGobV1(w io.Writer) error {
 		return err
 	}
 	if err := enc.Encode(tu.TokenNameMap); err != nil {
+		return err
+	}
+	if err := enc.Encode(tu.TypeMap); err != nil {
 		return err
 	}
 	if err := enc.Encode(tu.Back); err != nil {
@@ -135,6 +145,15 @@ func (tu *TranslationUnit) DecodeGobV1(r io.Reader) error {
 	}
 	ints = ints[:0]
 	ints = nil
+	// TypeIndex
+	if err := dec.Decode(&ints); err != nil {
+		return err
+	}
+	for i := range ints {
+		tu.Cursors[i].TypeIndex = ints[i]
+	}
+	ints = ints[:0]
+	ints = nil
 	// Tokens.Head
 	if err := dec.Decode(&ints); err != nil {
 		return err
@@ -154,6 +173,7 @@ func (tu *TranslationUnit) DecodeGobV1(r io.Reader) error {
 	ints = ints[:0]
 	ints = nil
 	/*
+		// All the code above to make encoding for Cursors more efficient.
 		if err := dec.Decode(&tu.Cursors); err != nil {
 			return err
 		}
@@ -168,6 +188,9 @@ func (tu *TranslationUnit) DecodeGobV1(r io.Reader) error {
 		return err
 	}
 	if err := dec.Decode(&tu.TokenNameMap); err != nil {
+		return err
+	}
+	if err := dec.Decode(&tu.TypeMap); err != nil {
 		return err
 	}
 	if err := dec.Decode(&tu.Back); err != nil {

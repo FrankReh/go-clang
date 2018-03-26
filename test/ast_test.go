@@ -18,8 +18,8 @@ import (
 	"github.com/frankreh/go-clang-v5.0/astbridge"
 	"github.com/frankreh/go-clang-v5.0/clang"
 	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
-	"github.com/frankreh/go-clang-v5.0/clang/tokenkind"
-	"github.com/frankreh/go-clang-v5.0/clang/typekind"
+	//"github.com/frankreh/go-clang-v5.0/clang/tokenkind"
+	//"github.com/frankreh/go-clang-v5.0/clang/typekind"
 	run "github.com/frankreh/go-clang-v5.0/clangrun"
 )
 
@@ -128,14 +128,6 @@ func tokenDescription(tu clang.TranslationUnit, token clang.Token) string {
 	return fmt.Sprintf("%s : %s", tu.TokenSpelling(token), token.Kind().String())
 }
 
-func tokenDescriptions(tu clang.TranslationUnit, tokens []clang.Token) []string {
-	var r []string
-	for _, token := range tokens {
-		r = append(r, fmt.Sprintf("%s : %s", tu.TokenSpelling(token), token.Kind().String()))
-	}
-	return r
-}
-
 //-- 2.
 // topCursorStrings implements run.TopCursorVisiter and collects cursorString results.
 type topCursorStrings struct {
@@ -163,120 +155,6 @@ func init() {
 	// assert it implements the desired interface.
 	var a interface{} = &topCursorStrings{}
 	_ = a.(run.TopCursorVisiter)
-}
-
-//-- 3.
-// fullCursorStrings implements run.FullCursorVisiter and collects cursorString results.
-type fullCursorStrings struct {
-	topLevelNamesToSkip map[string]bool
-	depthMap            map[clang.Cursor]int // 0 When parent is root, -1 when parent is one we are skipping.
-	seen                map[clang.Cursor]int // Cardinal order the cursor was already seen, not descended further.
-	pad                 string
-	list                []string
-}
-
-// FullCursorVisit implements run.FullCursorVisiter, collecting results of calls to cursorString.
-func (x *fullCursorStrings) FullCursorVisit(tu clang.TranslationUnit, cursor, parent clang.Cursor) {
-	// parent hash is not expected to be in the map so fact zero is returned is useful.
-	if x.depthMap == nil {
-		x.depthMap = make(map[clang.Cursor]int)
-		x.seen = make(map[clang.Cursor]int) // Init both at once.
-	}
-
-	depth := x.depthMap[parent]
-
-	if depth == 0 && x.topLevelNamesToSkip != nil {
-		name := cursor.Spelling()
-		if x.topLevelNamesToSkip[name] {
-			x.depthMap[cursor] = -1
-			return
-		}
-	}
-	if depth == -1 {
-		x.depthMap[cursor] = -1
-		return
-	}
-	x.depthMap[cursor] = depth + 1
-
-	if x.pad == "" {
-		x.pad = ". . . . . . . . . ."
-	}
-	for depth*2 > len(x.pad) {
-		x.pad += x.pad
-	}
-
-	s := fmt.Sprintf("%s", x.pad[:depth*2])
-
-	offset, found := x.seen[cursor]
-	if found {
-		s += fmt.Sprintf("[%d backreference]", offset)
-		x.depthMap[cursor] = -1 // Keep from descending further.
-		x.list = append(x.list, s)
-		return
-	}
-	x.seen[cursor] = len(x.list)
-
-	kind := cursor.Kind()
-
-	switch {
-	case kind.IsUnexposed():
-		s += fmt.Sprintf("IsUnexposed(%s)", kind)
-	case kind.IsLiteral(),
-		kind.IsExpression():
-		is := "?is?"
-		switch {
-		case kind.IsLiteral():
-			is = "IsLiteral"
-		case kind.IsExpression():
-			is = "IsExpression"
-		}
-		sourceRange := cursor.Extent()
-		tokens := tu.Tokenize(sourceRange)
-		if len(tokens) == 1 && tokens[0].Kind() == tokenkind.Literal {
-			// Hopefully the normal case where a Literal kind of cursor represents
-			// in a single Literal token. Then use its spelling as the cursor name.
-			name := tu.TokenSpelling(tokens[0])
-			s += fmt.Sprintf("%s/%s:%s", name, cursor.Kind(), is)
-		} else {
-			// An unexpected kind of token or there was more than one.
-			tokdescs := tokenDescriptions(tu, tokens)
-			s += fmt.Sprintf("%s:%s:[%v]", kind, is, strings.Join(tokdescs, ", "))
-		}
-		s += "/" + cursor.DisplayName()
-	case kind.IsStatement():
-		s += fmt.Sprintf("%s:IsStatement", cursor.Kind())
-	default:
-		name := cursor.Spelling()
-		s += name
-		s += fmt.Sprintf("/%s", cursor.Kind())
-	}
-
-	// Add Type info
-	ctype := cursor.Type()
-	tkind := ctype.Kind()
-	switch tkind {
-	case typekind.Invalid:
-		s += fmt.Sprintf(" {no type}")
-	default:
-		canonical := ctype.CanonicalType()
-		if canonical.Equal(ctype) {
-			s += fmt.Sprintf(" {%s %s}", tkind, ctype.Spelling())
-		} else {
-			s += fmt.Sprintf(" {%s(%s) %s}", tkind, canonical.Kind(), ctype.Spelling())
-		}
-	}
-	/* TBD For investigation purposes.
-	// Do the same cursors appears in multiple parts of the tree?
-	// Yes they do.
-	s += fmt.Sprintf(" %v %v", cursor.HashCursor(), cursor)
-	*/
-
-	x.list = append(x.list, s)
-}
-func init() {
-	// assert it implements the desired interface.
-	var a interface{} = &fullCursorStrings{}
-	_ = a.(run.FullCursorVisiter)
 }
 
 //-- 4.

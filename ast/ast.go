@@ -30,6 +30,7 @@ type TranslationUnit struct {
 	CursorNameMap StringMap
 	TokenMap      TokenMap // Token:"{TokenKindId:2 TokenNameId:3}" mapped to ID
 	TokenNameMap  StringMap
+	TypeMap       TypeMap // Type:{TypeKind Index} Index to specific slice, given the TypeKind.
 
 	// Create back reference "pointers" to recognize with cursor tree points back
 	// to itself.
@@ -86,6 +87,9 @@ func (tu *TranslationUnit) AssertEqual(tu2 *TranslationUnit) error {
 	if err := tu.TokenNameMap.AssertEqual(&tu2.TokenNameMap); err != nil {
 		return err
 	}
+	if err := tu.TypeMap.AssertEqual(&tu2.TypeMap); err != nil {
+		return err
+	}
 	if err := assertEqualMaps(tu.Back, tu2.Back); err != nil {
 		return err
 	}
@@ -111,6 +115,7 @@ func (t TranslationUnit) GoString() string {
 	fmt.Fprintf(b, "Tokens:\n%v\n", numberStrings(tokens, width))
 	fmt.Fprintf(b, "TokenMap:\n%v\n", numberStrings(tm_tokens, width))
 	fmt.Fprintf(b, "TokenNameMap:\n%v\n", numberStrings(t.TokenNameMap.Strings, width))
+	fmt.Fprintf(b, "TypeMap:\n%#v\n", t.TypeMap)
 	fmt.Fprintf(b, "Cursors:\n%v\n", numberStrings(cursors, width))
 	fmt.Fprintf(b, "CursorNameMap:\n%v\n", numberStrings(t.CursorNameMap.Strings, width))
 	if len(t.Back) > 0 {

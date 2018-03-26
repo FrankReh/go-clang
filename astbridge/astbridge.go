@@ -12,6 +12,7 @@ import (
 	"github.com/frankreh/go-clang-v5.0/ast"
 	"github.com/frankreh/go-clang-v5.0/clang"
 	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
+	"github.com/frankreh/go-clang-v5.0/clang/typekind"
 )
 
 // ClangTranslationUnit references the clang package components.
@@ -20,6 +21,7 @@ type ClangTranslationUnit struct {
 	ClangTu      *clang.TranslationUnit
 	ClangTokens  []clang.Token
 	ClangCursors []clang.Cursor
+	typeIndexes  map[clang.Type]int // TypeIndex for those types already created.
 }
 
 func (ctu *ClangTranslationUnit) convertClangTokens(clangTokens []clang.Token) []ast.TokenId {
@@ -50,6 +52,7 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 	if ctu.ClangTu != nil {
 		return errors.New("Already populated")
 	}
+	ctu.typeIndexes = make(map[clang.Type]int)
 
 	// For some tidyness, have the "" string map to the 0 id.
 	_ = ctu.GoTu.CursorNameMap.Id("")
@@ -63,6 +66,8 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 
 	mapTokenIndex := mapSourceLocationToIndex(tu, ctu.ClangTokens)
 
+	ctu.GoTu.TypeMap.Init()
+
 	ctu.GoTu.Back = make(map[int]int)
 
 	// Layer children to end of list, one set of children at a time.
@@ -73,6 +78,7 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 		CursorKindId: clangRootCursor.Kind(),
 		CursorNameId: ctu.GoTu.CursorNameMap.Id(clangRootCursor.Spelling()),
 		ParentIndex:  -1,
+		TypeIndex:    ctu.GoTu.TypeMap.MustAutoKeyIndex(typekind.Unexposed),
 		Tokens: ast.IndexPair{ // By definition, all the clang tokens.
 			Head: 0,
 			Len:  len(ctu.ClangTokens),
@@ -165,10 +171,14 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 				}
 				// End to set newCursor.Tokens.
 
+				// Create the appropriate type entry.
+				typeIndex := ctu.determineTypeIndex(cursor.Type())
+
 				newCursor := ast.Cursor{
 					CursorKindId: cursor.Kind(),
 					CursorNameId: ctu.GoTu.CursorNameMap.Id(cursor.Spelling()),
 					ParentIndex:  parentIndex,
+					TypeIndex:    typeIndex,
 
 					// Index can be set manually later but we do it here
 					// to better show what's going on.
@@ -214,4 +224,185 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 	//ctu.GoTu.SetBackChildren()
 
 	return nil
+}
+
+func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
+
+	typeIndex, found := ctu.typeIndexes[ctype]
+	if found {
+		return typeIndex
+	}
+
+	tkind := ctype.Kind()
+	typeIndex = ctu.GoTu.TypeMap.AutoKeyIndex(tkind)
+	if typeIndex == -1 {
+		typespelling := ctype.Spelling()
+
+		alignof, err := ctype.AlignOf()
+		if err != nil {
+			panic(fmt.Sprintf("type %v %s %s: %s", ctype, tkind, typespelling, err))
+		}
+		sizeof := uint64(0)
+		switch tkind {
+		case typekind.VariableArray:
+			break
+		default:
+			sizeof, err = ctype.SizeOf()
+			if err != nil {
+				panic(fmt.Sprintf("type %v %s %s: %s", ctype, tkind, typespelling, err))
+			}
+		}
+		switch {
+
+		case tkind.IsBuiltin():
+			typeIndex, err = ctu.GoTu.TypeMap.AddIntrinsic(ast.TypeIntrinsic{
+				TypeKindKind: ast.TypeKindKind{tkind},
+				TypeSpelling: typespelling,
+				Align:        int(alignof), // TBD change api to return int rather than uint64.
+				Size:         int(sizeof),  // TBD change api to return int rather than uint64.
+			})
+			if err != nil {
+				panic(err)
+			}
+
+		case tkind == typekind.Record:
+
+			typeIndex, err = ctu.GoTu.TypeMap.AddRecord(ast.TypeRecord{
+				Align:        int(alignof), // TBD change api to return int rather than uint64.
+				Size:         int(sizeof),  // TBD change api to return int rather than uint64.
+				TypeSpelling: typespelling,
+			})
+			if err != nil {
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				panic(errmsg + ": " + err.Error())
+			}
+
+		case tkind == typekind.Enum:
+			// Same as Record
+
+			typeIndex, err = ctu.GoTu.TypeMap.AddEnum(ast.TypeEnum{
+				Align:        int(alignof), // TBD change api to return int rather than uint64.
+				Size:         int(sizeof),  // TBD change api to return int rather than uint64.
+				TypeSpelling: typespelling,
+			})
+			if err != nil {
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				panic(errmsg + ": " + err.Error())
+			}
+
+		case tkind == typekind.Typedef,
+			tkind == typekind.Pointer,
+			tkind == typekind.Elaborated:
+
+			var pointeetype clang.Type
+			var errname string
+			switch {
+			case tkind == typekind.Typedef:
+				pointeetype = ctype.CanonicalType()
+				errname = "Typedefee"
+			case tkind == typekind.Pointer:
+				pointeetype = ctype.PointeeType()
+				errname = "Pointee"
+			case tkind == typekind.Elaborated:
+				pointeetype = ctype.NamedType()
+				errname = "Elaboratee"
+			default:
+				panic("missing case")
+			}
+			if pointeetype.Kind() == typekind.Invalid {
+				panic(errname + " type is invalid?")
+			}
+			pointeetypeindex := ctu.determineTypeIndex(pointeetype)
+			if pointeetypeindex <= 1 {
+				// Would indicate a pointer to an Invalid or Unexposed type kind.
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				errmsg += fmt.Sprintf(" %s %[2]s:%[2]d", errname, pointeetype.Kind())
+				errmsg += fmt.Sprintf(" %s typeindex %d", errname, pointeetypeindex)
+				errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[pointeetypeindex])
+				panic(errmsg + ": " + errname + " typeindex <= 1")
+			}
+			switch {
+			case tkind == typekind.Typedef:
+				typeIndex, err = ctu.GoTu.TypeMap.AddTypedef(ast.TypeTypedef{
+					TypeSpelling:        typespelling,
+					UnderlyingTypeIndex: pointeetypeindex,
+				})
+			case tkind == typekind.Pointer:
+				typeIndex, err = ctu.GoTu.TypeMap.AddPointer(ast.TypePointer{
+					UnderlyingTypeIndex: pointeetypeindex,
+				})
+			case tkind == typekind.Elaborated:
+				typeIndex, err = ctu.GoTu.TypeMap.AddElaborated(ast.TypeElaborated{
+					UnderlyingTypeIndex: pointeetypeindex,
+				})
+			default:
+				panic("missing case")
+			}
+			if err != nil {
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				errmsg += fmt.Sprintf(" %s %[2]s:%[2]d", errname, pointeetype.Kind())
+				errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[pointeetypeindex])
+				errmsg += fmt.Sprintf(" %s typeindex %d", errname, pointeetypeindex)
+				panic(errmsg + ": " + err.Error())
+			}
+
+		case tkind == typekind.FunctionNoProto,
+			tkind == typekind.FunctionProto:
+
+			typeIndex, err = ctu.GoTu.TypeMap.AddFunction(ast.TypeFunction{
+				TypeKindKind: ast.TypeKindKind{tkind},
+				TypeSpelling: typespelling,
+			})
+			if err != nil {
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				panic(errmsg + ": " + err.Error())
+			}
+
+		case tkind == typekind.ConstantArray:
+
+			elemtype := ctype.ElementType()
+			if elemtype.Kind() == typekind.Invalid {
+				panic(fmt.Sprintf("element type is invalid?"))
+			}
+			numelem := ctype.NumElements()
+			if numelem < 0 {
+				panic(fmt.Sprintf("element count is negative?"))
+			}
+			elemtypeindex := ctu.determineTypeIndex(elemtype)
+			if elemtypeindex <= 1 {
+				// Would indicate an array of an Invalid or Unexposed type kind.
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				errmsg += fmt.Sprintf(" elemtype %[1]s:%[1]d", elemtype.Kind())
+				errmsg += fmt.Sprintf(" elemtypeindex %d", elemtypeindex)
+				errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[elemtypeindex])
+				errmsg += fmt.Sprintf(" elemtypeindex %d", elemtypeindex)
+				panic(errmsg + ": elemtypeindex <= 1")
+			}
+			typeIndex, err = ctu.GoTu.TypeMap.AddConstArray(ast.TypeConstArray{
+				ElemTypeId:   elemtypeindex,
+				ElemCount:    int(numelem),
+				Align:        int(alignof), // TBD change api to return int rather than uint64.
+				Size:         int(sizeof),  // TBD change api to return int rather than uint64.
+				TypeSpelling: typespelling,
+			})
+			if err != nil {
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				errmsg += fmt.Sprintf(" elemtype %[1]s:%[1]d", elemtype.Kind())
+				errmsg += fmt.Sprintf(" Key%v", ctu.GoTu.TypeMap.Keys[elemtypeindex])
+				errmsg += fmt.Sprintf(" elemtypeindex %d", elemtypeindex)
+				panic(errmsg + ": " + err.Error())
+			}
+
+		default:
+			/*
+				errmsg := fmt.Sprintf("%[1]s:%[1]d", ctype.Kind())
+				panic(errmsg + ": type not yet handled")
+			*/
+			// TBD Stop gap measure while other type kinds are implemented.
+			typeIndex = ctu.GoTu.TypeMap.MustAutoKeyIndex(typekind.Unexposed) // TBD
+		}
+	}
+
+	ctu.typeIndexes[ctype] = typeIndex
+	return typeIndex
 }
