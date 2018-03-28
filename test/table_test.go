@@ -59,7 +59,34 @@ var testTupleData = []testTuple{
 		ExpectedTopCursors: `foo FunctionDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             foo/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
-            . CompoundStmt:IsStatement `,
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:18]
+            cursor.Extent() void foo() { }
+            USR c:@F@foo
+            Type() void ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[15:18]
+              cursor.Extent() { }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5
@@ -70,7 +97,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Void 0} {FunctionNoProto 0}]
-                Intrinsics: [{{Void} void 0 0}]
+                Intrinsics: [{{Void} 0 0 void}]
                 Functions: [{{FunctionNoProto} 2 [] void ()}]
             }
             Cursors:
@@ -111,19 +138,186 @@ var testTupleData = []testTuple{
 		ExpectedTopCursors: `foo FunctionDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             foo/FunctionDecl {first-seen:1 FunctionProto 'char *(int)' !POD numargs:1 result:{first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8} align:4 size:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:68]
+            cursor.Extent() char* foo(int i) { if (i >= 0) return "yes"; else return "no"; }
+            USR c:@F@foo
+            Type() char *(int)
+            Type().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 1
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 1
+            ResultType() char *
+            StorageClass() SC_None
+
+
             . i/ParmDecl {first-seen:4 Int 'int' align:4 size:4}
+              cursor i
+              Kind() ParmDecl
+              Extent: sample.c[14:19]
+              cursor.Extent() int i
+              USR c:sample.c@14@F@foo@i
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[21:68]
+              cursor.Extent() { if (i >= 0) return "yes"; else return "no"; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . IfStmt:IsStatement 
+                Kind() IfStmt
+                Extent: sample.c[23:65]
+                cursor.Extent() if (i >= 0) return "yes"; else return "no"
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . BinaryOperator:IsExpression:[i : Identifier, >= : Punctuation, 0 : Literal]/ {seen-before:4}
+                  Kind() BinaryOperator
+                  Extent: sample.c[27:33]
+                  cursor.Extent() i >= 0
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . IsUnexposed(UnexposedExpr) {seen-before:4}
+                    cursor i
+                    Kind() UnexposedExpr
+                    Extent: sample.c[27:28]
+                    cursor.Extent() i
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    (Availability) Availability_Available
+                    Referenced() i sample.c[14:19] kind: ParmDecl
+
+
             . . . . . DeclRefExpr:IsExpression:[i : Identifier]/i {seen-before:4}
+                      cursor i
+                      Kind() DeclRefExpr
+                      Extent: sample.c[27:28]
+                      cursor.Extent() i
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+                      Referenced() i sample.c[14:19] kind: ParmDecl
+
+
             . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:4}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[32:33]
+                    cursor.Extent() 0
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             . . . ReturnStmt:IsStatement 
+                  Kind() ReturnStmt
+                  Extent: sample.c[35:47]
+                  cursor.Extent() return "yes"
+                  bools for cursor.Kind(): IsStatement
+                  bools for cursor.Type(): ! IsPODType
+                  (Availability) Availability_Available
+
+
             . . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                    Kind() UnexposedExpr
+                    Extent: sample.c[42:47]
+                    cursor.Extent() "yes"
+                    Type() char *
+                    Type().Kind() Pointer
+                    Type().PointeeType() char
+                    Type().PointeeType().Kind() Char_S
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    (Availability) Availability_Available
+
+
             . . . . . "yes"/StringLiteral:IsLiteral/"yes" {first-seen:5 ConstantArray 'char [4]' align:1 size:4 len:4 elem:{seen-before:3}}
+                      cursor "yes"
+                      Kind() StringLiteral
+                      Extent: sample.c[42:47]
+                      cursor.Extent() "yes"
+                      Type() char [4]
+                      Type().Kind() ConstantArray
+                      Type().ElementType() char
+                      Type().ElementType().Kind() Char_S
+                      Type().NumElements() 4
+                      Type().ArrayElementType() char
+                      Type().ArrayElementType().Kind() Char_S
+                      Type().ArraySize() 4
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+
+
             . . . ReturnStmt:IsStatement 
+                  Kind() ReturnStmt
+                  Extent: sample.c[54:65]
+                  cursor.Extent() return "no"
+                  bools for cursor.Kind(): IsStatement
+                  bools for cursor.Type(): ! IsPODType
+                  (Availability) Availability_Available
+
+
             . . . . IsUnexposed(UnexposedExpr) {seen-before:2}
-            . . . . . "no"/StringLiteral:IsLiteral/"no" {first-seen:6 ConstantArray 'char [3]' align:1 size:3 len:3 elem:{seen-before:3}}`,
+                    Kind() UnexposedExpr
+                    Extent: sample.c[61:65]
+                    cursor.Extent() "no"
+                    Type() char *
+                    Type().Kind() Pointer
+                    Type().PointeeType() char
+                    Type().PointeeType().Kind() Char_S
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    (Availability) Availability_Available
+
+
+            . . . . . "no"/StringLiteral:IsLiteral/"no" {first-seen:6 ConstantArray 'char [3]' align:1 size:3 len:3 elem:{seen-before:3}}
+                      cursor "no"
+                      Kind() StringLiteral
+                      Extent: sample.c[61:65]
+                      cursor.Extent() "no"
+                      Type() char [3]
+                      Type().Kind() ConstantArray
+                      Type().ElementType() char
+                      Type().ElementType().Kind() Char_S
+                      Type().NumElements() 3
+                      Type().ArrayElementType() char
+                      Type().ArrayElementType().Kind() Char_S
+                      Type().ArraySize() 3
+                      Type().SizeOf() 3
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:3 10:5 11:9 12:10 13:6 14:11 15:12 16:13 17:14 18:11 19:15 20:13 21:16
@@ -136,7 +330,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Char_S 1} {Pointer 3} {FunctionProto 0} {ConstantArray 0} {ConstantArray 1}]
-                Intrinsics: [{{Int} int 4 4} {{Char_S} char 1 1}]
+                Intrinsics: [{{Int} 4 4 int} {{Char_S} 1 1 char}]
                 Functions: [{{FunctionProto} 4 [2] char *(int)}]
                 Arrays: [{4 {3 1 4 char [4]}} {3 {3 1 3 char [3]}}]
             }
@@ -158,15 +352,124 @@ var testTupleData = []testTuple{
 			`,
 		ExpectedFullCursors: `
             foo/FunctionDecl {first-seen:1 FunctionProto 'int (float)' !POD numargs:1 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:56]
+            cursor.Extent() int foo(float i) { if (i) return 1; else return 0; }
+            USR c:@F@foo
+            Type() int (float)
+            Type().Kind() FunctionProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 1
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 1
+            ResultType() int
+            StorageClass() SC_None
+
+
             . i/ParmDecl {first-seen:3 Float 'float' align:4 size:4}
+              cursor i
+              Kind() ParmDecl
+              Extent: sample.c[12:19]
+              cursor.Extent() float i
+              USR c:sample.c@12@F@foo@i
+              Type() float
+              Type().Kind() Float
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[21:56]
+              cursor.Extent() { if (i) return 1; else return 0; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . IfStmt:IsStatement 
+                Kind() IfStmt
+                Extent: sample.c[23:53]
+                cursor.Extent() if (i) return 1; else return 0
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . IsUnexposed(UnexposedExpr) {seen-before:3}
+                  cursor i
+                  Kind() UnexposedExpr
+                  Extent: sample.c[27:28]
+                  cursor.Extent() i
+                  Type() float
+                  Type().Kind() Float
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  (Availability) Availability_Available
+                  Referenced() i sample.c[12:19] kind: ParmDecl
+
+
             . . . . DeclRefExpr:IsExpression:[i : Identifier]/i {seen-before:3}
+                    cursor i
+                    Kind() DeclRefExpr
+                    Extent: sample.c[27:28]
+                    cursor.Extent() i
+                    Type() float
+                    Type().Kind() Float
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+                    Referenced() i sample.c[12:19] kind: ParmDecl
+
+
             . . . ReturnStmt:IsStatement 
+                  Kind() ReturnStmt
+                  Extent: sample.c[30:38]
+                  cursor.Extent() return 1
+                  bools for cursor.Kind(): IsStatement
+                  bools for cursor.Type(): ! IsPODType
+                  (Availability) Availability_Available
+
+
             . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[37:38]
+                    cursor.Extent() 1
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             . . . ReturnStmt:IsStatement 
-            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                  Kind() ReturnStmt
+                  Extent: sample.c[45:53]
+                  cursor.Extent() return 0
+                  bools for cursor.Kind(): IsStatement
+                  bools for cursor.Type(): ! IsPODType
+                  (Availability) Availability_Available
+
+
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[52:53]
+                    cursor.Extent() 0
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 1952,
 		ExpectedGobSize1: 1553,
 	},
@@ -204,6 +507,7 @@ var testTupleData = []testTuple{
 				if (b & 0x1) {
 					return Add(b);
 				}
+				return 0;
 			}
 			`,
 		ExpectedTokens: `
@@ -239,6 +543,9 @@ var testTupleData = []testTuple{
                  ) : Punctuation
                  ; : Punctuation
                  } : Punctuation
+            return : Keyword
+                 0 : Literal
+                 ; : Punctuation
                  } : Punctuation`,
 	},
 	{
@@ -246,10 +553,10 @@ var testTupleData = []testTuple{
 		SrcCode: `
 			static int sa = 7;
 			static int getsaI() {
-				return sa
+				return sa;
 			}
 			int getsa() {
-				return getsaI()
+				return getsaI();
 			}
 			`,
 		ExpectedTokens: `
@@ -267,6 +574,7 @@ var testTupleData = []testTuple{
                  { : Punctuation
             return : Keyword
                 sa : Identifier
+                 ; : Punctuation
                  } : Punctuation
                int : Keyword
              getsa : Identifier
@@ -277,6 +585,7 @@ var testTupleData = []testTuple{
             getsaI : Identifier
                  ( : Punctuation
                  ) : Punctuation
+                 ; : Punctuation
                  } : Punctuation`,
 	},
 	{
@@ -291,7 +600,30 @@ var testTupleData = []testTuple{
 		ExpectedTopCursors: `a VarDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
-            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}`,
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[0:9]
+            cursor.Extent() int a = 1
+            USR c:@a
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[8:9]
+              cursor.Extent() 1
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4
@@ -302,7 +634,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 1} {0 5}} 1:{VarDecl 2 0 2 {2 1} {0 4}} 2:{IntegerLiteral 0 1 2 {0 0} {3 1}}
@@ -324,8 +656,41 @@ var testTupleData = []testTuple{
 		ExpectedTopCursors: `a VarDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 UInt 'unsigned int' align:4 size:4}
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[0:20]
+            cursor.Extent() unsigned int a = 0x1
+            USR c:@a
+            Type() unsigned int
+            Type().Kind() UInt
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . IsUnexposed(UnexposedExpr) {seen-before:1}
-            . . 0x1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}`,
+              Kind() UnexposedExpr
+              Extent: sample.c[17:20]
+              cursor.Extent() 0x1
+              Type() unsigned int
+              Type().Kind() UInt
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression IsUnexposed
+              (Availability) Availability_Available
+
+
+            . . 0x1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}
+                Kind() IntegerLiteral
+                Extent: sample.c[17:20]
+                cursor.Extent() 0x1
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 1726,
 		ExpectedGobSize1: 1405,
 	},
@@ -341,7 +706,30 @@ var testTupleData = []testTuple{
 		ExpectedTopCursors: `a VarDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Double 'double' align:8 size:8}
-            . 0.001/FloatingLiteral:IsLiteral/ {seen-before:1}`,
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[0:16]
+            cursor.Extent() double a = 0.001
+            USR c:@a
+            Type() double
+            Type().Kind() Double
+            Type().SizeOf() 8
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 0.001/FloatingLiteral:IsLiteral/ {seen-before:1}
+              Kind() FloatingLiteral
+              Extent: sample.c[11:16]
+              cursor.Extent() 0.001
+              Type() double
+              Type().Kind() Double
+              Type().SizeOf() 8
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 1671,
 		ExpectedGobSize1: 1363,
 	},
@@ -370,7 +758,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
@@ -400,8 +788,43 @@ var testTupleData = []testTuple{
 		ExpectedTopCursors: `A FunctionDecl IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             A/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[0:20]
+            cursor.Extent() void A() { return; }
+            USR c:@F@A
+            Type() void ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
-            . . ReturnStmt:IsStatement `,
+              Kind() CompoundStmt
+              Extent: sample.c[9:20]
+              cursor.Extent() { return; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[11:17]
+                cursor.Extent() return
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 1723,
 		ExpectedGobSize1: 1406,
 	},
@@ -410,9 +833,54 @@ var testTupleData = []testTuple{
 		SrcCode: `int A() { return 1; }`,
 		ExpectedFullCursors: `
             A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[0:21]
+            cursor.Extent() int A() { return 1; }
+            USR c:@F@A
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[8:21]
+              cursor.Extent() { return 1; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
-            . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                Kind() ReturnStmt
+                Extent: sample.c[10:18]
+                cursor.Extent() return 1
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[17:18]
+                  cursor.Extent() 1
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 1752,
 		ExpectedGobSize1: 1422,
 	},
@@ -424,20 +892,187 @@ var testTupleData = []testTuple{
 					  `,
 		ExpectedFullCursors: `
             A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[0:21]
+            cursor.Extent() int A() { return 1; }
+            USR c:@F@A
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[8:21]
+              cursor.Extent() { return 1; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[10:18]
+                cursor.Extent() return 1
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[17:18]
+                  cursor.Extent() 1
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             B/FunctionDecl {seen-before:1}
+            cursor B
+            Kind() FunctionDecl
+            Extent: sample.c[29:52]
+            cursor.Extent() int B() { return (2); }
+            USR c:@F@B
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[37:52]
+              cursor.Extent() { return (2); }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[39:49]
+                cursor.Extent() return (2)
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {seen-before:2}
+                  Kind() ParenExpr
+                  Extent: sample.c[46:49]
+                  cursor.Extent() (2)
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[47:48]
+                    cursor.Extent() 2
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             C/FunctionDecl {seen-before:1}
+            cursor C
+            Kind() FunctionDecl
+            Extent: sample.c[60:85]
+            cursor.Extent() int C() { return ((2)); }
+            USR c:@F@C
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[68:85]
+              cursor.Extent() { return ((2)); }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[70:82]
+                cursor.Extent() return ((2))
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . ParenExpr:IsExpression:[( : Punctuation, ( : Punctuation, 2 : Literal, ) : Punctuation, ) : Punctuation]/ {seen-before:2}
+                  Kind() ParenExpr
+                  Extent: sample.c[77:82]
+                  cursor.Extent() ((2))
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . ParenExpr:IsExpression:[( : Punctuation, 2 : Literal, ) : Punctuation]/ {seen-before:2}
-            . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                    Kind() ParenExpr
+                    Extent: sample.c[78:81]
+                    cursor.Extent() (2)
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+                      Kind() IntegerLiteral
+                      Extent: sample.c[79:80]
+                      cursor.Extent() 2
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 2008,
 		ExpectedGobSize1: 1550,
 	},
@@ -459,11 +1094,76 @@ var testTupleData = []testTuple{
                  } : Punctuation`,
 		ExpectedFullCursors: `
             A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[0:27]
+            cursor.Extent() int A() { return 77 - 78; }
+            USR c:@F@A
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[8:27]
+              cursor.Extent() { return 77 - 78; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[10:24]
+                cursor.Extent() return 77 - 78
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . BinaryOperator:IsExpression:[77 : Literal, - : Punctuation, 78 : Literal]/ {seen-before:2}
+                  Kind() BinaryOperator
+                  Extent: sample.c[17:24]
+                  cursor.Extent() 77 - 78
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . 77/IntegerLiteral:IsLiteral/ {seen-before:2}
-            . . . . 78/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                    Kind() IntegerLiteral
+                    Extent: sample.c[17:19]
+                    cursor.Extent() 77
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            . . . . 78/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[22:24]
+                    cursor.Extent() 78
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10
@@ -475,7 +1175,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
@@ -500,9 +1200,52 @@ var testTupleData = []testTuple{
               ; : Punctuation`,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[0:15]
+            cursor.Extent() int a = 77 - 78
+            USR c:@a
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . BinaryOperator:IsExpression:[77 : Literal, - : Punctuation, 78 : Literal]/ {seen-before:1}
+              Kind() BinaryOperator
+              Extent: sample.c[8:15]
+              cursor.Extent() 77 - 78
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             . . 77/IntegerLiteral:IsLiteral/ {seen-before:1}
-            . . 78/IntegerLiteral:IsLiteral/ {seen-before:1}`,
+                Kind() IntegerLiteral
+                Extent: sample.c[8:10]
+                cursor.Extent() 77
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
+            . . 78/IntegerLiteral:IsLiteral/ {seen-before:1}
+                Kind() IntegerLiteral
+                Extent: sample.c[13:15]
+                cursor.Extent() 78
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6
@@ -513,7 +1256,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 1} {0 7}} 1:{VarDecl 2 0 2 {2 1} {0 6}} 2:{BinaryOperator 3 1 2 {3 2} {3 3}}
@@ -539,10 +1282,63 @@ var testTupleData = []testTuple{
               ; : Punctuation`,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[0:17]
+            cursor.Extent() int a = (77) - 78
+            USR c:@a
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . BinaryOperator:IsExpression:[( : Punctuation, 77 : Literal, ) : Punctuation, - : Punctuation, 78 : Literal]/ {seen-before:1}
+              Kind() BinaryOperator
+              Extent: sample.c[8:17]
+              cursor.Extent() (77) - 78
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             . . ParenExpr:IsExpression:[( : Punctuation, 77 : Literal, ) : Punctuation]/ {seen-before:1}
+                Kind() ParenExpr
+                Extent: sample.c[8:12]
+                cursor.Extent() (77)
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
             . . . 77/IntegerLiteral:IsLiteral/ {seen-before:1}
-            . . 78/IntegerLiteral:IsLiteral/ {seen-before:1}`,
+                  Kind() IntegerLiteral
+                  Extent: sample.c[9:11]
+                  cursor.Extent() 77
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . 78/IntegerLiteral:IsLiteral/ {seen-before:1}
+                Kind() IntegerLiteral
+                Extent: sample.c[15:17]
+                cursor.Extent() 78
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8
@@ -554,7 +1350,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 1} {0 9}} 1:{VarDecl 2 0 2 {2 1} {0 8}} 2:{BinaryOperator 3 1 2 {3 2} {3 5}}
@@ -567,52 +1363,130 @@ var testTupleData = []testTuple{
 	{
 		Name:    "var_a_is_minus_b",
 		Comment: ` UnaryOperator - has 2 tokens and 1 children. First child has 1 token. Means the 1st is the unary operator symbol.`,
-		SrcCode: `int a = 99;
-					  int b = -a;`,
+		SrcCode: `
+			const int a = 99;
+			int b = -a;
+			`,
 		ExpectedTokens: `
-            int : Keyword
-              a : Identifier
-              = : Punctuation
-             99 : Literal
-              ; : Punctuation
-            int : Keyword
-              b : Identifier
-              = : Punctuation
-              - : Punctuation
-              a : Identifier
-              ; : Punctuation`,
+            const : Keyword
+              int : Keyword
+                a : Identifier
+                = : Punctuation
+               99 : Literal
+                ; : Punctuation
+              int : Keyword
+                b : Identifier
+                = : Punctuation
+                - : Punctuation
+                a : Identifier
+                ; : Punctuation`,
 		ExpectedFullCursors: `
-            a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
-            . 99/IntegerLiteral:IsLiteral/ {seen-before:1}
-            b/VarDecl {seen-before:1}
-            . UnaryOperator:IsExpression:[- : Punctuation, a : Identifier]/ {seen-before:1}
-            . . IsUnexposed(UnexposedExpr) {seen-before:1}
-            . . . DeclRefExpr:IsExpression:[a : Identifier]/a {seen-before:1}`,
+            a/VarDecl {first-seen:1 Int 'const int' align:4 size:4 Const}
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[4:20]
+            cursor.Extent() const int a = 99
+            USR c:@a
+            Type() const int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsConstQualifiedType
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 99/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}
+              Kind() IntegerLiteral
+              Extent: sample.c[18:20]
+              cursor.Extent() 99
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
+            b/VarDecl {seen-before:2}
+            cursor b
+            Kind() VarDecl
+            Extent: sample.c[25:35]
+            cursor.Extent() int b = -a
+            USR c:@b
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . UnaryOperator:IsExpression:[- : Punctuation, a : Identifier]/ {seen-before:2}
+              Kind() UnaryOperator
+              Extent: sample.c[33:35]
+              cursor.Extent() -a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
+            . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                cursor a
+                Kind() UnexposedExpr
+                Extent: sample.c[34:35]
+                cursor.Extent() a
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression IsUnexposed
+                (Availability) Availability_Available
+                Referenced() a sample.c[4:20] kind: VarDecl
+
+
+            . . . DeclRefExpr:IsExpression:[a : Identifier]/a {seen-before:1}
+                  cursor a
+                  Kind() DeclRefExpr
+                  Extent: sample.c[34:35]
+                  cursor.Extent() a
+                  Type() const int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  bools for cursor.Type(): IsConstQualifiedType
+                  (Availability) Availability_Available
+                  Referenced() a sample.c[4:20] kind: VarDecl
+`,
 		ExpectedTUPopulate: `
             Tokens:
-            0:0 1:1 2:2 3:3 4:4 5:0 6:5 7:2 8:6 9:1 10:4
+            0:0 1:1 2:2 3:3 4:4 5:5 6:1 7:6 8:3 9:7 10:2 11:5
             TokenMap:
-            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Literal 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            0:{Keyword 0} 1:{Keyword 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Literal 4} 5:{Punctuation 5} 6:{Identifier 6}
+            7:{Punctuation 7}
             TokenNameMap:
-            0:int 1:a 2:= 3:99 4:; 5:b 6:-
+            0:const 1:int 2:a 3:= 4:99 5:; 6:b 7:-
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Int 1}]
+                Intrinsics: [{{Int} 4 4 const int} {{Int} 4 4 int}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 2} {0 11}} 1:{VarDecl 2 0 2 {3 1} {0 4}} 2:{VarDecl 3 0 2 {4 1} {5 5}}
-            3:{IntegerLiteral 0 1 2 {0 0} {3 1}} 4:{UnaryOperator 0 2 2 {5 1} {8 2}} 5:{UnexposedExpr 2 4 2 {6 1} {9 1}}
-            6:{DeclRefExpr 2 5 2 {0 0} {9 1}}
+            0:{TranslationUnit 1 -1 1 {1 2} {0 12}} 1:{VarDecl 2 0 2 {3 1} {0 5}} 2:{VarDecl 3 0 3 {4 1} {6 5}}
+            3:{IntegerLiteral 0 1 3 {0 0} {4 1}} 4:{UnaryOperator 0 2 3 {5 1} {9 2}} 5:{UnexposedExpr 2 4 3 {6 1} {10 1}}
+            6:{DeclRefExpr 2 5 2 {0 0} {10 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:b`,
-		ExpectedGobSize0: 1761,
-		ExpectedGobSize1: 1401,
+		ExpectedGobSize0: 1799,
+		ExpectedGobSize1: 1438,
 	},
 	{
 		Name: "add_sub_mul_div",
-		SrcCode: `int A() { return 1 + 2 - 3 * 4 / 5; }
-					  `,
+		SrcCode: `
+			int A() { return 1 + 2 - 3 * 4 / 5; }
+			`,
 		ExpectedTokens: `
                int : Keyword
                  A : Identifier
@@ -633,17 +1507,142 @@ var testTupleData = []testTuple{
                  } : Punctuation`,
 		ExpectedFullCursors: `
             A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[4:41]
+            cursor.Extent() int A() { return 1 + 2 - 3 * 4 / 5; }
+            USR c:@F@A
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[12:41]
+              cursor.Extent() { return 1 + 2 - 3 * 4 / 5; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[14:38]
+                cursor.Extent() return 1 + 2 - 3 * 4 / 5
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal, - : Punctuation, 3 : Literal, * : Punctuation, 4 : Literal, / : Punctuation, 5 : Literal]/ {seen-before:2}
+                  Kind() BinaryOperator
+                  Extent: sample.c[21:38]
+                  cursor.Extent() 1 + 2 - 3 * 4 / 5
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {seen-before:2}
+                    Kind() BinaryOperator
+                    Extent: sample.c[21:26]
+                    cursor.Extent() 1 + 2
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             . . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                      Kind() IntegerLiteral
+                      Extent: sample.c[21:22]
+                      cursor.Extent() 1
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+
+
             . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+                      Kind() IntegerLiteral
+                      Extent: sample.c[25:26]
+                      cursor.Extent() 2
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+
+
             . . . . BinaryOperator:IsExpression:[3 : Literal, * : Punctuation, 4 : Literal, / : Punctuation, 5 : Literal]/ {seen-before:2}
+                    Kind() BinaryOperator
+                    Extent: sample.c[29:38]
+                    cursor.Extent() 3 * 4 / 5
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             . . . . . BinaryOperator:IsExpression:[3 : Literal, * : Punctuation, 4 : Literal]/ {seen-before:2}
+                      Kind() BinaryOperator
+                      Extent: sample.c[29:34]
+                      cursor.Extent() 3 * 4
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+
+
             . . . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}
+                        Kind() IntegerLiteral
+                        Extent: sample.c[29:30]
+                        cursor.Extent() 3
+                        Type() int
+                        Type().Kind() Int
+                        Type().SizeOf() 4
+                        bools for cursor.Kind(): IsExpression
+                        (Availability) Availability_Available
+
+
             . . . . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}
-            . . . . . 5/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                        Kind() IntegerLiteral
+                        Extent: sample.c[33:34]
+                        cursor.Extent() 4
+                        Type() int
+                        Type().Kind() Int
+                        Type().SizeOf() 4
+                        bools for cursor.Kind(): IsExpression
+                        (Availability) Availability_Available
+
+
+            . . . . . 5/IntegerLiteral:IsLiteral/ {seen-before:2}
+                      Kind() IntegerLiteral
+                      Extent: sample.c[37:38]
+                      cursor.Extent() 5
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:12 13:13 14:14 15:15 16:16
@@ -656,7 +1655,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
@@ -672,90 +1671,995 @@ var testTupleData = []testTuple{
 	},
 	{
 		Name: "add_and_double_add",
-		SrcCode: `int A() { return 1 + 2; }
-					  int B() { return 1 + 2 + 3; }
-					  `,
+		SrcCode: `
+			int A() { return 1 + 2; }
+			int B() { return 1 + 2 + 3; }
+			`,
 		ExpectedFullCursors: `
             A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[4:29]
+            cursor.Extent() int A() { return 1 + 2; }
+            USR c:@F@A
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[12:29]
+              cursor.Extent() { return 1 + 2; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[14:26]
+                cursor.Extent() return 1 + 2
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {seen-before:2}
+                  Kind() BinaryOperator
+                  Extent: sample.c[21:26]
+                  cursor.Extent() 1 + 2
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[21:22]
+                    cursor.Extent() 1
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[25:26]
+                    cursor.Extent() 2
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             B/FunctionDecl {seen-before:1}
+            cursor B
+            Kind() FunctionDecl
+            Extent: sample.c[33:62]
+            cursor.Extent() int B() { return 1 + 2 + 3; }
+            USR c:@F@B
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[41:62]
+              cursor.Extent() { return 1 + 2 + 3; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[43:59]
+                cursor.Extent() return 1 + 2 + 3
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal, + : Punctuation, 3 : Literal]/ {seen-before:2}
+                  Kind() BinaryOperator
+                  Extent: sample.c[50:59]
+                  cursor.Extent() 1 + 2 + 3
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             . . . . BinaryOperator:IsExpression:[1 : Literal, + : Punctuation, 2 : Literal]/ {seen-before:2}
+                    Kind() BinaryOperator
+                    Extent: sample.c[50:55]
+                    cursor.Extent() 1 + 2
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
             . . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                      Kind() IntegerLiteral
+                      Extent: sample.c[50:51]
+                      cursor.Extent() 1
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+
+
             . . . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
-            . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                      Kind() IntegerLiteral
+                      Extent: sample.c[54:55]
+                      cursor.Extent() 2
+                      Type() int
+                      Type().Kind() Int
+                      Type().SizeOf() 4
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+
+
+            . . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[58:59]
+                    cursor.Extent() 3
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+`,
 		ExpectedGobSize0: 1985,
 		ExpectedGobSize1: 1538,
 	},
 	{
-		Name:    "hdr_processing_only",
+		Name: "hdr_processing_only",
+		Comment: `
+			// SC_Static seems to correlate with Linkage_internal and the use of the 'static' keyword.
+			// SC_Extern indicates variable or function is not defined there, just declared.
+			// SC_None   indicates a definition that is available externally.
+			`,
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
 		HdrCode: `
-			  extern int hdr_ext_v;
-			  static int hdr_sta_v;
-			  static int hdr_sta_v = 2;
-			  int hdr_glo_v = 3;
+			extern int h_ext_v;
+			static int h_sta_v;
+			static int h_sta_v = 2;
+			int h_glo_v = 3;
 
-			  extern int hdr_ext_f();
-			  inline int hdr_inl_f()       { return 11; }
-			  static int hdr_sta_f()       { return 12; }
-			  int hdr_glo_f()	           { return 13; }
-			  static inline int hdr_si_f() { return 14; }
-			  `,
+			extern int h_ext_f();
+			inline int h_inl_f()       { return 11; }
+			static int h_sta_f()       { return 12; }
+			int h_glo_f()	           { return 13; }
+			static inline int h_si_f() { return 14; }
+			`,
+		ExpectedTopCursors: `
+            h_ext_v VarDecl      IsDeclaration SC_Extern Linkage_External
+            h_sta_v VarDecl      IsDeclaration SC_Static Linkage_Internal
+            h_sta_v VarDecl      IsDeclaration SC_Static Linkage_Internal
+            h_glo_v VarDecl      IsDeclaration SC_None   Linkage_External
+            h_ext_f FunctionDecl IsDeclaration SC_Extern Linkage_External
+            h_inl_f FunctionDecl IsDeclaration SC_None   Linkage_External
+            h_sta_f FunctionDecl IsDeclaration SC_Static Linkage_Internal
+            h_glo_f FunctionDecl IsDeclaration SC_None   Linkage_External
+            h_si_f  FunctionDecl IsDeclaration SC_Static Linkage_Internal`,
+		ExpectedFullCursors: `
+            h_ext_v/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            cursor h_ext_v
+            Kind() VarDecl
+            Extent: ./hdr.h[4:22]
+            cursor.Extent() extern int h_ext_v
+            USR c:@h_ext_v
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+            StorageClass() SC_Extern
+
+
+            h_sta_v/VarDecl {seen-before:1}
+            cursor h_sta_v
+            Kind() VarDecl
+            Extent: ./hdr.h[27:45]
+            cursor.Extent() static int h_sta_v
+            USR c:hdr.h@h_sta_v
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Location(): ! IsFromMainFile
+            Linkage() Linkage_Internal
+            (Availability) Availability_Available
+            StorageClass() SC_Static
+            Definition() is different h_sta_v ./hdr.h[50:72] kind: VarDecl
+
+
+            h_sta_v/VarDecl {seen-before:1}
+            cursor h_sta_v
+            Kind() VarDecl
+            Extent: ./hdr.h[50:72]
+            cursor.Extent() static int h_sta_v = 2
+            USR c:hdr.h@h_sta_v
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Location(): ! IsFromMainFile
+            Linkage() Linkage_Internal
+            (Availability) Availability_Available
+            StorageClass() SC_Static
+            CanonicalCursor() h_sta_v ./hdr.h[27:45] kind: VarDecl
+
+
+            . 2/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: ./hdr.h[71:72]
+              cursor.Extent() 2
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+
+
+            h_glo_v/VarDecl {seen-before:1}
+            cursor h_glo_v
+            Kind() VarDecl
+            Extent: ./hdr.h[77:92]
+            cursor.Extent() int h_glo_v = 3
+            USR c:@h_glo_v
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 3/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: ./hdr.h[91:92]
+              cursor.Extent() 3
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+
+
+            h_ext_f/FunctionDecl {first-seen:2 FunctionNoProto 'int ()' !POD numargs:0 result:{seen-before:1} align:4 size:1 Variadic}
+            cursor h_ext_f
+            Kind() FunctionDecl
+            Extent: ./hdr.h[98:118]
+            cursor (function) has no CompoundStmt
+            cursor.Extent() extern int h_ext_f()
+            USR c:@F@h_ext_f
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_Extern
+
+
+            h_inl_f/FunctionDecl {seen-before:2}
+            cursor h_inl_f
+            Kind() FunctionDecl
+            Extent: ./hdr.h[123:164]
+            cursor.Extent() inline int h_inl_f()       { return 11; }
+            USR c:@F@h_inl_f
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsFunctionInlined IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: ./hdr.h[150:164]
+              cursor.Extent() { return 11; }
+              bools for cursor: IsFunctionInlined
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: ./hdr.h[152:161]
+                cursor.Extent() return 11
+                bools for cursor: IsFunctionInlined
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                bools for cursor.Location(): ! IsFromMainFile
+                (Availability) Availability_Available
+
+
+            . . . 11/IntegerLiteral:IsLiteral/ {seen-before:1}
+                  Kind() IntegerLiteral
+                  Extent: ./hdr.h[159:161]
+                  cursor.Extent() 11
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor: IsFunctionInlined
+                  bools for cursor.Kind(): IsExpression
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+
+
+            h_sta_f/FunctionDecl {seen-before:2}
+            cursor h_sta_f
+            Kind() FunctionDecl
+            Extent: ./hdr.h[168:209]
+            cursor.Extent() static int h_sta_f()       { return 12; }
+            USR c:hdr.h@F@h_sta_f
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            Linkage() Linkage_Internal
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_Static
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: ./hdr.h[195:209]
+              cursor.Extent() { return 12; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: ./hdr.h[197:206]
+                cursor.Extent() return 12
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                bools for cursor.Location(): ! IsFromMainFile
+                (Availability) Availability_Available
+
+
+            . . . 12/IntegerLiteral:IsLiteral/ {seen-before:1}
+                  Kind() IntegerLiteral
+                  Extent: ./hdr.h[204:206]
+                  cursor.Extent() 12
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+
+
+            h_glo_f/FunctionDecl {seen-before:2}
+            cursor h_glo_f
+            Kind() FunctionDecl
+            Extent: ./hdr.h[213:252]
+            cursor.Extent() int h_glo_f()	           { return 13; }
+            USR c:@F@h_glo_f
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: ./hdr.h[238:252]
+              cursor.Extent() { return 13; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: ./hdr.h[240:249]
+                cursor.Extent() return 13
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                bools for cursor.Location(): ! IsFromMainFile
+                (Availability) Availability_Available
+
+
+            . . . 13/IntegerLiteral:IsLiteral/ {seen-before:1}
+                  Kind() IntegerLiteral
+                  Extent: ./hdr.h[247:249]
+                  cursor.Extent() 13
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+
+
+            h_si_f/FunctionDecl {seen-before:2}
+            cursor h_si_f
+            Kind() FunctionDecl
+            Extent: ./hdr.h[256:297]
+            cursor.Extent() static inline int h_si_f() { return 14; }
+            USR c:hdr.h@F@h_si_f
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsFunctionInlined IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            Linkage() Linkage_Internal
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_Static
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: ./hdr.h[283:297]
+              cursor.Extent() { return 14; }
+              bools for cursor: IsFunctionInlined
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: ./hdr.h[285:294]
+                cursor.Extent() return 14
+                bools for cursor: IsFunctionInlined
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                bools for cursor.Location(): ! IsFromMainFile
+                (Availability) Availability_Available
+
+
+            . . . 14/IntegerLiteral:IsLiteral/ {seen-before:1}
+                  Kind() IntegerLiteral
+                  Extent: ./hdr.h[292:294]
+                  cursor.Extent() 14
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor: IsFunctionInlined
+                  bools for cursor.Kind(): IsExpression
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2
+            TokenMap:
+            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2}
+            TokenNameMap:
+            0:# 1:include 2:"hdr.h"
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 1} {0 3}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}}
+            CursorNameMap:
+            0: 1:sample.c 2:hdr.h`,
 		ExpectedGobSize0: 1621,
 		ExpectedGobSize1: 1329,
 	},
 	{
 		Name:    "hdr_and_source",
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
-		HdrCode: `#define MSG "Hello World!"
-			  extern int printf(const char* fmt);
-			  `,
-		SrcCode: `int A() { return 1; }
-			  extern int B() {return 2; }
-			  static int C() {return 3; }
-			  inline int D() {return 4; }
-			  `,
+		HdrCode: `
+			#define MSG "Hello World!"
+			`,
+		SrcCode: `
+			int A() { return 1; }
+			extern int B() {return 2; }
+			static int C() {return 3; }
+			inline int D() {return 4; }
+			`,
 		ExpectedTopCursors: `
-            A FunctionDecl IsDeclaration SC_None   Linkage_External
-            B FunctionDecl IsDeclaration SC_Extern Linkage_External
-            C FunctionDecl IsDeclaration SC_Static Linkage_Internal
-            D FunctionDecl IsDeclaration SC_None   Linkage_External`,
+            MSG MacroDefinition IsPreprocessing           Linkage_Invalid 
+            A   FunctionDecl    IsDeclaration   SC_None   Linkage_External
+            B   FunctionDecl    IsDeclaration   SC_Extern Linkage_External
+            C   FunctionDecl    IsDeclaration   SC_Static Linkage_Internal
+            D   FunctionDecl    IsDeclaration   SC_None   Linkage_External`,
 		ExpectedFullCursors: `
+            MSG/MacroDefinition 
+            cursor MSG
+            Kind() MacroDefinition
+            Extent: ./hdr.h[12:30]
+            cursor.Extent() MSG "Hello World!"
+            USR c:hdr.h@12@macro@MSG
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
             A/FunctionDecl {first-seen:1 FunctionNoProto 'int ()' !POD numargs:0 result:{first-seen:2 Int 'int' align:4 size:4} align:4 size:1 Variadic}
+            cursor A
+            Kind() FunctionDecl
+            Extent: sample.c[21:42]
+            cursor.Extent() int A() { return 1; }
+            USR c:@F@A
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[29:42]
+              cursor.Extent() { return 1; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[31:39]
+                cursor.Extent() return 1
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[38:39]
+                  cursor.Extent() 1
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             B/FunctionDecl {seen-before:1}
+            cursor B
+            Kind() FunctionDecl
+            Extent: sample.c[46:73]
+            cursor.Extent() extern int B() {return 2; }
+            USR c:@F@B
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_Extern
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[61:73]
+              cursor.Extent() {return 2; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[62:70]
+                cursor.Extent() return 2
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . 2/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[69:70]
+                  cursor.Extent() 2
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             C/FunctionDecl {seen-before:1}
+            cursor C
+            Kind() FunctionDecl
+            Extent: sample.c[77:104]
+            cursor.Extent() static int C() {return 3; }
+            USR c:sample.c@F@C
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            Linkage() Linkage_Internal
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_Static
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[92:104]
+              cursor.Extent() {return 3; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[93:101]
+                cursor.Extent() return 3
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
             . . . 3/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[100:101]
+                  cursor.Extent() 3
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
             D/FunctionDecl {seen-before:1}
+            cursor D
+            Kind() FunctionDecl
+            Extent: sample.c[108:135]
+            cursor.Extent() inline int D() {return 4; }
+            USR c:@F@D
+            Type() int ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() int
+            Type().ResultType().Kind() Int
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsFunctionInlined IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() int
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[123:135]
+              cursor.Extent() {return 4; }
+              bools for cursor: IsFunctionInlined
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
-            . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+                Kind() ReturnStmt
+                Extent: sample.c[124:132]
+                cursor.Extent() return 4
+                bools for cursor: IsFunctionInlined
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . 4/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[131:132]
+                  cursor.Extent() 4
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor: IsFunctionInlined
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:12 13:3 14:13 15:5 16:6 17:7 18:8 19:14 20:10 21:11 22:15 23:3
+            24:16 25:5 26:6 27:7 28:8 29:17 30:10 31:11 32:18 33:3 34:19 35:5 36:6 37:7 38:8 39:20 40:10 41:11
+            TokenMap:
+            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
+            7:{Punctuation 7} 8:{Keyword 8} 9:{Literal 9} 10:{Punctuation 10} 11:{Punctuation 11} 12:{Keyword 12} 13:{Identifier 13}
+            14:{Literal 14} 15:{Keyword 15} 16:{Identifier 16} 17:{Literal 17} 18:{Keyword 18} 19:{Identifier 19} 20:{Literal 20}
+            TokenNameMap:
+            0:# 1:include 2:"hdr.h" 3:int 4:A 5:( 6:) 7:{ 8:return 9:1 10:; 11:} 12:extern 13:B 14:2 15:static 16:C 17:3 18:inline
+            19:D 20:4
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
+                Intrinsics: [{{Int} 4 4 int}]
+                Functions: [{{FunctionNoProto} 2 [] int ()}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 5} {0 42}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{FunctionDecl 3 0 3 {6 1} {3 9}}
+            3:{FunctionDecl 4 0 3 {7 1} {12 10}} 4:{FunctionDecl 5 0 3 {8 1} {22 10}} 5:{FunctionDecl 6 0 3 {9 1} {32 10}}
+            6:{CompoundStmt 0 2 0 {10 1} {7 5}} 7:{CompoundStmt 0 3 0 {11 1} {17 5}} 8:{CompoundStmt 0 4 0 {12 1} {27 5}}
+            9:{CompoundStmt 0 5 0 {13 1} {37 5}} 10:{ReturnStmt 0 6 0 {14 1} {8 2}} 11:{ReturnStmt 0 7 0 {15 1} {18 2}}
+            12:{ReturnStmt 0 8 0 {16 1} {28 2}} 13:{ReturnStmt 0 9 0 {17 1} {38 2}} 14:{IntegerLiteral 0 10 2 {0 0} {9 1}}
+            15:{IntegerLiteral 0 11 2 {0 0} {19 1}} 16:{IntegerLiteral 0 12 2 {0 0} {29 1}} 17:{IntegerLiteral 0 13 2 {0 0} {39 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:hdr.h 3:A 4:B 5:C 6:D`,
 		ExpectedGobSize0: 2141,
 		ExpectedGobSize1: 1671,
+	},
+	{
+		Name:    "hdr_macro_expansion",
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		HdrCode: `
+			#define HELLO "Hello"
+			#define WORLD "World!"
+			#define HELLOWORLD HELLO " " WORLD
+			`,
+		SrcCode: `
+			char* foo() {return HELLOWORLD; }
+			`,
+		ExpectedTopCursors: `
+            HELLO      MacroDefinition IsPreprocessing         Linkage_Invalid 
+            WORLD      MacroDefinition IsPreprocessing         Linkage_Invalid 
+            HELLOWORLD MacroDefinition IsPreprocessing         Linkage_Invalid 
+            HELLOWORLD MacroExpansion  IsPreprocessing         Linkage_Invalid 
+            foo        FunctionDecl    IsDeclaration   SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            HELLO/MacroDefinition 
+            cursor HELLO
+            Kind() MacroDefinition
+            Extent: ./hdr.h[12:25]
+            cursor.Extent() HELLO "Hello"
+            USR c:hdr.h@12@macro@HELLO
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            WORLD/MacroDefinition 
+            cursor WORLD
+            Kind() MacroDefinition
+            Extent: ./hdr.h[37:51]
+            cursor.Extent() WORLD "World!"
+            USR c:hdr.h@37@macro@WORLD
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            HELLOWORLD/MacroDefinition 
+            cursor HELLOWORLD
+            Kind() MacroDefinition
+            Extent: ./hdr.h[63:89]
+            cursor.Extent() HELLOWORLD HELLO " " WORLD
+            USR c:hdr.h@63@macro@HELLOWORLD
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            HELLOWORLD/MacroExpansion 
+            cursor HELLOWORLD
+            Kind() MacroExpansion
+            Extent: sample.c[41:51]
+            cursor.Extent() HELLOWORLD
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() HELLOWORLD ./hdr.h[63:89] kind: MacroDefinition
+
+
+            foo/FunctionDecl {first-seen:1 FunctionNoProto 'char *()' !POD numargs:0 result:{first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8} align:4 size:1 Variadic}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[21:54]
+            cursor.Extent() char* foo() {return HELLOWORLD; }
+            USR c:@F@foo
+            Type() char *()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() char *
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[33:54]
+              cursor.Extent() {return HELLOWORLD; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[34:51]
+                cursor.Extent() return HELLOWORLD
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                  Kind() UnexposedExpr
+                  Extent: sample.c[41:51]
+                  cursor.Extent() HELLOWORLD
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+
+
+            . . . . StringLiteral:IsLiteral:[]/"Hello World!" {first-seen:4 ConstantArray 'char [13]' align:1 size:13 len:13 elem:{seen-before:3}}
+                    cursor "Hello World!"
+                    Kind() StringLiteral
+                    Extent: sample.c[41:51]
+                    cursor.Extent() HELLOWORLD
+                    Type() char [13]
+                    Type().Kind() ConstantArray
+                    Type().ElementType() char
+                    Type().ElementType().Kind() Char_S
+                    Type().NumElements() 13
+                    Type().ArrayElementType() char
+                    Type().ArrayElementType().Kind() Char_S
+                    Type().ArraySize() 13
+                    Type().SizeOf() 13
+                    bools for cursor.Kind(): IsExpression
+                    bools for cursor.Location(): ! IsFromMainFile
+                    (Availability) Availability_Available
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:12
+            TokenMap:
+            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            7:{Punctuation 7} 8:{Punctuation 8} 9:{Keyword 9} 10:{Identifier 10} 11:{Punctuation 11} 12:{Punctuation 12}
+            TokenNameMap:
+            0:# 1:include 2:"hdr.h" 3:char 4:* 5:foo 6:( 7:) 8:{ 9:return 10:HELLOWORLD 11:; 12:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Char_S 0} {Pointer 2} {FunctionNoProto 0} {ConstantArray 0}]
+                Intrinsics: [{{Char_S} 1 1 char}]
+                Functions: [{{FunctionNoProto} 3 [] char *()}]
+                Arrays: [{13 {2 1 13 char [13]}}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 3} {0 13}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{MacroExpansion 3 0 0 {0 0} {10 1}}
+            3:{FunctionDecl 4 0 4 {4 1} {3 10}} 4:{CompoundStmt 0 3 0 {5 1} {8 5}} 5:{ReturnStmt 0 4 0 {6 1} {9 2}}
+            6:{UnexposedExpr 0 5 3 {7 1} {0 0}} 7:{StringLiteral 5 6 5 {0 0} {0 0}}
+            CursorNameMap:
+            0: 1:sample.c 2:hdr.h 3:HELLOWORLD 4:foo 5:"Hello World!"`,
+		ExpectedGobSize0: 1920,
+		ExpectedGobSize1: 1568,
 	},
 	{
 		Name:    "struct_a_b",
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
 		SrcCode: `
-				  struct StructS {
-					  int a;
-					  char b;
-				  } VarS;
-				  `,
+			  struct StructS {
+				  int a;
+				  char b;
+			  } VarS;
+			  `,
 		ExpectedTokens: `
              struct : Keyword
             StructS : Identifier
@@ -774,9 +2678,75 @@ var testTupleData = []testTuple{
             VarS    VarDecl    IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             StructS/StructDecl {first-seen:1 Record 'struct StructS' align:4 size:8}
+            cursor StructS
+            Kind() StructDecl
+            Extent: sample.c[6:56]
+            cursor.Extent() struct StructS {
+            				  int a;
+            				  char b;
+            			  }
+            USR c:@S@StructS
+            Type() struct StructS
+            Type().Kind() Record
+            Type().Declaration() StructS
+            Type().SizeOf() 8
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[29:34]
+              cursor.Extent() int a
+              USR c:@S@StructS@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             . b/FieldDecl {first-seen:3 Char_S 'char' align:1 size:1}
+              cursor b
+              Kind() FieldDecl
+              Extent: sample.c[42:48]
+              cursor.Extent() char b
+              USR c:@S@StructS@FI@b
+              Type() char
+              Type().Kind() Char_S
+              Type().SizeOf() 1
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 32
+
+
             VarS/VarDecl {first-seen:4 Elaborated 'struct StructS' Canon:{seen-before:1} align:4 size:8}
+            cursor VarS
+            Kind() VarDecl
+            Extent: sample.c[6:61]
+            cursor.Extent() struct StructS {
+            				  int a;
+            				  char b;
+            			  } VarS
+            USR c:@VarS
+            Type() struct StructS
+            Type().Kind() Elaborated
+            Type().CanonicalType() struct StructS
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() StructS
+            Type().NamedType() struct StructS
+            Type().NamedType().Kind() Record
+            Type().SizeOf() 8
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [0 backreference]`,
 		ExpectedTUPopulate: `
             Tokens:
@@ -789,7 +2759,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Elaborated 2} {Int 0} {Char_S 1}]
-                Intrinsics: [{{Int} int 4 4} {{Char_S} char 1 1}]
+                Intrinsics: [{{Int} 4 4 int} {{Char_S} 1 1 char}]
                 Records: [{4 8 struct StructS}]
             }
             Cursors:
@@ -822,8 +2792,56 @@ var testTupleData = []testTuple{
             ii VarDecl     IsDeclaration SC_None Linkage_External `,
 		ExpectedFullCursors: `
             II/TypedefDecl {first-seen:1 Typedef 'II' Canon:{first-seen:2 Int 'int' align:4 size:4} align:4 size:4}
+            cursor II
+            Kind() TypedefDecl
+            Extent: sample.c[7:21]
+            cursor.Extent() typedef int II
+            USR c:sample.c@T@II
+            Type() II
+            Type().Kind() Typedef
+            Type().CanonicalType() int
+            Type().CanonicalType().Kind() Int
+            Type().Declaration() II
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            Linkage() Linkage_NoLinkage
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() int
+
+
             ii/VarDecl {seen-before:1}
-            . II/TypeRef {seen-before:1}`,
+            cursor ii
+            Kind() VarDecl
+            Extent: sample.c[29:34]
+            cursor.Extent() II ii
+            USR c:@ii
+            Type() II
+            Type().Kind() Typedef
+            Type().CanonicalType() int
+            Type().CanonicalType().Kind() Int
+            Type().Declaration() II
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . II/TypeRef {seen-before:1}
+              cursor II
+              Kind() TypeRef
+              Extent: sample.c[29:31]
+              cursor.Extent() II
+              Type() II
+              Type().Kind() Typedef
+              Type().CanonicalType() int
+              Type().CanonicalType().Kind() Int
+              Type().Declaration() II
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() II sample.c[7:21] kind: TypedefDecl
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:2 5:4 6:3
@@ -834,7 +2852,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Typedef 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Typedefs: [{2 II}]
             }
             Cursors:
@@ -862,11 +2880,84 @@ var testTupleData = []testTuple{
             ss VarDecl     IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             /StructDecl {first-seen:1 Record 'TA' align:4 size:4}
+            Kind() StructDecl
+            Extent: sample.c[21:38]
+            cursor.Extent() struct { int a; }
+            USR c:@SA@TA
+            Type() TA
+            Type().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[30:35]
+              cursor.Extent() int a
+              USR c:@SA@TA@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             TA/TypedefDecl {first-seen:3 Typedef 'TA' Canon:{seen-before:1} align:4 size:4}
+            cursor TA
+            Kind() TypedefDecl
+            Extent: sample.c[13:41]
+            cursor.Extent() typedef struct { int a; } TA
+            USR c:@T@TA
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() TA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() struct TA
+
+
             . [0 backreference]
             ss/VarDecl {seen-before:3}
-            . TA/TypeRef {seen-before:3}`,
+            cursor ss
+            Kind() VarDecl
+            Extent: sample.c[55:60]
+            cursor.Extent() TA ss
+            USR c:@ss
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() TA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . TA/TypeRef {seen-before:3}
+              cursor TA
+              Kind() TypeRef
+              Extent: sample.c[55:57]
+              cursor.Extent() TA
+              Type() TA
+              Type().Kind() Typedef
+              Type().CanonicalType() TA
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TA sample.c[13:41] kind: TypedefDecl
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:5 9:7 10:8 11:5
@@ -878,7 +2969,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Typedef 0} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Records: [{4 4 TA}]
                 Typedefs: [{2 TA}]
             }
@@ -923,20 +3014,216 @@ var testTupleData = []testTuple{
             y1 VarDecl     IsDeclaration SC_None Linkage_External`,
 		ExpectedFullCursors: `
             /StructDecl {first-seen:1 Record 'TA' align:4 size:4}
+            Kind() StructDecl
+            Extent: sample.c[21:38]
+            cursor.Extent() struct { int a; }
+            USR c:@SA@TA
+            Type() TA
+            Type().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[30:35]
+              cursor.Extent() int a
+              USR c:@SA@TA@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             TA/TypedefDecl {first-seen:3 Typedef 'TA' Canon:{seen-before:1} align:4 size:4}
+            cursor TA
+            Kind() TypedefDecl
+            Extent: sample.c[13:41]
+            cursor.Extent() typedef struct { int a; } TA
+            USR c:@T@TA
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() TA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() struct TA
+
+
             . [0 backreference]
             /StructDecl {first-seen:4 Record 'TB' align:4 size:4}
+            Kind() StructDecl
+            Extent: sample.c[63:80]
+            cursor.Extent() struct { int b; }
+            USR c:@SA@TB
+            Type() TB
+            Type().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . b/FieldDecl {seen-before:2}
+              cursor b
+              Kind() FieldDecl
+              Extent: sample.c[72:77]
+              cursor.Extent() int b
+              USR c:@SA@TB@FI@b
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             TB/TypedefDecl {first-seen:5 Typedef 'TB' Canon:{seen-before:4} align:4 size:4}
+            cursor TB
+            Kind() TypedefDecl
+            Extent: sample.c[55:83]
+            cursor.Extent() typedef struct { int b; } TB
+            USR c:@T@TB
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() struct TB
+
+
             . [4 backreference]
             x0/VarDecl {seen-before:3}
+            cursor x0
+            Kind() VarDecl
+            Extent: sample.c[97:102]
+            cursor.Extent() TA x0
+            USR c:@x0
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() TA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . TA/TypeRef {seen-before:3}
+              cursor TA
+              Kind() TypeRef
+              Extent: sample.c[97:99]
+              cursor.Extent() TA
+              Type() TA
+              Type().Kind() Typedef
+              Type().CanonicalType() TA
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TA sample.c[13:41] kind: TypedefDecl
+
+
             x1/VarDecl {seen-before:3}
+            cursor x1
+            Kind() VarDecl
+            Extent: sample.c[116:121]
+            cursor.Extent() TA x1
+            USR c:@x1
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() TA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . TA/TypeRef {seen-before:3}
+              cursor TA
+              Kind() TypeRef
+              Extent: sample.c[116:118]
+              cursor.Extent() TA
+              Type() TA
+              Type().Kind() Typedef
+              Type().CanonicalType() TA
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TA sample.c[13:41] kind: TypedefDecl
+
+
             y0/VarDecl {seen-before:5}
+            cursor y0
+            Kind() VarDecl
+            Extent: sample.c[135:140]
+            cursor.Extent() TB y0
+            USR c:@y0
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . TB/TypeRef {seen-before:5}
+              cursor TB
+              Kind() TypeRef
+              Extent: sample.c[135:137]
+              cursor.Extent() TB
+              Type() TB
+              Type().Kind() Typedef
+              Type().CanonicalType() TB
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TB
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TB sample.c[55:83] kind: TypedefDecl
+
+
             y1/VarDecl {seen-before:5}
+            cursor y1
+            Kind() VarDecl
+            Extent: sample.c[135:150]
+            cursor.Extent() TB y0,
+            			   y1
+            USR c:@y1
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [13 backreference]`,
 		ExpectedTUPopulate: `
             Tokens:
@@ -951,7 +3238,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Typedef 0} {Record 1} {Typedef 1} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Records: [{4 4 TA} {4 4 TB}]
                 Typedefs: [{2 TA} {4 TB}]
             }
@@ -998,18 +3285,185 @@ var testTupleData = []testTuple{
         `,
 		ExpectedFullCursors: `
             SA/StructDecl {first-seen:1 Record 'struct SA' align:4 size:4}
+            cursor SA
+            Kind() StructDecl
+            Extent: sample.c[13:33]
+            cursor.Extent() struct SA { int a; }
+            USR c:@S@SA
+            Type() struct SA
+            Type().Kind() Record
+            Type().Declaration() SA
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[25:30]
+              cursor.Extent() int a
+              USR c:@S@SA@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             /StructDecl {first-seen:3 Record 'TB' align:4 size:4}
+            Kind() StructDecl
+            Extent: sample.c[55:72]
+            cursor.Extent() struct { int b; }
+            USR c:@SA@TB
+            Type() TB
+            Type().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . b/FieldDecl {seen-before:2}
+              cursor b
+              Kind() FieldDecl
+              Extent: sample.c[64:69]
+              cursor.Extent() int b
+              USR c:@SA@TB@FI@b
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             TB/TypedefDecl {first-seen:4 Typedef 'TB' Canon:{seen-before:3} align:4 size:4}
+            cursor TB
+            Kind() TypedefDecl
+            Extent: sample.c[47:75]
+            cursor.Extent() typedef struct { int b; } TB
+            USR c:@T@TB
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() struct TB
+
+
             . [2 backreference]
             x0/VarDecl {first-seen:5 Elaborated 'struct SA' Canon:{seen-before:1} align:4 size:4}
+            cursor x0
+            Kind() VarDecl
+            Extent: sample.c[89:101]
+            cursor.Extent() struct SA x0
+            USR c:@x0
+            Type() struct SA
+            Type().Kind() Elaborated
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() SA
+            Type().NamedType() struct SA
+            Type().NamedType().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . struct SA/TypeRef {seen-before:1}
+              cursor struct SA
+              Kind() TypeRef
+              Extent: sample.c[96:98]
+              cursor.Extent() SA
+              Type() struct SA
+              Type().Kind() Record
+              Type().Declaration() SA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() SA sample.c[13:33] kind: StructDecl
+
+
             x1/VarDecl {seen-before:5}
+            cursor x1
+            Kind() VarDecl
+            Extent: sample.c[89:105]
+            cursor.Extent() struct SA x0, x1
+            USR c:@x1
+            Type() struct SA
+            Type().Kind() Elaborated
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() SA
+            Type().NamedType() struct SA
+            Type().NamedType().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [7 backreference]
             y0/VarDecl {seen-before:4}
+            cursor y0
+            Kind() VarDecl
+            Extent: sample.c[119:124]
+            cursor.Extent() TB y0
+            USR c:@y0
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . TB/TypeRef {seen-before:4}
+              cursor TB
+              Kind() TypeRef
+              Extent: sample.c[119:121]
+              cursor.Extent() TB
+              Type() TB
+              Type().Kind() Typedef
+              Type().CanonicalType() TB
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TB
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TB sample.c[47:75] kind: TypedefDecl
+
+
             y1/VarDecl {seen-before:4}
+            cursor y1
+            Kind() VarDecl
+            Extent: sample.c[119:128]
+            cursor.Extent() TB y0, y1
+            USR c:@y1
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [11 backreference]`,
 		ExpectedTUPopulate: `
             Tokens:
@@ -1024,7 +3478,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Record 1} {Typedef 0} {Elaborated 2} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Records: [{4 4 struct SA} {4 4 TB}]
                 Typedefs: [{3 TB}]
             }
@@ -1059,24 +3513,269 @@ var testTupleData = []testTuple{
         `,
 		ExpectedFullCursors: `
             SA/StructDecl {first-seen:1 Record 'struct SA' align:4 size:4}
+            cursor SA
+            Kind() StructDecl
+            Extent: sample.c[13:33]
+            cursor.Extent() struct SA { int a; }
+            USR c:@S@SA
+            Type() struct SA
+            Type().Kind() Record
+            Type().Declaration() SA
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[25:30]
+              cursor.Extent() int a
+              USR c:@S@SA@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             TA/TypedefDecl {first-seen:3 Typedef 'TA' Canon:{seen-before:1} align:4 size:4}
+            cursor TA
+            Kind() TypedefDecl
+            Extent: sample.c[68:88]
+            cursor.Extent() typedef struct SA TA
+            USR c:sample.c@T@TA
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            Linkage() Linkage_NoLinkage
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() struct SA
+
+
             . struct SA/TypeRef {seen-before:1}
+              cursor struct SA
+              Kind() TypeRef
+              Extent: sample.c[83:85]
+              cursor.Extent() SA
+              Type() struct SA
+              Type().Kind() Record
+              Type().Declaration() SA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() SA sample.c[13:33] kind: StructDecl
+
+
             /StructDecl {first-seen:4 Record 'TB' align:4 size:4}
+            Kind() StructDecl
+            Extent: sample.c[150:167]
+            cursor.Extent() struct { int b; }
+            USR c:@SA@TB
+            Type() TB
+            Type().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
             . b/FieldDecl {seen-before:2}
+              cursor b
+              Kind() FieldDecl
+              Extent: sample.c[159:164]
+              cursor.Extent() int b
+              USR c:@SA@TB@FI@b
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
             TB/TypedefDecl {first-seen:5 Typedef 'TB' Canon:{seen-before:4} align:4 size:4}
+            cursor TB
+            Kind() TypedefDecl
+            Extent: sample.c[142:170]
+            cursor.Extent() typedef struct { int b; } TB
+            USR c:@T@TB
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            TypedefDeclUnderlyingType() struct TB
+
+
             . [4 backreference]
             x0/VarDecl {first-seen:6 Elaborated 'struct SA' Canon:{seen-before:1} align:4 size:4}
+            cursor x0
+            Kind() VarDecl
+            Extent: sample.c[224:236]
+            cursor.Extent() struct SA x0
+            USR c:@x0
+            Type() struct SA
+            Type().Kind() Elaborated
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() SA
+            Type().NamedType() struct SA
+            Type().NamedType().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . struct SA/TypeRef {seen-before:1}
+              cursor struct SA
+              Kind() TypeRef
+              Extent: sample.c[231:233]
+              cursor.Extent() SA
+              Type() struct SA
+              Type().Kind() Record
+              Type().Declaration() SA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() SA sample.c[13:33] kind: StructDecl
+
+
             x1/VarDecl {seen-before:6}
+            cursor x1
+            Kind() VarDecl
+            Extent: sample.c[224:240]
+            cursor.Extent() struct SA x0, x1
+            USR c:@x1
+            Type() struct SA
+            Type().Kind() Elaborated
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() SA
+            Type().NamedType() struct SA
+            Type().NamedType().Kind() Record
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [9 backreference]
             y0/VarDecl {seen-before:3}
+            cursor y0
+            Kind() VarDecl
+            Extent: sample.c[310:315]
+            cursor.Extent() TA y0
+            USR c:@y0
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . TA/TypeRef {seen-before:3}
+              cursor TA
+              Kind() TypeRef
+              Extent: sample.c[310:312]
+              cursor.Extent() TA
+              Type() TA
+              Type().Kind() Typedef
+              Type().CanonicalType() struct SA
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TA
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TA sample.c[68:88] kind: TypedefDecl
+
+
             y1/VarDecl {seen-before:3}
+            cursor y1
+            Kind() VarDecl
+            Extent: sample.c[310:319]
+            cursor.Extent() TA y0, y1
+            USR c:@y1
+            Type() TA
+            Type().Kind() Typedef
+            Type().CanonicalType() struct SA
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TA
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [13 backreference]
             z0/VarDecl {seen-before:5}
+            cursor z0
+            Kind() VarDecl
+            Extent: sample.c[333:338]
+            cursor.Extent() TB z0
+            USR c:@z0
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . TB/TypeRef {seen-before:5}
+              cursor TB
+              Kind() TypeRef
+              Extent: sample.c[333:335]
+              cursor.Extent() TB
+              Type() TB
+              Type().Kind() Typedef
+              Type().CanonicalType() TB
+              Type().CanonicalType().Kind() Record
+              Type().Declaration() TB
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() TB sample.c[142:170] kind: TypedefDecl
+
+
             z1/VarDecl {seen-before:5}
+            cursor z1
+            Kind() VarDecl
+            Extent: sample.c[333:342]
+            cursor.Extent() TB z0, z1
+            USR c:@z1
+            Type() TB
+            Type().Kind() Typedef
+            Type().CanonicalType() TB
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() TB
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . [17 backreference]`,
 		ExpectedTUPopulate: `
             Tokens:
@@ -1094,7 +3793,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Typedef 0} {Record 1} {Typedef 1} {Elaborated 2} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Records: [{4 4 struct SA} {4 4 TB}]
                 Typedefs: [{2 TA} {4 TB}]
             }
@@ -1127,9 +3826,66 @@ var testTupleData = []testTuple{
         `,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[13:18]
+            cursor.Extent() int a
+            USR c:@a
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             b/VarDecl {first-seen:2 Pointer 'int *' *{seen-before:1} align:8 size:8}
+            cursor b
+            Kind() VarDecl
+            Extent: sample.c[32:38]
+            cursor.Extent() int *b
+            USR c:@b
+            Type() int *
+            Type().Kind() Pointer
+            Type().PointeeType() int
+            Type().PointeeType().Kind() Int
+            Type().SizeOf() 8
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             c/VarDecl {first-seen:3 Pointer 'int **' *{seen-before:2} align:8 size:8}
-            d/VarDecl {first-seen:4 Pointer 'int ***' *{seen-before:3} align:8 size:8}`,
+            cursor c
+            Kind() VarDecl
+            Extent: sample.c[52:59]
+            cursor.Extent() int **c
+            USR c:@c
+            Type() int **
+            Type().Kind() Pointer
+            Type().PointeeType() int *
+            Type().PointeeType().Kind() Pointer
+            Type().SizeOf() 8
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            d/VarDecl {first-seen:4 Pointer 'int ***' *{seen-before:3} align:8 size:8}
+            cursor d
+            Kind() VarDecl
+            Extent: sample.c[73:81]
+            cursor.Extent() int ***d
+            USR c:@d
+            Type() int ***
+            Type().Kind() Pointer
+            Type().PointeeType() int **
+            Type().PointeeType().Kind() Pointer
+            Type().SizeOf() 8
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:0 4:3 5:4 6:2 7:0 8:3 9:3 10:5 11:2 12:0 13:3 14:3 15:3 16:6 17:2
@@ -1140,7 +3896,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Pointer 2} {Pointer 3} {Pointer 4}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 4} {0 18}} 1:{VarDecl 2 0 2 {0 0} {0 2}} 2:{VarDecl 3 0 3 {0 0} {3 3}}
@@ -1166,17 +3922,175 @@ var testTupleData = []testTuple{
         `,
 		ExpectedFullCursors: `
             a/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            cursor a
+            Kind() VarDecl
+            Extent: sample.c[13:18]
+            cursor.Extent() int a
+            USR c:@a
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             b/VarDecl {first-seen:2 ConstantArray 'int [1]' align:4 size:4 len:1 elem:{seen-before:1}}
+            cursor b
+            Kind() VarDecl
+            Extent: sample.c[32:40]
+            cursor.Extent() int b[1]
+            USR c:@b
+            Type() int [1]
+            Type().Kind() ConstantArray
+            Type().ElementType() int
+            Type().ElementType().Kind() Int
+            Type().NumElements() 1
+            Type().ArrayElementType() int
+            Type().ArrayElementType().Kind() Int
+            Type().ArraySize() 1
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . 1/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[38:39]
+              cursor.Extent() 1
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             c/VarDecl {first-seen:3 ConstantArray 'int [2][3]' align:4 size:24 len:2 elem:{first-seen:4 ConstantArray 'int [3]' align:4 size:12 len:3 elem:{seen-before:1}}}
+            cursor c
+            Kind() VarDecl
+            Extent: sample.c[54:65]
+            cursor.Extent() int c[2][3]
+            USR c:@c
+            Type() int [2][3]
+            Type().Kind() ConstantArray
+            Type().ElementType() int [3]
+            Type().ElementType().Kind() ConstantArray
+            Type().NumElements() 2
+            Type().ArrayElementType() int [3]
+            Type().ArrayElementType().Kind() ConstantArray
+            Type().ArraySize() 2
+            Type().SizeOf() 24
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . 3/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[63:64]
+              cursor.Extent() 3
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             . 2/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[60:61]
+              cursor.Extent() 2
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             d/VarDecl {first-seen:5 ConstantArray 'int [4][5][6]' align:4 size:480 len:4 elem:{first-seen:6 ConstantArray 'int [5][6]' align:4 size:120 len:5 elem:{first-seen:7 ConstantArray 'int [6]' align:4 size:24 len:6 elem:{seen-before:1}}}}
+            cursor d
+            Kind() VarDecl
+            Extent: sample.c[79:93]
+            cursor.Extent() int d[4][5][6]
+            USR c:@d
+            Type() int [4][5][6]
+            Type().Kind() ConstantArray
+            Type().ElementType() int [5][6]
+            Type().ElementType().Kind() ConstantArray
+            Type().NumElements() 4
+            Type().ArrayElementType() int [5][6]
+            Type().ArrayElementType().Kind() ConstantArray
+            Type().ArraySize() 4
+            Type().SizeOf() 480
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . 6/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[91:92]
+              cursor.Extent() 6
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             . 5/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[88:89]
+              cursor.Extent() 5
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             . 4/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[85:86]
+              cursor.Extent() 4
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             e/VarDecl {seen-before:2}
-            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}`,
+            cursor e
+            Kind() VarDecl
+            Extent: sample.c[107:115]
+            cursor.Extent() int e[1]
+            USR c:@e
+            Type() int [1]
+            Type().Kind() ConstantArray
+            Type().ElementType() int
+            Type().ElementType().Kind() Int
+            Type().NumElements() 1
+            Type().ArrayElementType() int
+            Type().ArrayElementType().Kind() Int
+            Type().ArraySize() 1
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[113:114]
+              cursor.Extent() 1
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:0 4:3 5:4 6:5 7:6 8:2 9:0 10:7 11:4 12:8 13:6 14:4 15:9 16:6 17:2 18:0 19:10 20:4 21:11 22:6 23:4 24:12
@@ -1190,7 +4104,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {ConstantArray 0} {ConstantArray 1} {ConstantArray 2} {ConstantArray 3} {ConstantArray 4} {ConstantArray 5}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Arrays: [{1 {2 4 4 int [1]}} {3 {2 4 12 int [3]}} {2 {4 4 24 int [2][3]}} {6 {2 4 24 int [6]}} {5 {6 4 120 int [5][6]}} {4 {7 4 480 int [4][5][6]}}]
             }
             Cursors:
@@ -1215,11 +4129,94 @@ var testTupleData = []testTuple{
         `,
 		ExpectedFullCursors: `
             foo/FunctionDecl {first-seen:1 FunctionProto 'void (int)' !POD numargs:1 result:{first-seen:2 Void 'void' !POD} align:4 size:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[13:51]
+            cursor.Extent() void foo(int n) {
+            				int arr[n];
+            			}
+            USR c:@F@foo
+            Type() void (int)
+            Type().Kind() FunctionProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 1
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 1
+            ResultType() void
+            StorageClass() SC_None
+
+
             . n/ParmDecl {first-seen:3 Int 'int' align:4 size:4}
+              cursor n
+              Kind() ParmDecl
+              Extent: sample.c[22:27]
+              cursor.Extent() int n
+              USR c:sample.c@22@F@foo@n
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[29:51]
+              cursor.Extent() {
+            				int arr[n];
+            			}
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             . . DeclStmt:IsStatement 
-            . . . arr/VarDecl {first-seen:4 VariableArray 'int [n]' align:4 elem:{seen-before:3}}
-            . . . . DeclRefExpr:IsExpression:[n : Identifier]/n {seen-before:3}`,
+                Kind() DeclStmt
+                Extent: sample.c[35:46]
+                cursor.Extent() int arr[n];
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . arr/VarDecl {first-seen:4 VariableArray 'int [n]' align:4 elem:{seen-before:3}} diff_lexical_parent
+                  cursor arr
+                  Kind() VarDecl
+                  Extent: sample.c[35:45]
+                  cursor.Extent() int arr[n]
+                  USR c:sample.c@35@F@foo@arr
+                  Type() int [n]
+                  Type().Kind() VariableArray
+                  Type().ElementType() int
+                  Type().ElementType().Kind() Int
+                  Type().ArrayElementType() int
+                  Type().ArrayElementType().Kind() Int
+                  bools for cursor: IsCursorDefinition
+                  bools for cursor.Kind(): IsDeclaration
+                  Linkage() Linkage_NoLinkage
+                  (Availability) Availability_Available
+                  StorageClass() SC_None
+
+
+            . . . . DeclRefExpr:IsExpression:[n : Identifier]/n {seen-before:3}
+                    cursor n
+                    Kind() DeclRefExpr
+                    Extent: sample.c[43:44]
+                    cursor.Extent() n
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+                    Referenced() n sample.c[22:27] kind: ParmDecl
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:3 8:7 9:8 10:4 11:9 12:10 13:11
@@ -1231,7 +4228,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Void 1} {FunctionProto 0} {VariableArray 0}]
-                Intrinsics: [{{Int} int 4 4} {{Void} void 0 0}]
+                Intrinsics: [{{Int} 4 4 int} {{Void} 0 0 void}]
                 Functions: [{{FunctionProto} 3 [2] void (int)}]
                 Arrays: [{-1 {2 4 0 int [n]}}]
             }
@@ -1252,27 +4249,71 @@ var testTupleData = []testTuple{
             enum {
 				A,
 				B
-			}
+			};
         `,
 		ExpectedFullCursors: `
             /EnumDecl {first-seen:1 Enum 'enum (anonymous at sample.c:2:13)' align:4 size:4}
+            Kind() EnumDecl
+            Extent: sample.c[13:37]
+            cursor.Extent() enum {
+            				A,
+            				B
+            			}
+            USR c:@Ea@A
+            Type() enum (anonymous at sample.c:2:13)
+            Type().Kind() Enum
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            Linkage() Linkage_NoLinkage
+            (Availability) Availability_Available
+            EnumDeclIntegerType() unsigned int
+
+
             . A/EnumConstantDecl {first-seen:2 Int 'int' align:4 size:4}
-            . B/EnumConstantDecl {seen-before:2}`,
+              cursor A
+              Kind() EnumConstantDecl
+              Extent: sample.c[24:25]
+              cursor.Extent() A
+              USR c:@Ea@A@A
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . B/EnumConstantDecl {seen-before:2}
+              cursor B
+              Kind() EnumConstantDecl
+              Extent: sample.c[31:32]
+              cursor.Extent() B
+              USR c:@Ea@A@B
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
-            0:0 1:1 2:2 3:3 4:4 5:5
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6
             TokenMap:
-            0:{Keyword 0} 1:{Punctuation 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Identifier 4} 5:{Punctuation 5}
+            0:{Keyword 0} 1:{Punctuation 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
             TokenNameMap:
-            0:enum 1:{ 2:A 3:, 4:B 5:}
+            0:enum 1:{ 2:A 3:, 4:B 5:} 6:;
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Enum 0} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Enums: [{4 4 enum (anonymous at sample.c:2:13)}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{EnumDecl 0 0 2 {2 2} {0 6}} 2:{EnumConstantDecl 2 1 3 {0 0} {2 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 7}} 1:{EnumDecl 0 0 2 {2 2} {0 6}} 2:{EnumConstantDecl 2 1 3 {0 0} {2 1}}
             3:{EnumConstantDecl 3 1 3 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:B`,
@@ -1287,27 +4328,73 @@ var testTupleData = []testTuple{
             enum MyEnum {
 				A,
 				B
-			}
+			};
         `,
 		ExpectedFullCursors: `
             MyEnum/EnumDecl {first-seen:1 Enum 'enum MyEnum' align:4 size:4}
+            cursor MyEnum
+            Kind() EnumDecl
+            Extent: sample.c[13:44]
+            cursor.Extent() enum MyEnum {
+            				A,
+            				B
+            			}
+            USR c:@E@MyEnum
+            Type() enum MyEnum
+            Type().Kind() Enum
+            Type().Declaration() MyEnum
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            EnumDeclIntegerType() unsigned int
+
+
             . A/EnumConstantDecl {first-seen:2 Int 'int' align:4 size:4}
-            . B/EnumConstantDecl {seen-before:2}`,
+              cursor A
+              Kind() EnumConstantDecl
+              Extent: sample.c[31:32]
+              cursor.Extent() A
+              USR c:@E@MyEnum@A
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . B/EnumConstantDecl {seen-before:2}
+              cursor B
+              Kind() EnumConstantDecl
+              Extent: sample.c[38:39]
+              cursor.Extent() B
+              USR c:@E@MyEnum@B
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
-            0:0 1:1 2:2 3:3 4:4 5:5 6:6
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
             TokenMap:
             0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Identifier 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            7:{Punctuation 7}
             TokenNameMap:
-            0:enum 1:MyEnum 2:{ 3:A 4:, 5:B 6:}
+            0:enum 1:MyEnum 2:{ 3:A 4:, 5:B 6:} 7:;
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Enum 0} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Enums: [{4 4 enum MyEnum}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 7}} 1:{EnumDecl 2 0 2 {2 2} {0 7}} 2:{EnumConstantDecl 3 1 3 {0 0} {3 1}}
+            0:{TranslationUnit 1 -1 1 {1 1} {0 8}} 1:{EnumDecl 2 0 2 {2 2} {0 7}} 2:{EnumConstantDecl 3 1 3 {0 0} {3 1}}
             3:{EnumConstantDecl 4 1 3 {0 0} {5 1}}
             CursorNameMap:
             0: 1:sample.c 2:MyEnum 3:A 4:B`,
@@ -1316,42 +4403,150 @@ var testTupleData = []testTuple{
 		Name: "type_enum_named_with_var",
 		Comment: `
 			// x is declared without the enum keyword but appears to be handled the same as y.
+			// But a libclang diagnostic error says must use 'enum' tag.
 			`,
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
 		SrcCode: `
             enum MyEnum {
 				A,
 				B
-			}
-			MyEnum x;
+			};
+			enum MyEnum x;
 			enum MyEnum y;
         `,
 		ExpectedFullCursors: `
             MyEnum/EnumDecl {first-seen:1 Enum 'enum MyEnum' align:4 size:4}
+            cursor MyEnum
+            Kind() EnumDecl
+            Extent: sample.c[13:44]
+            cursor.Extent() enum MyEnum {
+            				A,
+            				B
+            			}
+            USR c:@E@MyEnum
+            Type() enum MyEnum
+            Type().Kind() Enum
+            Type().Declaration() MyEnum
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            EnumDeclIntegerType() unsigned int
+
+
             . A/EnumConstantDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor A
+              Kind() EnumConstantDecl
+              Extent: sample.c[31:32]
+              cursor.Extent() A
+              USR c:@E@MyEnum@A
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
             . B/EnumConstantDecl {seen-before:2}
+              cursor B
+              Kind() EnumConstantDecl
+              Extent: sample.c[38:39]
+              cursor.Extent() B
+              USR c:@E@MyEnum@B
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
             x/VarDecl {first-seen:3 Elaborated 'enum MyEnum' Canon:{seen-before:1} align:4 size:4}
+            cursor x
+            Kind() VarDecl
+            Extent: sample.c[49:62]
+            cursor.Extent() enum MyEnum x
+            USR c:@x
+            Type() enum MyEnum
+            Type().Kind() Elaborated
+            Type().CanonicalType() enum MyEnum
+            Type().CanonicalType().Kind() Enum
+            Type().Declaration() MyEnum
+            Type().NamedType() enum MyEnum
+            Type().NamedType().Kind() Enum
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . enum MyEnum/TypeRef {seen-before:1}
+              cursor enum MyEnum
+              Kind() TypeRef
+              Extent: sample.c[54:60]
+              cursor.Extent() MyEnum
+              Type() enum MyEnum
+              Type().Kind() Enum
+              Type().Declaration() MyEnum
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() MyEnum sample.c[13:44] kind: EnumDecl
+
+
             y/VarDecl {seen-before:3}
-            . enum MyEnum/TypeRef {seen-before:1}`,
+            cursor y
+            Kind() VarDecl
+            Extent: sample.c[67:80]
+            cursor.Extent() enum MyEnum y
+            USR c:@y
+            Type() enum MyEnum
+            Type().Kind() Elaborated
+            Type().CanonicalType() enum MyEnum
+            Type().CanonicalType().Kind() Enum
+            Type().Declaration() MyEnum
+            Type().NamedType() enum MyEnum
+            Type().NamedType().Kind() Enum
+            Type().SizeOf() 4
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . enum MyEnum/TypeRef {seen-before:1}
+              cursor enum MyEnum
+              Kind() TypeRef
+              Extent: sample.c[72:78]
+              cursor.Extent() MyEnum
+              Type() enum MyEnum
+              Type().Kind() Enum
+              Type().Declaration() MyEnum
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsReference
+              (Availability) Availability_Available
+              Referenced() MyEnum sample.c[13:44] kind: EnumDecl
+`,
 		ExpectedTUPopulate: `
             Tokens:
-            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:1 8:7 9:8 10:0 11:1 12:9 13:8
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:0 9:1 10:8 11:7 12:0 13:1 14:9 15:7
             TokenMap:
             0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Identifier 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
-            7:{Identifier 7} 8:{Punctuation 8} 9:{Identifier 9}
+            7:{Punctuation 7} 8:{Identifier 8} 9:{Identifier 9}
             TokenNameMap:
-            0:enum 1:MyEnum 2:{ 3:A 4:, 5:B 6:} 7:x 8:; 9:y
+            0:enum 1:MyEnum 2:{ 3:A 4:, 5:B 6:} 7:; 8:x 9:y
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Enum 0} {Elaborated 2} {Int 0}]
-                Intrinsics: [{{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 int}]
                 Enums: [{4 4 enum MyEnum}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 3} {0 14}} 1:{EnumDecl 2 0 2 {4 2} {0 7}} 2:{VarDecl 3 0 3 {6 1} {7 2}}
-            3:{VarDecl 4 0 3 {7 1} {10 3}} 4:{EnumConstantDecl 5 1 4 {0 0} {3 1}} 5:{EnumConstantDecl 6 1 4 {0 0} {5 1}}
-            6:{TypeRef 7 2 2 {0 0} {7 1}} 7:{TypeRef 7 3 2 {0 0} {11 1}}
+            0:{TranslationUnit 1 -1 1 {1 3} {0 16}} 1:{EnumDecl 2 0 2 {4 2} {0 7}} 2:{VarDecl 3 0 3 {6 1} {8 3}}
+            3:{VarDecl 4 0 3 {7 1} {12 3}} 4:{EnumConstantDecl 5 1 4 {0 0} {3 1}} 5:{EnumConstantDecl 6 1 4 {0 0} {5 1}}
+            6:{TypeRef 7 2 2 {0 0} {9 1}} 7:{TypeRef 7 3 2 {0 0} {13 1}}
             CursorNameMap:
             0: 1:sample.c 2:MyEnum 3:x 4:y 5:A 6:B 7:enum MyEnum`,
 	},
@@ -1364,9 +4559,58 @@ var testTupleData = []testTuple{
         `,
 		ExpectedFullCursors: `
             i/VarDecl {first-seen:1 Int 'const int' align:4 size:4 Const}
+            cursor i
+            Kind() VarDecl
+            Extent: sample.c[13:28]
+            cursor.Extent() const int i = 1
+            USR c:@i
+            Type() const int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsConstQualifiedType
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
             . 1/IntegerLiteral:IsLiteral/ {first-seen:2 Int 'int' align:4 size:4}
+              Kind() IntegerLiteral
+              Extent: sample.c[27:28]
+              cursor.Extent() 1
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
             j/VarDecl {first-seen:3 Int 'volatile int' align:4 size:4 Volatile}
-            . 1/IntegerLiteral:IsLiteral/ {seen-before:2}`,
+            cursor j
+            Kind() VarDecl
+            Extent: sample.c[42:60]
+            cursor.Extent() volatile int j = 1
+            USR c:@j
+            Type() volatile int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsVolatileQualifiedType
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 1/IntegerLiteral:IsLiteral/ {seen-before:2}
+              Kind() IntegerLiteral
+              Extent: sample.c[59:60]
+              cursor.Extent() 1
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:1 8:7 9:3 10:4 11:5
@@ -1378,7 +4622,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Int 1} {Int 2}]
-                Intrinsics: [{{Int} const int 4 4} {{Int} volatile int 4 4} {{Int} int 4 4}]
+                Intrinsics: [{{Int} 4 4 const int} {{Int} 4 4 volatile int} {{Int} 4 4 int}]
             }
             Cursors:
             0:{TranslationUnit 1 -1 1 {1 2} {0 12}} 1:{VarDecl 2 0 2 {3 1} {0 5}} 2:{VarDecl 3 0 3 {4 1} {6 5}}
@@ -1399,10 +4643,87 @@ var testTupleData = []testTuple{
 			`,
 		ExpectedFullCursors: `
             foo/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:18]
+            cursor.Extent() void foo() { }
+            USR c:@F@foo
+            Type() void ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+
+
             . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[15:18]
+              cursor.Extent() { }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
             bar/FunctionDecl {first-seen:3 FunctionProto 'void (void)' !POD numargs:0 result:{seen-before:2} align:4 size:1}
+            cursor bar
+            Kind() FunctionDecl
+            Extent: sample.c[22:36]
+            cursor (function) has no CompoundStmt
+            cursor.Extent() void bar(void)
+            USR c:@F@bar
+            Type() void (void)
+            Type().Kind() FunctionProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+            Definition() is different bar sample.c[41:55] kind: FunctionDecl
+
+
             bar/FunctionDecl {seen-before:3}
-            . CompoundStmt:IsStatement `,
+            cursor bar
+            Kind() FunctionDecl
+            Extent: sample.c[41:55]
+            cursor.Extent() void bar() { }
+            USR c:@F@bar
+            Type() void (void)
+            Type().Kind() FunctionProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+            CanonicalCursor() bar sample.c[22:36] kind: FunctionDecl
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[52:55]
+              cursor.Extent() { }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+`,
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:0 7:6 8:2 9:0 10:3 11:7 12:0 13:6 14:2 15:3 16:4 17:5
@@ -1414,7 +4735,7 @@ var testTupleData = []testTuple{
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Void 0} {FunctionNoProto 0} {FunctionProto 1}]
-                Intrinsics: [{{Void} void 0 0}]
+                Intrinsics: [{{Void} 0 0 void}]
                 Functions: [{{FunctionNoProto} 2 [] void ()} {{FunctionProto} 2 [] void (void)}]
             }
             Cursors:
@@ -1422,5 +4743,1597 @@ var testTupleData = []testTuple{
             3:{FunctionDecl 3 0 4 {5 1} {12 6}} 4:{CompoundStmt 0 1 0 {0 0} {4 2}} 5:{CompoundStmt 0 3 0 {0 0} {16 2}}
             CursorNameMap:
             0: 1:sample.c 2:foo 3:bar`,
+	},
+	{
+		Name: "two_functions_same_signature",
+		Comment: `
+			// 
+			`,
+		SrcCode: `
+			char* foo(int, long long);
+			char* foo(int w, long long x) { return 0; }
+			char* bar(int, long long);
+			char* bar(int y, long long z) { return 0; }
+			`,
+		ExpectedFullCursors: `
+            foo/FunctionDecl {first-seen:1 FunctionProto 'char *(int, long long)' !POD numargs:2 result:{first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8} align:4 size:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:29]
+            cursor (function) has no CompoundStmt
+            cursor.Extent() char* foo(int, long long)
+            USR c:@F@foo
+            Type() char *(int, long long)
+            Type().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 2
+            Type().SizeOf() 1
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 2
+            ResultType() char *
+            StorageClass() SC_None
+            Definition() is different foo sample.c[34:77] kind: FunctionDecl
+
+
+            . /ParmDecl {first-seen:4 Int 'int' align:4 size:4}
+              Kind() ParmDecl
+              Extent: sample.c[14:17]
+              cursor.Extent() int
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . /ParmDecl {first-seen:5 LongLong 'long long' align:8 size:8}
+              Kind() ParmDecl
+              Extent: sample.c[19:28]
+              cursor.Extent() long long
+              Type() long long
+              Type().Kind() LongLong
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            foo/FunctionDecl {seen-before:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[34:77]
+            cursor.Extent() char* foo(int w, long long x) { return 0; }
+            USR c:@F@foo
+            Type() char *(int, long long)
+            Type().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 2
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 2
+            ResultType() char *
+            StorageClass() SC_None
+            CanonicalCursor() foo sample.c[4:29] kind: FunctionDecl
+
+
+            . w/ParmDecl {seen-before:4}
+              cursor w
+              Kind() ParmDecl
+              Extent: sample.c[44:49]
+              cursor.Extent() int w
+              USR c:sample.c@44@F@foo@w
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . x/ParmDecl {seen-before:5}
+              cursor x
+              Kind() ParmDecl
+              Extent: sample.c[51:62]
+              cursor.Extent() long long x
+              USR c:sample.c@51@F@foo@x
+              Type() long long
+              Type().Kind() LongLong
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[64:77]
+              cursor.Extent() { return 0; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[66:74]
+                cursor.Extent() return 0
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                  Kind() UnexposedExpr
+                  Extent: sample.c[73:74]
+                  cursor.Extent() 0
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  (Availability) Availability_Available
+
+
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:4}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[73:74]
+                    cursor.Extent() 0
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            bar/FunctionDecl {seen-before:1}
+            cursor bar
+            Kind() FunctionDecl
+            Extent: sample.c[81:106]
+            cursor (function) has no CompoundStmt
+            cursor.Extent() char* bar(int, long long)
+            USR c:@F@bar
+            Type() char *(int, long long)
+            Type().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 2
+            Type().SizeOf() 1
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 2
+            ResultType() char *
+            StorageClass() SC_None
+            Definition() is different bar sample.c[111:154] kind: FunctionDecl
+
+
+            . /ParmDecl {seen-before:4}
+              Kind() ParmDecl
+              Extent: sample.c[91:94]
+              cursor.Extent() int
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . /ParmDecl {seen-before:5}
+              Kind() ParmDecl
+              Extent: sample.c[96:105]
+              cursor.Extent() long long
+              Type() long long
+              Type().Kind() LongLong
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            bar/FunctionDecl {seen-before:1}
+            cursor bar
+            Kind() FunctionDecl
+            Extent: sample.c[111:154]
+            cursor.Extent() char* bar(int y, long long z) { return 0; }
+            USR c:@F@bar
+            Type() char *(int, long long)
+            Type().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 2
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 2
+            ResultType() char *
+            StorageClass() SC_None
+            CanonicalCursor() bar sample.c[81:106] kind: FunctionDecl
+
+
+            . y/ParmDecl {seen-before:4}
+              cursor y
+              Kind() ParmDecl
+              Extent: sample.c[121:126]
+              cursor.Extent() int y
+              USR c:sample.c@121@F@bar@y
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . z/ParmDecl {seen-before:5}
+              cursor z
+              Kind() ParmDecl
+              Extent: sample.c[128:139]
+              cursor.Extent() long long z
+              USR c:sample.c@128@F@bar@z
+              Type() long long
+              Type().Kind() LongLong
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[141:154]
+              cursor.Extent() { return 0; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[143:151]
+                cursor.Extent() return 0
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                  Kind() UnexposedExpr
+                  Extent: sample.c[150:151]
+                  cursor.Extent() 0
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  (Availability) Availability_Available
+
+
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:4}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[150:151]
+                    cursor.Extent() 0
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:6 8:7 9:8 10:0 11:1 12:2 13:3 14:4 15:9 16:5 17:6 18:6 19:10 20:7 21:11 22:12 23:13 24:8
+            25:14 26:0 27:1 28:15 29:3 30:4 31:5 32:6 33:6 34:7 35:8 36:0 37:1 38:15 39:3 40:4 41:16 42:5 43:6 44:6 45:17 46:7 47:11
+            48:12 49:13 50:8 51:14
+            TokenMap:
+            0:{Keyword 0} 1:{Punctuation 1} 2:{Identifier 2} 3:{Punctuation 3} 4:{Keyword 4} 5:{Punctuation 5} 6:{Keyword 6}
+            7:{Punctuation 7} 8:{Punctuation 8} 9:{Identifier 9} 10:{Identifier 10} 11:{Punctuation 11} 12:{Keyword 12}
+            13:{Literal 13} 14:{Punctuation 14} 15:{Identifier 15} 16:{Identifier 16} 17:{Identifier 17}
+            TokenNameMap:
+            0:char 1:* 2:foo 3:( 4:int 5:, 6:long 7:) 8:; 9:w 10:x 11:{ 12:return 13:0 14:} 15:bar 16:y 17:z
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {LongLong 1} {Char_S 2} {Pointer 4} {FunctionProto 0}]
+                Intrinsics: [{{Int} 4 4 int} {{LongLong} 8 8 long long} {{Char_S} 1 1 char}]
+                Functions: [{{FunctionProto} 5 [2 3] char *(int, long long)}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 4} {0 52}} 1:{FunctionDecl 2 0 6 {5 2} {0 9}} 2:{FunctionDecl 2 0 6 {7 3} {10 16}}
+            3:{FunctionDecl 3 0 6 {10 2} {26 9}} 4:{FunctionDecl 3 0 6 {12 3} {36 16}} 5:{ParmDecl 0 1 2 {0 0} {4 1}}
+            6:{ParmDecl 0 1 3 {0 0} {6 2}} 7:{ParmDecl 4 2 2 {0 0} {14 2}} 8:{ParmDecl 5 2 3 {0 0} {17 3}}
+            9:{CompoundStmt 0 2 0 {15 1} {21 5}} 10:{ParmDecl 0 3 2 {0 0} {30 1}} 11:{ParmDecl 0 3 3 {0 0} {32 2}}
+            12:{ParmDecl 6 4 2 {0 0} {40 2}} 13:{ParmDecl 7 4 3 {0 0} {43 3}} 14:{CompoundStmt 0 4 0 {16 1} {47 5}}
+            15:{ReturnStmt 0 9 0 {17 1} {22 2}} 16:{ReturnStmt 0 14 0 {18 1} {48 2}} 17:{UnexposedExpr 0 15 5 {19 1} {23 1}}
+            18:{UnexposedExpr 0 16 5 {20 1} {49 1}} 19:{IntegerLiteral 0 17 2 {0 0} {23 1}} 20:{IntegerLiteral 0 18 2 {0 0} {49 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:foo 3:bar 4:w 5:x 6:y 7:z`,
+	},
+	{
+		Name: "struct_field_access",
+		Comment: `
+			// 
+			`,
+		SrcCode: `
+			  struct S {
+				  int a;
+				  char b;
+			  };
+			
+			char* foo(struct S *p) {
+				p->a = 0;
+				p->b = 0;
+				return &(p->b);
+			}
+			`,
+		ExpectedFullCursors: `
+            S/StructDecl {first-seen:1 Record 'struct S' align:4 size:8}
+            cursor S
+            Kind() StructDecl
+            Extent: sample.c[6:50]
+            cursor.Extent() struct S {
+            				  int a;
+            				  char b;
+            			  }
+            USR c:@S@S
+            Type() struct S
+            Type().Kind() Record
+            Type().Declaration() S
+            Type().SizeOf() 8
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[23:28]
+              cursor.Extent() int a
+              USR c:@S@S@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
+            . b/FieldDecl {first-seen:3 Char_S 'char' align:1 size:1}
+              cursor b
+              Kind() FieldDecl
+              Extent: sample.c[36:42]
+              cursor.Extent() char b
+              USR c:@S@S@FI@b
+              Type() char
+              Type().Kind() Char_S
+              Type().SizeOf() 1
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 32
+
+
+            foo/FunctionDecl {first-seen:4 FunctionProto 'char *(struct S *)' !POD Canon:{first-seen:5 FunctionProto 'char *(struct S *)' !POD numargs:1 result:{first-seen:6 Pointer 'char *' *{seen-before:3} align:8 size:8} align:4 size:1} numargs:1 result:{seen-before:6} align:4 size:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[59:136]
+            cursor.Extent() char* foo(struct S *p) {
+            				p->a = 0;
+            				p->b = 0;
+            				return &(p->b);
+            			}
+            USR c:@F@foo
+            Type() char *(struct S *)
+            Type().Kind() FunctionProto
+            Type().CanonicalType() char *(struct S *)
+            Type().CanonicalType().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 1
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 1
+            ResultType() char *
+            StorageClass() SC_None
+
+
+            . p/ParmDecl {first-seen:7 Pointer 'struct S *' Canon:{first-seen:8 Pointer 'struct S *' *{seen-before:1} align:8 size:8} *{first-seen:9 Elaborated 'struct S' Canon:{seen-before:1} align:4 size:8} align:8 size:8}
+              cursor p
+              Kind() ParmDecl
+              Extent: sample.c[69:80]
+              cursor.Extent() struct S *p
+              USR c:sample.c@69@F@foo@p
+              Type() struct S *
+              Type().Kind() Pointer
+              Type().CanonicalType() struct S *
+              Type().CanonicalType().Kind() Pointer
+              Type().PointeeType() struct S
+              Type().PointeeType().Kind() Elaborated
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . . struct S/TypeRef {seen-before:1}
+                cursor struct S
+                Kind() TypeRef
+                Extent: sample.c[76:77]
+                cursor.Extent() S
+                Type() struct S
+                Type().Kind() Record
+                Type().Declaration() S
+                Type().SizeOf() 8
+                bools for cursor.Kind(): IsReference
+                (Availability) Availability_Available
+                Referenced() S sample.c[6:50] kind: StructDecl
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[82:136]
+              cursor.Extent() {
+            				p->a = 0;
+            				p->b = 0;
+            				return &(p->b);
+            			}
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . BinaryOperator:IsExpression:[p : Identifier, -> : Punctuation, a : Identifier, = : Punctuation, 0 : Literal]/ {seen-before:2}
+                Kind() BinaryOperator
+                Extent: sample.c[88:96]
+                cursor.Extent() p->a = 0
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
+            . . . MemberRefExpr:IsExpression:[p : Identifier, -> : Punctuation, a : Identifier]/a {seen-before:2}
+                  cursor a
+                  Kind() MemberRefExpr
+                  Extent: sample.c[88:92]
+                  cursor.Extent() p->a
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+                  Referenced() a sample.c[23:28] kind: FieldDecl
+
+
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:7}
+                    cursor p
+                    Kind() UnexposedExpr
+                    Extent: sample.c[88:89]
+                    cursor.Extent() p
+                    Type() struct S *
+                    Type().Kind() Pointer
+                    Type().CanonicalType() struct S *
+                    Type().CanonicalType().Kind() Pointer
+                    Type().PointeeType() struct S
+                    Type().PointeeType().Kind() Elaborated
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    (Availability) Availability_Available
+                    Referenced() p sample.c[69:80] kind: ParmDecl
+
+
+            . . . . . DeclRefExpr:IsExpression:[p : Identifier]/p {seen-before:7}
+                      cursor p
+                      Kind() DeclRefExpr
+                      Extent: sample.c[88:89]
+                      cursor.Extent() p
+                      Type() struct S *
+                      Type().Kind() Pointer
+                      Type().CanonicalType() struct S *
+                      Type().CanonicalType().Kind() Pointer
+                      Type().PointeeType() struct S
+                      Type().PointeeType().Kind() Elaborated
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+                      Referenced() p sample.c[69:80] kind: ParmDecl
+
+
+            . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[95:96]
+                  cursor.Extent() 0
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . BinaryOperator:IsExpression:[p : Identifier, -> : Punctuation, b : Identifier, = : Punctuation, 0 : Literal]/ {seen-before:3}
+                Kind() BinaryOperator
+                Extent: sample.c[102:110]
+                cursor.Extent() p->b = 0
+                Type() char
+                Type().Kind() Char_S
+                Type().SizeOf() 1
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
+            . . . MemberRefExpr:IsExpression:[p : Identifier, -> : Punctuation, b : Identifier]/b {seen-before:3}
+                  cursor b
+                  Kind() MemberRefExpr
+                  Extent: sample.c[102:106]
+                  cursor.Extent() p->b
+                  Type() char
+                  Type().Kind() Char_S
+                  Type().SizeOf() 1
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+                  Referenced() b sample.c[36:42] kind: FieldDecl
+
+
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:7}
+                    cursor p
+                    Kind() UnexposedExpr
+                    Extent: sample.c[102:103]
+                    cursor.Extent() p
+                    Type() struct S *
+                    Type().Kind() Pointer
+                    Type().CanonicalType() struct S *
+                    Type().CanonicalType().Kind() Pointer
+                    Type().PointeeType() struct S
+                    Type().PointeeType().Kind() Elaborated
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    (Availability) Availability_Available
+                    Referenced() p sample.c[69:80] kind: ParmDecl
+
+
+            . . . . . DeclRefExpr:IsExpression:[p : Identifier]/p {seen-before:7}
+                      cursor p
+                      Kind() DeclRefExpr
+                      Extent: sample.c[102:103]
+                      cursor.Extent() p
+                      Type() struct S *
+                      Type().Kind() Pointer
+                      Type().CanonicalType() struct S *
+                      Type().CanonicalType().Kind() Pointer
+                      Type().PointeeType() struct S
+                      Type().PointeeType().Kind() Elaborated
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+                      Referenced() p sample.c[69:80] kind: ParmDecl
+
+
+            . . . IsUnexposed(UnexposedExpr) {seen-before:3}
+                  Kind() UnexposedExpr
+                  Extent: sample.c[109:110]
+                  cursor.Extent() 0
+                  Type() char
+                  Type().Kind() Char_S
+                  Type().SizeOf() 1
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  (Availability) Availability_Available
+
+
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:2}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[109:110]
+                    cursor.Extent() 0
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[116:130]
+                cursor.Extent() return &(p->b)
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . UnaryOperator:IsExpression:[& : Punctuation, ( : Punctuation, p : Identifier, -> : Punctuation, b : Identifier, ) : Punctuation]/ {seen-before:6}
+                  Kind() UnaryOperator
+                  Extent: sample.c[123:130]
+                  cursor.Extent() &(p->b)
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . . ParenExpr:IsExpression:[( : Punctuation, p : Identifier, -> : Punctuation, b : Identifier, ) : Punctuation]/ {seen-before:3}
+                    Kind() ParenExpr
+                    Extent: sample.c[124:130]
+                    cursor.Extent() (p->b)
+                    Type() char
+                    Type().Kind() Char_S
+                    Type().SizeOf() 1
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            . . . . . MemberRefExpr:IsExpression:[p : Identifier, -> : Punctuation, b : Identifier]/b {seen-before:3}
+                      cursor b
+                      Kind() MemberRefExpr
+                      Extent: sample.c[125:129]
+                      cursor.Extent() p->b
+                      Type() char
+                      Type().Kind() Char_S
+                      Type().SizeOf() 1
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+                      Referenced() b sample.c[36:42] kind: FieldDecl
+
+
+            . . . . . . IsUnexposed(UnexposedExpr) {seen-before:7}
+                        cursor p
+                        Kind() UnexposedExpr
+                        Extent: sample.c[125:126]
+                        cursor.Extent() p
+                        Type() struct S *
+                        Type().Kind() Pointer
+                        Type().CanonicalType() struct S *
+                        Type().CanonicalType().Kind() Pointer
+                        Type().PointeeType() struct S
+                        Type().PointeeType().Kind() Elaborated
+                        Type().SizeOf() 8
+                        bools for cursor.Kind(): IsExpression IsUnexposed
+                        (Availability) Availability_Available
+                        Referenced() p sample.c[69:80] kind: ParmDecl
+
+
+            . . . . . . . DeclRefExpr:IsExpression:[p : Identifier]/p {seen-before:7}
+                          cursor p
+                          Kind() DeclRefExpr
+                          Extent: sample.c[125:126]
+                          cursor.Extent() p
+                          Type() struct S *
+                          Type().Kind() Pointer
+                          Type().CanonicalType() struct S *
+                          Type().CanonicalType().Kind() Pointer
+                          Type().PointeeType() struct S
+                          Type().PointeeType().Kind() Elaborated
+                          Type().SizeOf() 8
+                          bools for cursor.Kind(): IsExpression
+                          (Availability) Availability_Available
+                          Referenced() p sample.c[69:80] kind: ParmDecl
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:5 9:8 10:5 11:6 12:9 13:10 14:11 15:0 16:1 17:9 18:12 19:13 20:2 21:12 22:14 23:4
+            24:15 25:16 26:5 27:12 28:14 29:7 30:15 31:16 32:5 33:17 34:18 35:11 36:12 37:14 38:7 39:13 40:5 41:8
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Keyword 6}
+            7:{Identifier 7} 8:{Punctuation 8} 9:{Punctuation 9} 10:{Identifier 10} 11:{Punctuation 11} 12:{Identifier 12}
+            13:{Punctuation 13} 14:{Punctuation 14} 15:{Punctuation 15} 16:{Literal 16} 17:{Keyword 17} 18:{Punctuation 18}
+            TokenNameMap:
+            0:struct 1:S 2:{ 3:int 4:a 5:; 6:char 7:b 8:} 9:* 10:foo 11:( 12:p 13:) 14:-> 15:= 16:0 17:return 18:&
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Elaborated 2} {Pointer 3} {Char_S 0} {Pointer 5} {FunctionProto 0} {Int 1}]
+                Intrinsics: [{{Char_S} 1 1 char} {{Int} 4 4 int}]
+                Records: [{4 8 struct S}]
+                Functions: [{{FunctionProto} 6 [4] char *(struct S *)}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 2} {0 42}} 1:{StructDecl 2 0 2 {3 2} {0 10}} 2:{FunctionDecl 3 0 7 {5 2} {11 31}}
+            3:{FieldDecl 4 1 8 {0 0} {3 2}} 4:{FieldDecl 5 1 5 {0 0} {6 2}} 5:{ParmDecl 6 2 4 {7 1} {15 4}}
+            6:{CompoundStmt 0 2 0 {8 3} {20 22}} 7:{TypeRef 7 5 2 {0 0} {16 1}} 8:{BinaryOperator 8 6 8 {11 2} {21 5}}
+            9:{BinaryOperator 8 6 5 {13 2} {27 5}} 10:{ReturnStmt 0 6 0 {15 1} {33 7}} 11:{MemberRefExpr 4 8 8 {16 1} {21 3}}
+            12:{IntegerLiteral 0 8 8 {0 0} {25 1}} 13:{MemberRefExpr 5 9 5 {17 1} {27 3}} 14:{UnexposedExpr 0 9 5 {18 1} {31 1}}
+            15:{UnaryOperator 0 10 6 {19 1} {34 6}} 16:{UnexposedExpr 6 11 4 {20 1} {21 1}} 17:{UnexposedExpr 6 13 4 {21 1} {27 1}}
+            18:{IntegerLiteral 0 14 8 {0 0} {31 1}} 19:{ParenExpr 0 15 5 {22 1} {35 5}} 20:{DeclRefExpr 6 16 4 {0 0} {21 1}}
+            21:{DeclRefExpr 6 17 4 {0 0} {27 1}} 22:{MemberRefExpr 5 19 5 {23 1} {36 3}} 23:{UnexposedExpr 6 22 4 {24 1} {36 1}}
+            24:{DeclRefExpr 6 23 4 {0 0} {36 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:S 3:foo 4:a 5:b 6:p 7:struct S 8:=`,
+	},
+	{
+		Name: "double_assignment",
+		Comment: `
+			// 
+			`,
+		SrcCode: `
+			void foo(int *x, int *y) {
+				*x = *y = 1;
+			}
+			`,
+		ExpectedFullCursors: `
+            foo/FunctionDecl {first-seen:1 FunctionProto 'void (int *, int *)' !POD numargs:2 result:{first-seen:2 Void 'void' !POD} align:4 size:1}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:52]
+            cursor.Extent() void foo(int *x, int *y) {
+            				*x = *y = 1;
+            			}
+            USR c:@F@foo
+            Type() void (int *, int *)
+            Type().Kind() FunctionProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 2
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 2
+            ResultType() void
+            StorageClass() SC_None
+
+
+            . x/ParmDecl {first-seen:3 Pointer 'int *' *{first-seen:4 Int 'int' align:4 size:4} align:8 size:8}
+              cursor x
+              Kind() ParmDecl
+              Extent: sample.c[13:19]
+              cursor.Extent() int *x
+              USR c:sample.c@13@F@foo@x
+              Type() int *
+              Type().Kind() Pointer
+              Type().PointeeType() int
+              Type().PointeeType().Kind() Int
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . y/ParmDecl {seen-before:3}
+              cursor y
+              Kind() ParmDecl
+              Extent: sample.c[21:27]
+              cursor.Extent() int *y
+              USR c:sample.c@21@F@foo@y
+              Type() int *
+              Type().Kind() Pointer
+              Type().PointeeType() int
+              Type().PointeeType().Kind() Int
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[29:52]
+              cursor.Extent() {
+            				*x = *y = 1;
+            			}
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . BinaryOperator:IsExpression:[* : Punctuation, x : Identifier, = : Punctuation, * : Punctuation, y : Identifier, = : Punctuation, 1 : Literal]/ {seen-before:4}
+                Kind() BinaryOperator
+                Extent: sample.c[35:46]
+                cursor.Extent() *x = *y = 1
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
+            . . . UnaryOperator:IsExpression:[* : Punctuation, x : Identifier]/ {seen-before:4}
+                  Kind() UnaryOperator
+                  Extent: sample.c[35:37]
+                  cursor.Extent() *x
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:3}
+                    cursor x
+                    Kind() UnexposedExpr
+                    Extent: sample.c[36:37]
+                    cursor.Extent() x
+                    Type() int *
+                    Type().Kind() Pointer
+                    Type().PointeeType() int
+                    Type().PointeeType().Kind() Int
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    (Availability) Availability_Available
+                    Referenced() x sample.c[13:19] kind: ParmDecl
+
+
+            . . . . . DeclRefExpr:IsExpression:[x : Identifier]/x {seen-before:3}
+                      cursor x
+                      Kind() DeclRefExpr
+                      Extent: sample.c[36:37]
+                      cursor.Extent() x
+                      Type() int *
+                      Type().Kind() Pointer
+                      Type().PointeeType() int
+                      Type().PointeeType().Kind() Int
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression
+                      (Availability) Availability_Available
+                      Referenced() x sample.c[13:19] kind: ParmDecl
+
+
+            . . . BinaryOperator:IsExpression:[* : Punctuation, y : Identifier, = : Punctuation, 1 : Literal]/ {seen-before:4}
+                  Kind() BinaryOperator
+                  Extent: sample.c[40:46]
+                  cursor.Extent() *y = 1
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . . UnaryOperator:IsExpression:[* : Punctuation, y : Identifier]/ {seen-before:4}
+                    Kind() UnaryOperator
+                    Extent: sample.c[40:42]
+                    cursor.Extent() *y
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            . . . . . IsUnexposed(UnexposedExpr) {seen-before:3}
+                      cursor y
+                      Kind() UnexposedExpr
+                      Extent: sample.c[41:42]
+                      cursor.Extent() y
+                      Type() int *
+                      Type().Kind() Pointer
+                      Type().PointeeType() int
+                      Type().PointeeType().Kind() Int
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression IsUnexposed
+                      (Availability) Availability_Available
+                      Referenced() y sample.c[21:27] kind: ParmDecl
+
+
+            . . . . . . DeclRefExpr:IsExpression:[y : Identifier]/y {seen-before:3}
+                        cursor y
+                        Kind() DeclRefExpr
+                        Extent: sample.c[41:42]
+                        cursor.Extent() y
+                        Type() int *
+                        Type().Kind() Pointer
+                        Type().PointeeType() int
+                        Type().PointeeType().Kind() Int
+                        Type().SizeOf() 8
+                        bools for cursor.Kind(): IsExpression
+                        (Availability) Availability_Available
+                        Referenced() y sample.c[21:27] kind: ParmDecl
+
+
+            . . . . 1/IntegerLiteral:IsLiteral/ {seen-before:4}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[45:46]
+                    cursor.Extent() 1
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:3 8:4 9:7 10:8 11:9 12:4 13:5 14:10 15:4 16:7 17:10 18:11 19:12 20:13
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Keyword 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            7:{Identifier 7} 8:{Punctuation 8} 9:{Punctuation 9} 10:{Punctuation 10} 11:{Literal 11} 12:{Punctuation 12}
+            13:{Punctuation 13}
+            TokenNameMap:
+            0:void 1:foo 2:( 3:int 4:* 5:x 6:, 7:y 8:) 9:{ 10:= 11:1 12:; 13:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Pointer 2} {Void 1} {FunctionProto 0}]
+                Intrinsics: [{{Int} 4 4 int} {{Void} 0 0 void}]
+                Functions: [{{FunctionProto} 4 [3 3] void (int *, int *)}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 1} {0 21}} 1:{FunctionDecl 2 0 5 {2 3} {0 21}} 2:{ParmDecl 3 1 3 {0 0} {3 3}}
+            3:{ParmDecl 4 1 3 {0 0} {7 3}} 4:{CompoundStmt 0 1 0 {5 1} {11 10}} 5:{BinaryOperator 5 4 2 {6 2} {12 7}}
+            6:{UnaryOperator 0 5 2 {8 1} {12 2}} 7:{BinaryOperator 5 5 2 {9 2} {15 4}} 8:{UnexposedExpr 3 6 3 {11 1} {13 1}}
+            9:{UnaryOperator 0 7 2 {12 1} {15 2}} 10:{IntegerLiteral 0 7 2 {0 0} {18 1}} 11:{DeclRefExpr 3 8 3 {0 0} {13 1}}
+            12:{UnexposedExpr 4 9 3 {13 1} {16 1}} 13:{DeclRefExpr 4 12 3 {0 0} {16 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:foo 3:x 4:y 5:=`,
+	},
+	{
+		Name: "global_var_mod",
+		Comment: `
+			// Modify a global variable from within a function.
+			// Here the unary operator can be understood as ++ and as postfix because
+			// it has one child and two tokens, and its child occupies the first token.
+			`,
+		SrcCode: `
+			int i = 0;
+			void foo() {
+				i++;
+			}
+			`,
+		ExpectedTokens: `
+             int : Keyword
+               i : Identifier
+               = : Punctuation
+               0 : Literal
+               ; : Punctuation
+            void : Keyword
+             foo : Identifier
+               ( : Punctuation
+               ) : Punctuation
+               { : Punctuation
+               i : Identifier
+              ++ : Punctuation
+               ; : Punctuation
+               } : Punctuation`,
+		ExpectedTopCursors: `
+            i   VarDecl      IsDeclaration SC_None Linkage_External
+            foo FunctionDecl IsDeclaration SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            i/VarDecl {first-seen:1 Int 'int' align:4 size:4}
+            cursor i
+            Kind() VarDecl
+            Extent: sample.c[4:13]
+            cursor.Extent() int i = 0
+            USR c:@i
+            Type() int
+            Type().Kind() Int
+            Type().SizeOf() 4
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . 0/IntegerLiteral:IsLiteral/ {seen-before:1}
+              Kind() IntegerLiteral
+              Extent: sample.c[12:13]
+              cursor.Extent() 0
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor.Kind(): IsExpression
+              (Availability) Availability_Available
+
+
+            foo/FunctionDecl {first-seen:2 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:3 Void 'void' !POD} align:4 size:1 Variadic}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[18:44]
+            cursor.Extent() void foo() {
+            				i++;
+            			}
+            USR c:@F@foo
+            Type() void ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[29:44]
+              cursor.Extent() {
+            				i++;
+            			}
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . UnaryOperator:IsExpression:[i : Identifier, ++ : Punctuation]/ {seen-before:1}
+                Kind() UnaryOperator
+                Extent: sample.c[35:38]
+                cursor.Extent() i++
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
+            . . . DeclRefExpr:IsExpression:[i : Identifier]/i {seen-before:1}
+                  cursor i
+                  Kind() DeclRefExpr
+                  Extent: sample.c[35:36]
+                  cursor.Extent() i
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+                  Referenced() i sample.c[4:13] kind: VarDecl
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:1 11:10 12:4 13:11
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Literal 3} 4:{Punctuation 4} 5:{Keyword 5} 6:{Identifier 6}
+            7:{Punctuation 7} 8:{Punctuation 8} 9:{Punctuation 9} 10:{Punctuation 10} 11:{Punctuation 11}
+            TokenNameMap:
+            0:int 1:i 2:= 3:0 4:; 5:void 6:foo 7:( 8:) 9:{ 10:++ 11:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {Void 1} {FunctionNoProto 0}]
+                Intrinsics: [{{Int} 4 4 int} {{Void} 0 0 void}]
+                Functions: [{{FunctionNoProto} 3 [] void ()}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 2} {0 14}} 1:{VarDecl 2 0 2 {3 1} {0 4}} 2:{FunctionDecl 3 0 4 {4 1} {5 9}}
+            3:{IntegerLiteral 0 1 2 {0 0} {3 1}} 4:{CompoundStmt 0 2 0 {5 1} {9 5}} 5:{UnaryOperator 0 4 2 {6 1} {10 2}}
+            6:{DeclRefExpr 2 5 2 {0 0} {10 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:i 3:foo`,
+	},
+	{
+		Name: "local_var_mod",
+		Comment: `
+			//
+			`,
+		SrcCode: `
+			void foo() {
+				int i = 0;
+				i++;
+			}
+			`,
+		ExpectedTopCursors: `foo FunctionDecl IsDeclaration SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            foo/FunctionDecl {first-seen:1 FunctionNoProto 'void ()' !POD numargs:0 result:{first-seen:2 Void 'void' !POD} align:4 size:1 Variadic}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[4:45]
+            cursor.Extent() void foo() {
+            				int i = 0;
+            				i++;
+            			}
+            USR c:@F@foo
+            Type() void ()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() void
+            Type().ResultType().Kind() Void
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() void
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[15:45]
+              cursor.Extent() {
+            				int i = 0;
+            				i++;
+            			}
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . DeclStmt:IsStatement 
+                Kind() DeclStmt
+                Extent: sample.c[21:31]
+                cursor.Extent() int i = 0;
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . i/VarDecl {first-seen:3 Int 'int' align:4 size:4} diff_lexical_parent
+                  cursor i
+                  Kind() VarDecl
+                  Extent: sample.c[21:30]
+                  cursor.Extent() int i = 0
+                  USR c:sample.c@21@F@foo@i
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor: IsCursorDefinition
+                  bools for cursor.Kind(): IsDeclaration
+                  Linkage() Linkage_NoLinkage
+                  (Availability) Availability_Available
+                  StorageClass() SC_None
+
+
+            . . . . 0/IntegerLiteral:IsLiteral/ {seen-before:3}
+                    Kind() IntegerLiteral
+                    Extent: sample.c[29:30]
+                    cursor.Extent() 0
+                    Type() int
+                    Type().Kind() Int
+                    Type().SizeOf() 4
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+
+
+            . . UnaryOperator:IsExpression:[i : Identifier, ++ : Punctuation]/ {seen-before:3}
+                Kind() UnaryOperator
+                Extent: sample.c[36:39]
+                cursor.Extent() i++
+                Type() int
+                Type().Kind() Int
+                Type().SizeOf() 4
+                bools for cursor.Kind(): IsExpression
+                (Availability) Availability_Available
+
+
+            . . . DeclRefExpr:IsExpression:[i : Identifier]/i {seen-before:3}
+                  cursor i
+                  Kind() DeclRefExpr
+                  Extent: sample.c[36:37]
+                  cursor.Extent() i
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+                  Referenced() i sample.c[21:30] kind: VarDecl
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:6 11:10 12:9 13:11
+            TokenMap:
+            0:{Keyword 0} 1:{Identifier 1} 2:{Punctuation 2} 3:{Punctuation 3} 4:{Punctuation 4} 5:{Keyword 5} 6:{Identifier 6}
+            7:{Punctuation 7} 8:{Literal 8} 9:{Punctuation 9} 10:{Punctuation 10} 11:{Punctuation 11}
+            TokenNameMap:
+            0:void 1:foo 2:( 3:) 4:{ 5:int 6:i 7:= 8:0 9:; 10:++ 11:}
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Void 0} {FunctionNoProto 0} {Int 1}]
+                Intrinsics: [{{Void} 0 0 void} {{Int} 4 4 int}]
+                Functions: [{{FunctionNoProto} 2 [] void ()}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 1} {0 14}} 1:{FunctionDecl 2 0 3 {2 1} {0 14}} 2:{CompoundStmt 0 1 0 {3 2} {4 10}}
+            3:{DeclStmt 0 2 0 {5 1} {5 5}} 4:{UnaryOperator 0 2 4 {6 1} {10 2}} 5:{VarDecl 3 3 4 {7 1} {5 4}}
+            6:{DeclRefExpr 3 4 4 {0 0} {10 1}} 7:{IntegerLiteral 0 5 4 {0 0} {8 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:foo 3:i`,
+	},
+	{
+		Name:    "structs_A_in_hdr_B_in_src",
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		HdrCode: `
+			  struct A {
+				  int a;
+				  char b;
+			  };
+		`,
+		SrcCode: `
+			  struct B {
+				  int a;
+				  char b;
+			  };
+			  char * fooA(struct A *p) { return &p->b; }
+			  char * fooB(struct B *p) { return &p->b; }
+			  `,
+		ExpectedTopCursors: `
+            A    StructDecl   IsDeclaration         Linkage_External
+            B    StructDecl   IsDeclaration         Linkage_External
+            fooA FunctionDecl IsDeclaration SC_None Linkage_External
+            fooB FunctionDecl IsDeclaration SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            A/StructDecl {first-seen:1 Record 'struct A' align:4 size:8}
+            cursor A
+            Kind() StructDecl
+            Extent: ./hdr.h[6:50]
+            cursor.Extent() struct A {
+            				  int a;
+            				  char b;
+            			  }
+            USR c:@S@A
+            Type() struct A
+            Type().Kind() Record
+            Type().Declaration() A
+            Type().SizeOf() 8
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            . a/FieldDecl {first-seen:2 Int 'int' align:4 size:4}
+              cursor a
+              Kind() FieldDecl
+              Extent: ./hdr.h[23:28]
+              cursor.Extent() int a
+              USR c:@S@A@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
+            . b/FieldDecl {first-seen:3 Char_S 'char' align:1 size:1}
+              cursor b
+              Kind() FieldDecl
+              Extent: ./hdr.h[36:42]
+              cursor.Extent() char b
+              USR c:@S@A@FI@b
+              Type() char
+              Type().Kind() Char_S
+              Type().SizeOf() 1
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              bools for cursor.Location(): ! IsFromMainFile
+              (Availability) Availability_Available
+              OffsetOfField() 32
+
+
+            B/StructDecl {first-seen:4 Record 'struct B' align:4 size:8}
+            cursor B
+            Kind() StructDecl
+            Extent: sample.c[23:67]
+            cursor.Extent() struct B {
+            				  int a;
+            				  char b;
+            			  }
+            USR c:@S@B
+            Type() struct B
+            Type().Kind() Record
+            Type().Declaration() B
+            Type().SizeOf() 8
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
+            . a/FieldDecl {seen-before:2}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[40:45]
+              cursor.Extent() int a
+              USR c:@S@B@FI@a
+              Type() int
+              Type().Kind() Int
+              Type().SizeOf() 4
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
+            . b/FieldDecl {seen-before:3}
+              cursor b
+              Kind() FieldDecl
+              Extent: sample.c[53:59]
+              cursor.Extent() char b
+              USR c:@S@B@FI@b
+              Type() char
+              Type().Kind() Char_S
+              Type().SizeOf() 1
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 32
+
+
+            fooA/FunctionDecl {first-seen:5 FunctionProto 'char *(struct A *)' !POD Canon:{first-seen:6 FunctionProto 'char *(struct A *)' !POD numargs:1 result:{first-seen:7 Pointer 'char *' *{seen-before:3} align:8 size:8} align:4 size:1} numargs:1 result:{seen-before:7} align:4 size:1}
+            cursor fooA
+            Kind() FunctionDecl
+            Extent: sample.c[74:116]
+            cursor.Extent() char * fooA(struct A *p) { return &p->b; }
+            USR c:@F@fooA
+            Type() char *(struct A *)
+            Type().Kind() FunctionProto
+            Type().CanonicalType() char *(struct A *)
+            Type().CanonicalType().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 1
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 1
+            ResultType() char *
+            StorageClass() SC_None
+
+
+            . p/ParmDecl {first-seen:8 Pointer 'struct A *' Canon:{first-seen:9 Pointer 'struct A *' *{seen-before:1} align:8 size:8} *{first-seen:10 Elaborated 'struct A' Canon:{seen-before:1} align:4 size:8} align:8 size:8}
+              cursor p
+              Kind() ParmDecl
+              Extent: sample.c[86:97]
+              cursor.Extent() struct A *p
+              USR c:sample.c@86@F@fooA@p
+              Type() struct A *
+              Type().Kind() Pointer
+              Type().CanonicalType() struct A *
+              Type().CanonicalType().Kind() Pointer
+              Type().PointeeType() struct A
+              Type().PointeeType().Kind() Elaborated
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . . struct A/TypeRef {seen-before:1}
+                cursor struct A
+                Kind() TypeRef
+                Extent: sample.c[93:94]
+                cursor.Extent() A
+                Type() struct A
+                Type().Kind() Record
+                Type().Declaration() A
+                Type().SizeOf() 8
+                bools for cursor.Kind(): IsReference
+                (Availability) Availability_Available
+                Referenced() A ./hdr.h[6:50] kind: StructDecl
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[99:116]
+              cursor.Extent() { return &p->b; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[101:113]
+                cursor.Extent() return &p->b
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . UnaryOperator:IsExpression:[& : Punctuation, p : Identifier, -> : Punctuation, b : Identifier]/ {seen-before:7}
+                  Kind() UnaryOperator
+                  Extent: sample.c[108:113]
+                  cursor.Extent() &p->b
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . . MemberRefExpr:IsExpression:[p : Identifier, -> : Punctuation, b : Identifier]/b {seen-before:3}
+                    cursor b
+                    Kind() MemberRefExpr
+                    Extent: sample.c[109:113]
+                    cursor.Extent() p->b
+                    Type() char
+                    Type().Kind() Char_S
+                    Type().SizeOf() 1
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+                    Referenced() b ./hdr.h[36:42] kind: FieldDecl
+
+
+            . . . . . IsUnexposed(UnexposedExpr) {seen-before:8}
+                      cursor p
+                      Kind() UnexposedExpr
+                      Extent: sample.c[109:110]
+                      cursor.Extent() p
+                      Type() struct A *
+                      Type().Kind() Pointer
+                      Type().CanonicalType() struct A *
+                      Type().CanonicalType().Kind() Pointer
+                      Type().PointeeType() struct A
+                      Type().PointeeType().Kind() Elaborated
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression IsUnexposed
+                      (Availability) Availability_Available
+                      Referenced() p sample.c[86:97] kind: ParmDecl
+
+
+            . . . . . . DeclRefExpr:IsExpression:[p : Identifier]/p {seen-before:8}
+                        cursor p
+                        Kind() DeclRefExpr
+                        Extent: sample.c[109:110]
+                        cursor.Extent() p
+                        Type() struct A *
+                        Type().Kind() Pointer
+                        Type().CanonicalType() struct A *
+                        Type().CanonicalType().Kind() Pointer
+                        Type().PointeeType() struct A
+                        Type().PointeeType().Kind() Elaborated
+                        Type().SizeOf() 8
+                        bools for cursor.Kind(): IsExpression
+                        (Availability) Availability_Available
+                        Referenced() p sample.c[86:97] kind: ParmDecl
+
+
+            fooB/FunctionDecl {first-seen:11 FunctionProto 'char *(struct B *)' !POD Canon:{first-seen:12 FunctionProto 'char *(struct B *)' !POD numargs:1 result:{seen-before:7} align:4 size:1} numargs:1 result:{seen-before:7} align:4 size:1}
+            cursor fooB
+            Kind() FunctionDecl
+            Extent: sample.c[122:164]
+            cursor.Extent() char * fooB(struct B *p) { return &p->b; }
+            USR c:@F@fooB
+            Type() char *(struct B *)
+            Type().Kind() FunctionProto
+            Type().CanonicalType() char *(struct B *)
+            Type().CanonicalType().Kind() FunctionProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 1
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 1
+            ResultType() char *
+            StorageClass() SC_None
+
+
+            . p/ParmDecl {first-seen:13 Pointer 'struct B *' Canon:{first-seen:14 Pointer 'struct B *' *{seen-before:4} align:8 size:8} *{first-seen:15 Elaborated 'struct B' Canon:{seen-before:4} align:4 size:8} align:8 size:8}
+              cursor p
+              Kind() ParmDecl
+              Extent: sample.c[134:145]
+              cursor.Extent() struct B *p
+              USR c:sample.c@134@F@fooB@p
+              Type() struct B *
+              Type().Kind() Pointer
+              Type().CanonicalType() struct B *
+              Type().CanonicalType().Kind() Pointer
+              Type().PointeeType() struct B
+              Type().PointeeType().Kind() Elaborated
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              Linkage() Linkage_NoLinkage
+              (Availability) Availability_Available
+
+
+            . . struct B/TypeRef {seen-before:4}
+                cursor struct B
+                Kind() TypeRef
+                Extent: sample.c[141:142]
+                cursor.Extent() B
+                Type() struct B
+                Type().Kind() Record
+                Type().Declaration() B
+                Type().SizeOf() 8
+                bools for cursor.Kind(): IsReference
+                (Availability) Availability_Available
+                Referenced() B sample.c[23:67] kind: StructDecl
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[147:164]
+              cursor.Extent() { return &p->b; }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[149:161]
+                cursor.Extent() return &p->b
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . UnaryOperator:IsExpression:[& : Punctuation, p : Identifier, -> : Punctuation, b : Identifier]/ {seen-before:7}
+                  Kind() UnaryOperator
+                  Extent: sample.c[156:161]
+                  cursor.Extent() &p->b
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . . MemberRefExpr:IsExpression:[p : Identifier, -> : Punctuation, b : Identifier]/b {seen-before:3}
+                    cursor b
+                    Kind() MemberRefExpr
+                    Extent: sample.c[157:161]
+                    cursor.Extent() p->b
+                    Type() char
+                    Type().Kind() Char_S
+                    Type().SizeOf() 1
+                    bools for cursor.Kind(): IsExpression
+                    (Availability) Availability_Available
+                    Referenced() b sample.c[53:59] kind: FieldDecl
+
+
+            . . . . . IsUnexposed(UnexposedExpr) {seen-before:13}
+                      cursor p
+                      Kind() UnexposedExpr
+                      Extent: sample.c[157:158]
+                      cursor.Extent() p
+                      Type() struct B *
+                      Type().Kind() Pointer
+                      Type().CanonicalType() struct B *
+                      Type().CanonicalType().Kind() Pointer
+                      Type().PointeeType() struct B
+                      Type().PointeeType().Kind() Elaborated
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression IsUnexposed
+                      (Availability) Availability_Available
+                      Referenced() p sample.c[134:145] kind: ParmDecl
+
+
+            . . . . . . DeclRefExpr:IsExpression:[p : Identifier]/p {seen-before:13}
+                        cursor p
+                        Kind() DeclRefExpr
+                        Extent: sample.c[157:158]
+                        cursor.Extent() p
+                        Type() struct B *
+                        Type().Kind() Pointer
+                        Type().CanonicalType() struct B *
+                        Type().CanonicalType().Kind() Pointer
+                        Type().PointeeType() struct B
+                        Type().PointeeType().Kind() Elaborated
+                        Type().SizeOf() 8
+                        bools for cursor.Kind(): IsExpression
+                        (Availability) Availability_Available
+                        Referenced() p sample.c[134:145] kind: ParmDecl
+`,
 	},
 }

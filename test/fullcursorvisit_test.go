@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/frankreh/go-clang-v5.0/ast"
 	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
 	"github.com/frankreh/go-clang-v5.0/clang/tokenkind"
 	"github.com/frankreh/go-clang-v5.0/clang/typekind"
 	run "github.com/frankreh/go-clang-v5.0/clangrun"
@@ -14,10 +16,13 @@ import (
 // fullCursorStrings implements run.FullCursorVisiter and collects cursorString results.
 type fullCursorStrings struct {
 	topLevelNamesToSkip map[string]bool
-	depthMap            map[clang.Cursor]int // 0 When parent is root, -1 when parent is one we are skipping.
-	seenCursors         map[clang.Cursor]int // Cardinal order the cursor was already seen, not descended further.
-	pad                 string
-	list                []string
+	sources        ast.Sources
+
+	depthMap                  map[clang.Cursor]int // 0 When parent is root, -1 when parent is one we are skipping.
+	seenCursors               map[clang.Cursor]int // Cardinal order the cursor was already seen, not descended further.
+	seenSemanticParentCursors map[clang.Cursor]int // Cardinal order the cursor was already seen, not descended further.
+	pad                       string
+	list                      []string
 
 	seenTypes map[clang.Type]int // Ordinal number of the type already seen, starting at 1.
 }
@@ -27,7 +32,8 @@ func (x *fullCursorStrings) FullCursorVisit(tu clang.TranslationUnit, cursor, pa
 	// parent hash is not expected to be in the map so fact zero is returned is useful.
 	if x.depthMap == nil {
 		x.depthMap = make(map[clang.Cursor]int)
-		x.seenCursors = make(map[clang.Cursor]int) // Init all at once.
+		x.seenCursors = make(map[clang.Cursor]int)               // Init all at once.
+		x.seenSemanticParentCursors = make(map[clang.Cursor]int) // Init all at once.
 		x.seenTypes = make(map[clang.Type]int)
 	}
 
@@ -64,7 +70,7 @@ func (x *fullCursorStrings) FullCursorVisit(tu clang.TranslationUnit, cursor, pa
 		x.list = append(x.list, s)
 		return
 	}
-	x.seenCursors[cursor] = len(x.list)
+	x.seenCursors[cursor] = len(x.list) // TBD use len of map itself
 
 	kind := cursor.Kind()
 
@@ -120,11 +126,16 @@ func (x *fullCursorStrings) FullCursorVisit(tu clang.TranslationUnit, cursor, pa
 
 		tkind := ctype.Kind()
 
-		// If Invalid type, just return "". Make sure cursor was Statement first.
+		// If Invalid type, just return "". Make sure cursor was Statement or Macro* first.
 		// If it was anything else, we want to figure out the type.
 		if typekind.Invalid == tkind {
-			if !kind.IsStatement() {
-				return "{Invalid - but not Statement}"
+			switch kind {
+			case cursorkind.MacroDefinition,
+				cursorkind.MacroExpansion:
+			default:
+				if !kind.IsStatement() {
+					return "{Invalid - but cursor is not Statement or a Macro*}"
+				}
 			}
 			return ""
 		}
@@ -227,6 +238,36 @@ func (x *fullCursorStrings) FullCursorVisit(tu clang.TranslationUnit, cursor, pa
 	// Do the same cursors appears in multiple parts of the tree?
 	// Yes they do.
 	s += fmt.Sprintf(" %v %v", cursor.HashCursor(), cursor)
+	*/
+
+	// Lexical parent
+
+	lexicalParent := cursor.LexicalParent()
+	if !lexicalParent.IsNull() && !lexicalParent.Equal(parent) {
+		// So far, it seems any local variable is flagged with a different lexical parent.
+		s += fmt.Sprintf(" diff_lexical_parent")
+	}
+
+	s += "\n" + cursorPrint(2*depth, cursor, parent, x.sources)
+
+	// Semantic parent
+
+	/*
+		semanticParent := cursor.SemanticParent()
+		if !semanticParent.IsNull() && !semanticParent.Equal(parent) {
+			offset, found := x.seenCursors[semanticParent]
+			if found {
+				s += fmt.Sprintf(" diff_semantic_parent_seen_in_normal_tree:%d", offset)
+			} else {
+				offset, found = x.seenSemanticParentCursors[semanticParent]
+				if found {
+					s += fmt.Sprintf(" diff_semantic_parent_seen_in_semantic_checks:%d", offset)
+				} else {
+					s += " diff_semantic_parent_not_seen"
+					x.seenSemanticParentCursors[semanticParent] = len(x.seenSemanticParentCursors)
+				}
+			}
+		}
 	*/
 
 	x.list = append(x.list, s)

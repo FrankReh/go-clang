@@ -28,9 +28,9 @@ func (tk *TypeKindKind) Kind() typekind.Kind {
 
 type TypeIntrinsic struct {
 	TypeKindKind
-	TypeSpelling string
 	Align        int // TBD unsigned byte or unsigned short?
 	Size         int
+	TypeSpelling string
 }
 
 type TypePointer struct {

@@ -8,6 +8,7 @@ package astbridge
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/frankreh/go-clang-v5.0/ast"
 	"github.com/frankreh/go-clang-v5.0/clang"
@@ -59,6 +60,10 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 
 	ctu.ClangTu = tu
 	clangRootCursor := tu.TranslationUnitCursor()
+
+	if err := diagnosticError(tu); err != nil {
+		return err
+	}
 
 	ctu.ClangTokens = tu.Tokenize(clangRootCursor.Extent())
 
@@ -389,9 +394,9 @@ func (ctu *ClangTranslationUnit) determineTypeIndex(ctype clang.Type) int {
 			if tkind.IsBuiltin() {
 				typeIndex, err = ctu.GoTu.TypeMap.AddIntrinsic(ast.TypeIntrinsic{
 					TypeKindKind: ast.TypeKindKind{tkind},
-					TypeSpelling: typespelling,
 					Align:        int(alignof), // TBD change api to return int rather than uint64.
 					Size:         int(sizeof),  // TBD change api to return int rather than uint64.
+					TypeSpelling: typespelling,
 				})
 				if err != nil {
 					panic(err)
@@ -465,4 +470,18 @@ func (ctu *ClangTranslationUnit) mustDetermineSubTypeIndex(superTypeKind typekin
 		panic(errmsg + ": " + errname + " typeindex <= 1")
 	}
 	return subtypeindex
+}
+
+func diagnosticError(tu *clang.TranslationUnit) error {
+	diags := tu.Diagnostics()
+	if len(diags) == 0 {
+		return nil
+	}
+
+	b := new(strings.Builder)
+	for _, diag := range diags {
+		fmt.Fprintln(b, "diagnostic", diag.FormatDiagnostic(0))
+	}
+
+	return fmt.Errorf("%s", b.String())
 }

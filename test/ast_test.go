@@ -132,8 +132,10 @@ func tokenDescription(tu clang.TranslationUnit, token clang.Token) string {
 // topCursorStrings implements run.TopCursorVisiter and collects cursorString results.
 type topCursorStrings struct {
 	topLevelNamesToSkip map[string]bool
-	hdrs                []string
-	list                []string
+	sources        ast.Sources
+
+	hdrs []string
+	list []string
 }
 
 // TopCursorVisit implements run.TopCursorVisiter, collecting results of calls to cursorString.
@@ -160,16 +162,22 @@ func init() {
 //-- 4.
 // tuParser implements run.TUParser and collects cursorString results.
 type tuParser struct {
+	sources ast.Sources
+
 	ast.TranslationUnit // The non clang version of that gets populated from the clang version.
+	err                 error
 }
 
 // tokenVisit implements TUParser, collecting results of calls to cursorString.
 func (x *tuParser) TUParse(tu *clang.TranslationUnit) {
 	ctu := astbridge.ClangTranslationUnit{}
 
-	ctu.Populate(tu)
+	x.err = ctu.Populate(tu)
+	if x.err != nil {
+		return
+	}
 
-	// Just save the Go version of the TranslationUnit.
+	// Save the Go version of the TranslationUnit.
 	x.TranslationUnit = ctu.GoTu
 }
 
@@ -298,18 +306,18 @@ func compilerTopLevelNames() (map[string]bool, error) {
 	// Create an essentially blank source code buffer to compile
 	// and record the cursor names that are encountered by the
 	// top cursor visit routine.
-	input := run.Callbacks{
+	callbacks := run.Callbacks{
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
-		HdrCode: " ", // Non empty so the cursor for "hdr.h" is also included
-		SrcCode: "",
+		// Non empty so the cursor for "hdr.h" is also included
+		UnsavedFiles: run.BuildUnsavedFiles(" ", " "),
 	}
 	// Only one callback function needed for this collection.
-	input.AppendTopCursorFn(
+	callbacks.AppendTopCursorFn(
 		func(tu clang.TranslationUnit, cursor, parent clang.Cursor) {
 			r[cursor.Spelling()] = true
 		})
 
-	err := input.Execute() // collect the data
+	err := callbacks.Execute() // collect the data
 	return r, err
 }
 
@@ -452,11 +460,15 @@ func TestAst(t *testing.T) {
 		if test.Disable {
 			continue
 		}
+
 		t.Run(test.Name, func(t *testing.T) {
+
+			unsavedFiles := run.BuildUnsavedFiles(test.HdrCode, test.SrcCode)
+			sources := &SourcesUnsavedFiles{unsavedFiles}
+
 			input := run.Callbacks{
-				Options: options,
-				HdrCode: test.HdrCode,
-				SrcCode: test.SrcCode,
+				Options:      options,
+				UnsavedFiles: unsavedFiles,
 			}
 			// Create an object that conforms to all four Callbacks of data collection.
 			tr := struct {
@@ -468,9 +480,16 @@ func TestAst(t *testing.T) {
 			tr.topCursorStrings.topLevelNamesToSkip = topLevelNames
 			tr.fullCursorStrings.topLevelNamesToSkip = topLevelNames
 
+			tr.topCursorStrings.sources = sources
+			tr.fullCursorStrings.sources = sources
+			tr.tuParser.sources = sources
+
 			err := input.LayerAndExecute(&tr) // collect the data
 			if err != nil {
 				t.Fatal(err)
+			}
+			if tr.tuParser.err != nil {
+				t.Fatal(tr.tuParser.err)
 			}
 
 			if test.ExpectedTokens != "" {

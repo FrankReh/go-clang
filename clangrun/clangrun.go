@@ -37,9 +37,8 @@ type TUParser interface {
 }
 
 type Callbacks struct {
-	Options clang.TranslationUnit_Flags
-	HdrCode string
-	SrcCode string
+	Options      clang.TranslationUnit_Flags
+	UnsavedFiles []clang.UnsavedFile
 
 	// Four slices of callback functions that can be executed on behalf of the
 	// translation unit.  One that is run on every token, one on every top
@@ -111,7 +110,7 @@ func (c *Callbacks) LayerAndExecute(o interface{}) error {
 // Execute creates a clang.TranslationUnit that calls up to three Callbacks of callbacks on it.
 // Any of the three callback functions can be left nil.
 func (c *Callbacks) Execute() error {
-	err := Execute(c.Options, c.SrcCode, c.HdrCode, func(idx clang.Index, tu clang.TranslationUnit) error {
+	err := Execute(c.Options, c.UnsavedFiles, func(idx clang.Index, tu clang.TranslationUnit) error {
 		atLeastOne := false
 
 		for _, tokenFn := range c.TokenFn {
@@ -157,29 +156,42 @@ func (c *Callbacks) Execute() error {
 	return err
 }
 
-// Execute creates a clang.TranslationUnit and calls run with it.
-func Execute(options clang.TranslationUnit_Flags, srcCode, hdrCode string,
-	run func(idx clang.Index, tu clang.TranslationUnit) error) error {
-
+func BuildUnsavedFiles(hdrCode, srcCode string) []clang.UnsavedFile {
 	srcFilename := "sample.c"
 
-	var buffers []clang.UnsavedFile
+	var r []clang.UnsavedFile
 
 	if hdrCode != "" {
+		// Use "./" at beginning of hdr.h because clang.ExpansionLocation() returns the string "./hdr.h".
+		// The building of the TranslationUnit doesn't require it but isn't harmed by it either.
+		// But the lookup performed by the Sources.Extract() wants to match filenames exactly.
 		hdrFilename := "hdr.h"
 
-		buffers = append(buffers, clang.NewUnsavedFile(hdrFilename, hdrCode)) // 1. unsaved file for header
-		srcCode = fmt.Sprintf("#include \"%s\"\n%s", hdrFilename, srcCode)    // 2. include header in source
+		r = append(r, clang.NewUnsavedFile("./" + hdrFilename, hdrCode))          // 1. unsaved file for header
+		srcCode = fmt.Sprintf("#include \"%s\"\n%s", hdrFilename, srcCode) // 2. include header in source
 	}
 
-	buffers = append(buffers, clang.NewUnsavedFile(srcFilename, srcCode))
+	r = append(r, clang.NewUnsavedFile(srcFilename, srcCode))
+	return r
+}
+
+// Execute creates a clang.TranslationUnit and calls run with it.
+// The run callback is provided so the user can execute code within the
+// scope of the clang TranslationUnit.
+func Execute(options clang.TranslationUnit_Flags, buffers []clang.UnsavedFile,
+	run func(idx clang.Index, tu clang.TranslationUnit) error) error {
 
 	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
+	if len(buffers) == 0 {
+		return fmt.Errorf("UnsavedFiles buffer is empty.")
+	}
+	srcFilename := buffers[len(buffers)-1].Filename()
+
 	tu := idx.ParseTranslationUnit(srcFilename, nil, buffers, options)
 	if !tu.IsValid() {
-		return fmt.Errorf("clang TranslationUnit is not valid")
+		return fmt.Errorf("clang TranslationUnit is not valid.")
 	}
 	defer tu.Dispose()
 
