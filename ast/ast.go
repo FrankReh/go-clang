@@ -34,7 +34,9 @@ type TranslationUnit struct {
 
 	// Create back reference "pointers" to recognize with cursor tree points back
 	// to itself.
-	Back map[int]int
+	Back       map[int]int
+	Referenced map[int]int
+	Definition map[int]int
 }
 
 // DecodeFinish Completes the setup of the lists and maps after the object
@@ -93,6 +95,14 @@ func (tu *TranslationUnit) AssertEqual(tu2 *TranslationUnit) error {
 	if err := assertEqualMaps(tu.Back, tu2.Back); err != nil {
 		return err
 	}
+	if err := assertEqualMaps(tu.Referenced, tu2.Referenced); err != nil {
+		fmt.Println("assertEqualMaps(tu.Referenced, tu2.Referenced)")
+		return err
+	}
+	if err := assertEqualMaps(tu.Definition, tu2.Definition); err != nil {
+		fmt.Println("assertEqualMaps(tu.Definition, tu2.Definition)")
+		return err
+	}
 	return nil
 }
 
@@ -119,14 +129,20 @@ func (t TranslationUnit) GoString() string {
 	fmt.Fprintf(b, "Cursors:\n%v\n", numberStrings(cursors, width))
 	fmt.Fprintf(b, "CursorNameMap:\n%v\n", numberStrings(t.CursorNameMap.Strings, width))
 	if len(t.Back) > 0 {
-		fmt.Fprintf(b, "Back:\n%v\n", numberStringsNoIndex(backStrings(t.Back), width))
+		fmt.Fprintf(b, "Back:\n%v\n", numberStringsNoIndex(mapIntIntStrings(t.Back), width))
+	}
+	if len(t.Referenced) > 0 {
+		fmt.Fprintf(b, "Referenced:\n%v\n", numberStringsNoIndex(mapIntIntStrings(t.Referenced), width))
+	}
+	if len(t.Definition) > 0 {
+		fmt.Fprintf(b, "Definition:\n%v\n", numberStringsNoIndex(mapIntIntStrings(t.Definition), width))
 	}
 	return b.String()
 }
 
-// backStrings returns strings of form "key:value", sorted by key.
+// mapIntIntStrings returns strings of form "key:value", sorted by key.
 // Sort them because their display gets compared to an expected value.
-func backStrings(m map[int]int) []string {
+func mapIntIntStrings(m map[int]int) []string {
 	// To store the keys in slice in sorted order
 	var keys []int
 	for k := range m {

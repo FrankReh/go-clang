@@ -18,38 +18,77 @@ import (
 
 // ClangTranslationUnit references the clang package components.
 type ClangTranslationUnit struct {
-	GoTu         ast.TranslationUnit
-	ClangTu      *clang.TranslationUnit
-	ClangTokens  []clang.Token
-	ClangCursors []clang.Cursor
-	typeIndexes  map[clang.Type]int // TypeIndex for those types already created.
+	GoTu          ast.TranslationUnit
+	ClangTu       *clang.TranslationUnit
+	ClangTokens   []clang.Token
+	ClangCursors  []clang.Cursor
+	mapTokenIndex map[clang.SourceLocation]int
+	typeIndexes   map[clang.Type]int // TypeIndex for those types already created.
 }
 
-func (ctu *ClangTranslationUnit) convertClangTokens(clangTokens []clang.Token) []ast.TokenId {
-	r := make([]ast.TokenId, len(clangTokens))
+// Tokenize
+//		ensures GoTo slice and map structures used for tokens are initialized,
+//		calls Tokenize on the cursor's Extent,
+//		can return a range of already existing toeksn if the first token is found in the map,
+//		otherwise appends the new clang tokens to those being tracked,
+//		creates GoTo Tokens from the Token kind and spelling,
+//		adds them to the TokenMap, which may recognize them as already in the map,
+//		appends the GoTo Token indexes to the slice of tokens,
+//		and puts all the Token source locations into the map to allow
+//		subsequent calls to possibly find their subrange of tokens is already in
+//		the slice.
+func (ctu *ClangTranslationUnit) Tokenize(cursor clang.Cursor) ast.IndexPair {
+	// Ensure setup of the slice and the map.
+	if ctu.GoTu.TokenIds == nil {
+		ctu.GoTu.TokenIds = make([]ast.TokenId, 0, 100) // cap size is arbitrary
+	}
+	s := &ctu.GoTu.TokenIds
 
-	for i := range r {
-		tokenSpelling := ctu.ClangTu.TokenSpelling(clangTokens[i])
+	if ctu.mapTokenIndex == nil {
+		ctu.mapTokenIndex = make(map[clang.SourceLocation]int)
+	}
+	m := ctu.mapTokenIndex
+
+	// Process tokens from cursor. Most times they will already have been seen.
+
+	var tokenRange ast.IndexPair
+	clangTokens := ctu.ClangTu.Tokenize(cursor.Extent())
+
+	if len(clangTokens) == 0 {
+		return tokenRange
+	}
+
+	tokenRange.Len = len(clangTokens)
+
+	if index, ok := m[ctu.ClangTu.TokenLocation(clangTokens[0])]; ok {
+		tokenRange.Head = index
+		return tokenRange
+	}
+	tokenRange.Head = len(m) // len tracks length of the slice and the map.
+
+	// The location of the first token wasn't found in the map, so all will be appended
+	// to the ClangTokens, and the slice and map.
+	ctu.ClangTokens = append(ctu.ClangTokens, clangTokens...)
+
+	// convert clang Tokens to ast tokens and appends them to ctu.GoTu.TokenIds.
+
+	for _, clangToken := range clangTokens {
+		tokenSpelling := ctu.ClangTu.TokenSpelling(clangToken)
 		token := ast.Token{
-			TokenKindId: clangTokens[i].Kind(),
+			TokenKindId: clangToken.Kind(),
 			TokenNameId: ctu.GoTu.TokenNameMap.Id(tokenSpelling),
 		}
 		tokenId := ctu.GoTu.TokenMap.Id(token)
-		r[i] = tokenId
+		*s = append(*s, tokenId)
+
+		clangSourceLocation := ctu.ClangTu.TokenLocation(clangToken)
+		m[clangSourceLocation] = len(m) // len tracks length of the slice and the map.
 	}
-	return r
+
+	return tokenRange
 }
 
-func mapSourceLocationToIndex(tu *clang.TranslationUnit, clangTokens []clang.Token) map[clang.SourceLocation]int {
-	r := make(map[clang.SourceLocation]int)
-
-	for i := range clangTokens {
-		r[tu.TokenLocation(clangTokens[i])] = i
-	}
-	return r
-}
-
-func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
+func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit, topLevelNamesToSkip map[string]bool) error {
 	if ctu.ClangTu != nil {
 		return errors.New("Already populated")
 	}
@@ -65,15 +104,13 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 		return err
 	}
 
-	ctu.ClangTokens = tu.Tokenize(clangRootCursor.Extent())
-
-	ctu.GoTu.TokenIds = ctu.convertClangTokens(ctu.ClangTokens)
-
-	mapTokenIndex := mapSourceLocationToIndex(tu, ctu.ClangTokens)
+	ctu.Tokenize(clangRootCursor)
 
 	ctu.GoTu.TypeMap.Init()
 
 	ctu.GoTu.Back = make(map[int]int)
+	ctu.GoTu.Referenced = make(map[int]int)
+	ctu.GoTu.Definition = make(map[int]int)
 
 	// Layer children to end of list, one set of children at a time.
 
@@ -105,6 +142,14 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 	cursorsSeen := make(map[clang.Cursor]int)
 	nullCursor := clang.NewNullCursor()
 
+	// interestingCursor returns true if new cursor is not null and not same as
+	// old cursor.
+	interestingCursor := func(newc, oldc clang.Cursor) bool {
+		return !newc.Equal(nullCursor) && !newc.Equal(oldc)
+	}
+
+	// Loop through every cursor found, calling Visit on each one.
+
 	// Grow the list of clang cursors by visiting the list of clang cursors.
 	for parentIndex := 0; parentIndex < len(ctu.ClangCursors); parentIndex++ {
 
@@ -124,7 +169,10 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 				len(ctu.ClangCursors))
 		}
 
+		// The all important Visit().
+
 		ctu.ClangCursors[parentIndex].Visit(func(cursor, parent clang.Cursor) clang.ChildVisitResult {
+
 			childcount++
 
 			ownIndex := len(ctu.GoTu.Cursors)
@@ -157,24 +205,24 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 					fmt.Printf("childcount %d\n", childcount)
 				}
 
-				// Start to set newCursor.Tokens.
-				var tokenRange ast.IndexPair
+				// Skip over builtin macro definitions.
+				if cursor.Kind() == cursorkind.MacroDefinition {
+					// Keying off of cursor.IsMacroBuiltin() doesn't work.
+					// These macros don't return true for this call.
+					// So skip based on the high level names that were found when no code
+					// was submitted.
+					if topLevelNamesToSkip != nil {
+						name := cursor.Spelling()
 
-				// Get clang tokens for this cursor long enough to find them in
-				// the global tu list of tokens. It should be enough to get just
-				// the first token from the cursor, but there is no libclang call
-				// for that.
-				if tokens := tu.Tokenize(cursor.Extent()); len(tokens) > 0 {
-					// TBD work against the parent's list first to reduce the search times.
-					index, ok := mapTokenIndex[tu.TokenLocation(tokens[0])]
-					if !ok {
-						// oken location not found in map, skipping cursor
-						return clang.ChildVisit_Continue
+						if topLevelNamesToSkip[name] {
+							// Skipping the builtin macros to save on output. If it becomes necessary to include,
+							// may want to have a test mode that can skip these for most of the test cases.
+							return clang.ChildVisit_Continue
+						}
 					}
-					tokenRange.Head = index
-					tokenRange.Len = len(tokens)
 				}
-				// End to set newCursor.Tokens.
+
+				tokenRange := ctu.Tokenize(cursor)
 
 				// Create the appropriate type entry.
 				typeIndex := ctu.determineTypeIndex(cursor.Type())
@@ -198,6 +246,30 @@ func (ctu *ClangTranslationUnit) Populate(tu *clang.TranslationUnit) error {
 				// lengths not match.
 				ctu.GoTu.Cursors = append(ctu.GoTu.Cursors, newCursor)
 				ctu.ClangCursors = append(ctu.ClangCursors, cursor)
+
+				// Record when cursor has a referenced cursor and when it has a difference definition cursor.
+				if referenced := cursor.Referenced(); interestingCursor(referenced, cursor) {
+
+					referencedIndex, ok := cursorsSeen[referenced]
+					if ok {
+						ctu.GoTu.Referenced[ownIndex] = referencedIndex
+					} else {
+						fmt.Println(`panic("referenced cursor not yet seen")`)
+						//panic("referenced cursor not yet seen")
+						ctu.GoTu.Referenced[ownIndex] = -1
+					}
+
+					if definition := cursor.Referenced(); interestingCursor(definition, referenced) {
+						definitionIndex, ok := cursorsSeen[definition]
+						if ok {
+							ctu.GoTu.Definition[ownIndex] = definitionIndex
+						} else {
+							fmt.Println(`panic("definition cursor not yet seen")`)
+							//panic("definition cursor not yet seen")
+							ctu.GoTu.Definition[ownIndex] = -1
+						}
+					}
+				}
 			}
 
 			// Determining the children doesn't have to be done here.

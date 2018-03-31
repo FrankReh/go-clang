@@ -86,6 +86,12 @@ func (tu *TranslationUnit) EncodeGobV1(w io.Writer) error {
 	if err := enc.Encode(tu.Back); err != nil {
 		return err
 	}
+	if err := enc.Encode(tu.Referenced); err != nil {
+		return err
+	}
+	if err := enc.Encode(tu.Definition); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -194,6 +200,12 @@ func (tu *TranslationUnit) DecodeGobV1(r io.Reader) error {
 		return err
 	}
 	if err := dec.Decode(&tu.Back); err != nil {
+		return err
+	}
+	if err := dec.Decode(&tu.Referenced); err != nil {
+		return err
+	}
+	if err := dec.Decode(&tu.Definition); err != nil {
 		return err
 	}
 	tu.DecodeFinish()

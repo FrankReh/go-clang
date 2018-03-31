@@ -21,8 +21,8 @@ var testTupleData = []testTuple{
 
 	{
 		Name:             "empty_a1",
-		ExpectedGobSize0: 1558,
-		ExpectedGobSize1: 1279,
+		ExpectedGobSize0: 1594,
+		ExpectedGobSize1: 1289,
 	},
 	{
 		Name: "empty_a2",
@@ -41,8 +41,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {0 0} {0 0}}
             CursorNameMap:
             0: 1:sample.c`,
-		ExpectedGobSize0: 1558,
-		ExpectedGobSize1: 1279,
+		ExpectedGobSize0: 1594,
+		ExpectedGobSize1: 1289,
 	},
 	{
 		Name: "void_foo",
@@ -104,8 +104,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {1 1} {0 6}} 1:{FunctionDecl 2 0 3 {2 1} {0 6}} 2:{CompoundStmt 0 1 0 {0 0} {4 2}}
             CursorNameMap:
             0: 1:sample.c 2:foo`,
-		ExpectedGobSize0: 1689,
-		ExpectedGobSize1: 1383,
+		ExpectedGobSize0: 1725,
+		ExpectedGobSize1: 1393,
 	},
 	{
 		Name: "charp_foo_if",
@@ -341,9 +341,11 @@ var testTupleData = []testTuple{
             9:{IntegerLiteral 0 5 2 {0 0} {12 1}} 10:{UnexposedExpr 0 6 4 {13 1} {15 1}} 11:{UnexposedExpr 0 7 4 {14 1} {19 1}}
             12:{DeclRefExpr 3 8 2 {0 0} {10 1}} 13:{StringLiteral 4 10 6 {0 0} {15 1}} 14:{StringLiteral 5 11 7 {0 0} {19 1}}
             CursorNameMap:
-            0: 1:sample.c 2:foo 3:i 4:"yes" 5:"no" 6:>=`,
-		ExpectedGobSize0: 2134,
-		ExpectedGobSize1: 1682,
+            0: 1:sample.c 2:foo 3:i 4:"yes" 5:"no" 6:>=
+            Referenced:
+            8:2 12:2`,
+		ExpectedGobSize0: 2174,
+		ExpectedGobSize1: 1696,
 	},
 	{
 		Name: "int_foo_if_float",
@@ -470,8 +472,8 @@ var testTupleData = []testTuple{
                     bools for cursor.Kind(): IsExpression
                     (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 1952,
-		ExpectedGobSize1: 1553,
+		ExpectedGobSize0: 1992,
+		ExpectedGobSize1: 1567,
 	},
 	{
 		Name:    "int_world",
@@ -640,8 +642,8 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {1 1} {0 5}} 1:{VarDecl 2 0 2 {2 1} {0 4}} 2:{IntegerLiteral 0 1 2 {0 0} {3 1}}
             CursorNameMap:
             0: 1:sample.c 2:a`,
-		ExpectedGobSize0: 1661,
-		ExpectedGobSize1: 1353,
+		ExpectedGobSize0: 1697,
+		ExpectedGobSize1: 1363,
 	},
 	{
 		Name:    "global_var_unsigned_int_a_is_0x1",
@@ -691,8 +693,8 @@ var testTupleData = []testTuple{
                 bools for cursor.Kind(): IsExpression
                 (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 1726,
-		ExpectedGobSize1: 1405,
+		ExpectedGobSize0: 1762,
+		ExpectedGobSize1: 1415,
 	},
 	{
 		Name:    "global_var_a_is_0_001",
@@ -730,8 +732,8 @@ var testTupleData = []testTuple{
               bools for cursor.Kind(): IsExpression
               (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 1671,
-		ExpectedGobSize1: 1363,
+		ExpectedGobSize0: 1707,
+		ExpectedGobSize1: 1373,
 	},
 	{
 		Name: "function_storage_comparison",
@@ -770,8 +772,8 @@ var testTupleData = []testTuple{
             15:{IntegerLiteral 0 11 2 {0 0} {26 1}} 16:{IntegerLiteral 0 12 2 {0 0} {36 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:B 4:C 5:D`,
-		ExpectedGobSize0: 2086,
-		ExpectedGobSize1: 1623,
+		ExpectedGobSize0: 2122,
+		ExpectedGobSize1: 1633,
 	},
 	{
 		Name:    "void_function_and_return",
@@ -825,8 +827,8 @@ var testTupleData = []testTuple{
                 bools for cursor.Type(): ! IsPODType
                 (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 1723,
-		ExpectedGobSize1: 1406,
+		ExpectedGobSize0: 1759,
+		ExpectedGobSize1: 1416,
 	},
 	{
 		Name:    "int_function_and_return_1",
@@ -881,8 +883,8 @@ var testTupleData = []testTuple{
                   bools for cursor.Kind(): IsExpression
                   (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 1752,
-		ExpectedGobSize1: 1422,
+		ExpectedGobSize0: 1788,
+		ExpectedGobSize1: 1432,
 	},
 	{
 		Name: "parenthesis_comparison",
@@ -1073,8 +1075,8 @@ var testTupleData = []testTuple{
                       bools for cursor.Kind(): IsExpression
                       (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 2008,
-		ExpectedGobSize1: 1550,
+		ExpectedGobSize0: 2044,
+		ExpectedGobSize1: 1560,
 	},
 	{
 		Name: "func_sub_77_and_78",
@@ -1184,8 +1186,8 @@ var testTupleData = []testTuple{
             6:{IntegerLiteral 0 4 2 {0 0} {8 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:-`,
-		ExpectedGobSize0: 1809,
-		ExpectedGobSize1: 1454,
+		ExpectedGobSize0: 1845,
+		ExpectedGobSize1: 1464,
 	},
 	{
 		Name:    "var_sub_77_and_78",
@@ -1263,8 +1265,8 @@ var testTupleData = []testTuple{
             3:{IntegerLiteral 0 2 2 {0 0} {3 1}} 4:{IntegerLiteral 0 2 2 {0 0} {5 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 1717,
-		ExpectedGobSize1: 1385,
+		ExpectedGobSize0: 1753,
+		ExpectedGobSize1: 1395,
 	},
 	{
 		Name:    "var_sub_p77p_and_78",
@@ -1357,8 +1359,8 @@ var testTupleData = []testTuple{
             3:{ParenExpr 0 2 2 {5 1} {3 3}} 4:{IntegerLiteral 0 2 2 {0 0} {7 1}} 5:{IntegerLiteral 0 3 2 {0 0} {4 1}}
             CursorNameMap:
             0: 1:sample.c 2:a 3:-`,
-		ExpectedGobSize0: 1749,
-		ExpectedGobSize1: 1404,
+		ExpectedGobSize0: 1785,
+		ExpectedGobSize1: 1414,
 	},
 	{
 		Name:    "var_a_is_minus_b",
@@ -1478,9 +1480,11 @@ var testTupleData = []testTuple{
             3:{IntegerLiteral 0 1 3 {0 0} {4 1}} 4:{UnaryOperator 0 2 3 {5 1} {9 2}} 5:{UnexposedExpr 2 4 3 {6 1} {10 1}}
             6:{DeclRefExpr 2 5 2 {0 0} {10 1}}
             CursorNameMap:
-            0: 1:sample.c 2:a 3:b`,
-		ExpectedGobSize0: 1799,
-		ExpectedGobSize1: 1438,
+            0: 1:sample.c 2:a 3:b
+            Referenced:
+            5:1 6:1`,
+		ExpectedGobSize0: 1839,
+		ExpectedGobSize1: 1452,
 	},
 	{
 		Name: "add_sub_mul_div",
@@ -1666,8 +1670,8 @@ var testTupleData = []testTuple{
             12:{IntegerLiteral 0 9 2 {0 0} {12 1}}
             CursorNameMap:
             0: 1:sample.c 2:A 3:- 4:+ 5:/ 6:*`,
-		ExpectedGobSize0: 1969,
-		ExpectedGobSize1: 1542,
+		ExpectedGobSize0: 2005,
+		ExpectedGobSize1: 1552,
 	},
 	{
 		Name: "add_and_double_add",
@@ -1841,8 +1845,8 @@ var testTupleData = []testTuple{
                     bools for cursor.Kind(): IsExpression
                     (Availability) Availability_Available
 `,
-		ExpectedGobSize0: 1985,
-		ExpectedGobSize1: 1538,
+		ExpectedGobSize0: 2021,
+		ExpectedGobSize1: 1548,
 	},
 	{
 		Name: "hdr_processing_only",
@@ -2212,21 +2216,38 @@ var testTupleData = []testTuple{
 `,
 		ExpectedTUPopulate: `
             Tokens:
-            0:0 1:1 2:2
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:4 8:7 9:6 10:4 11:7 12:8 13:9 14:4 15:10 16:8 17:11 18:3 19:4 20:12 21:13 22:14 23:15 24:4
+            25:16 26:13 27:14 28:17 29:18 30:19 31:20 32:21 33:6 34:4 35:22 36:13 37:14 38:17 39:18 40:23 41:20 42:21 43:4 44:24
+            45:13 46:14 47:17 48:18 49:25 50:20 51:21 52:6 53:15 54:4 55:26 56:13 57:14 58:17 59:18 60:27 61:20 62:21
             TokenMap:
-            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2}
+            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Keyword 4} 5:{Identifier 5} 6:{Keyword 6}
+            7:{Identifier 7} 8:{Punctuation 8} 9:{Literal 9} 10:{Identifier 10} 11:{Literal 11} 12:{Identifier 12}
+            13:{Punctuation 13} 14:{Punctuation 14} 15:{Keyword 15} 16:{Identifier 16} 17:{Punctuation 17} 18:{Keyword 18}
+            19:{Literal 19} 20:{Punctuation 20} 21:{Punctuation 21} 22:{Identifier 22} 23:{Literal 23} 24:{Identifier 24}
+            25:{Literal 25} 26:{Identifier 26} 27:{Literal 27}
             TokenNameMap:
-            0:# 1:include 2:"hdr.h"
+            0:# 1:include 2:"hdr.h" 3:extern 4:int 5:h_ext_v 6:static 7:h_sta_v 8:= 9:2 10:h_glo_v 11:3 12:h_ext_f 13:( 14:)
+            15:inline 16:h_inl_f 17:{ 18:return 19:11 20:; 21:} 22:h_sta_f 23:12 24:h_glo_f 25:13 26:h_si_f 27:14
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1}]
+                Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
+                Intrinsics: [{{Int} 4 4 int}]
+                Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 1} {0 3}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}}
+            0:{TranslationUnit 1 -1 1 {1 10} {0 3}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{VarDecl 3 0 2 {0 0} {3 3}}
+            3:{VarDecl 4 0 2 {0 0} {6 3}} 4:{VarDecl 4 0 2 {11 1} {9 5}} 5:{VarDecl 5 0 2 {12 1} {14 4}}
+            6:{FunctionDecl 6 0 3 {0 0} {18 5}} 7:{FunctionDecl 7 0 3 {13 1} {23 10}} 8:{FunctionDecl 8 0 3 {14 1} {33 10}}
+            9:{FunctionDecl 9 0 3 {15 1} {43 9}} 10:{FunctionDecl 10 0 3 {16 1} {52 11}} 11:{IntegerLiteral 0 4 2 {0 0} {13 1}}
+            12:{IntegerLiteral 0 5 2 {0 0} {17 1}} 13:{CompoundStmt 0 7 0 {17 1} {28 5}} 14:{CompoundStmt 0 8 0 {18 1} {38 5}}
+            15:{CompoundStmt 0 9 0 {19 1} {47 5}} 16:{CompoundStmt 0 10 0 {20 1} {58 5}} 17:{ReturnStmt 0 13 0 {21 1} {29 2}}
+            18:{ReturnStmt 0 14 0 {22 1} {39 2}} 19:{ReturnStmt 0 15 0 {23 1} {48 2}} 20:{ReturnStmt 0 16 0 {24 1} {59 2}}
+            21:{IntegerLiteral 0 17 2 {0 0} {30 1}} 22:{IntegerLiteral 0 18 2 {0 0} {40 1}} 23:{IntegerLiteral 0 19 2 {0 0} {49 1}}
+            24:{IntegerLiteral 0 20 2 {0 0} {60 1}}
             CursorNameMap:
-            0: 1:sample.c 2:hdr.h`,
-		ExpectedGobSize0: 1621,
-		ExpectedGobSize1: 1329,
+            0: 1:sample.c 2:hdr.h 3:h_ext_v 4:h_sta_v 5:h_glo_v 6:h_ext_f 7:h_inl_f 8:h_sta_f 9:h_glo_f 10:h_si_f`,
+		ExpectedGobSize0: 2466,
+		ExpectedGobSize1: 1901,
 	},
 	{
 		Name:    "hdr_and_source",
@@ -2465,14 +2486,15 @@ var testTupleData = []testTuple{
 		ExpectedTUPopulate: `
             Tokens:
             0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:12 13:3 14:13 15:5 16:6 17:7 18:8 19:14 20:10 21:11 22:15 23:3
-            24:16 25:5 26:6 27:7 28:8 29:17 30:10 31:11 32:18 33:3 34:19 35:5 36:6 37:7 38:8 39:20 40:10 41:11
+            24:16 25:5 26:6 27:7 28:8 29:17 30:10 31:11 32:18 33:3 34:19 35:5 36:6 37:7 38:8 39:20 40:10 41:11 42:21 43:22
             TokenMap:
             0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Punctuation 6}
             7:{Punctuation 7} 8:{Keyword 8} 9:{Literal 9} 10:{Punctuation 10} 11:{Punctuation 11} 12:{Keyword 12} 13:{Identifier 13}
             14:{Literal 14} 15:{Keyword 15} 16:{Identifier 16} 17:{Literal 17} 18:{Keyword 18} 19:{Identifier 19} 20:{Literal 20}
+            21:{Identifier 21} 22:{Literal 22}
             TokenNameMap:
             0:# 1:include 2:"hdr.h" 3:int 4:A 5:( 6:) 7:{ 8:return 9:1 10:; 11:} 12:extern 13:B 14:2 15:static 16:C 17:3 18:inline
-            19:D 20:4
+            19:D 20:4 21:MSG 22:"Hello World!"
             TypeMap:
             TypeMap{
                 Keys: [{Invalid -1} {Unexposed -1} {Int 0} {FunctionNoProto 0}]
@@ -2480,19 +2502,26 @@ var testTupleData = []testTuple{
                 Functions: [{{FunctionNoProto} 2 [] int ()}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 5} {0 42}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{FunctionDecl 3 0 3 {6 1} {3 9}}
-            3:{FunctionDecl 4 0 3 {7 1} {12 10}} 4:{FunctionDecl 5 0 3 {8 1} {22 10}} 5:{FunctionDecl 6 0 3 {9 1} {32 10}}
-            6:{CompoundStmt 0 2 0 {10 1} {7 5}} 7:{CompoundStmt 0 3 0 {11 1} {17 5}} 8:{CompoundStmt 0 4 0 {12 1} {27 5}}
-            9:{CompoundStmt 0 5 0 {13 1} {37 5}} 10:{ReturnStmt 0 6 0 {14 1} {8 2}} 11:{ReturnStmt 0 7 0 {15 1} {18 2}}
-            12:{ReturnStmt 0 8 0 {16 1} {28 2}} 13:{ReturnStmt 0 9 0 {17 1} {38 2}} 14:{IntegerLiteral 0 10 2 {0 0} {9 1}}
-            15:{IntegerLiteral 0 11 2 {0 0} {19 1}} 16:{IntegerLiteral 0 12 2 {0 0} {29 1}} 17:{IntegerLiteral 0 13 2 {0 0} {39 1}}
+            0:{TranslationUnit 1 -1 1 {1 6} {0 42}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{MacroDefinition 3 0 0 {0 0} {42 2}}
+            3:{FunctionDecl 4 0 3 {7 1} {3 9}} 4:{FunctionDecl 5 0 3 {8 1} {12 10}} 5:{FunctionDecl 6 0 3 {9 1} {22 10}}
+            6:{FunctionDecl 7 0 3 {10 1} {32 10}} 7:{CompoundStmt 0 3 0 {11 1} {7 5}} 8:{CompoundStmt 0 4 0 {12 1} {17 5}}
+            9:{CompoundStmt 0 5 0 {13 1} {27 5}} 10:{CompoundStmt 0 6 0 {14 1} {37 5}} 11:{ReturnStmt 0 7 0 {15 1} {8 2}}
+            12:{ReturnStmt 0 8 0 {16 1} {18 2}} 13:{ReturnStmt 0 9 0 {17 1} {28 2}} 14:{ReturnStmt 0 10 0 {18 1} {38 2}}
+            15:{IntegerLiteral 0 11 2 {0 0} {9 1}} 16:{IntegerLiteral 0 12 2 {0 0} {19 1}} 17:{IntegerLiteral 0 13 2 {0 0} {29 1}}
+            18:{IntegerLiteral 0 14 2 {0 0} {39 1}}
             CursorNameMap:
-            0: 1:sample.c 2:hdr.h 3:A 4:B 5:C 6:D`,
-		ExpectedGobSize0: 2141,
-		ExpectedGobSize1: 1671,
+            0: 1:sample.c 2:hdr.h 3:MSG 4:A 5:B 6:C 7:D`,
+		ExpectedGobSize0: 2227,
+		ExpectedGobSize1: 1724,
 	},
 	{
-		Name:    "hdr_macro_expansion",
+		Name: "hdr_macro_expansion_twice",
+		Comment: `
+			// Nonsensical function but it shows off how the same macro
+			// appearing twice is handled by clang.
+            // First  MacroExpansion comes with Extent: sample.c[48:58]
+            // Second MacroExpansion comes with Extent: sample.c[67:77]
+		`,
 		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
 		HdrCode: `
 			#define HELLO "Hello"
@@ -2500,12 +2529,13 @@ var testTupleData = []testTuple{
 			#define HELLOWORLD HELLO " " WORLD
 			`,
 		SrcCode: `
-			char* foo() {return HELLOWORLD; }
+			char* foo() {if (1) return HELLOWORLD; return HELLOWORLD; }
 			`,
 		ExpectedTopCursors: `
             HELLO      MacroDefinition IsPreprocessing         Linkage_Invalid 
             WORLD      MacroDefinition IsPreprocessing         Linkage_Invalid 
             HELLOWORLD MacroDefinition IsPreprocessing         Linkage_Invalid 
+            HELLOWORLD MacroExpansion  IsPreprocessing         Linkage_Invalid 
             HELLOWORLD MacroExpansion  IsPreprocessing         Linkage_Invalid 
             foo        FunctionDecl    IsDeclaration   SC_None Linkage_External`,
 		ExpectedFullCursors: `
@@ -2548,7 +2578,18 @@ var testTupleData = []testTuple{
             HELLOWORLD/MacroExpansion 
             cursor HELLOWORLD
             Kind() MacroExpansion
-            Extent: sample.c[41:51]
+            Extent: sample.c[48:58]
+            cursor.Extent() HELLOWORLD
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() HELLOWORLD ./hdr.h[63:89] kind: MacroDefinition
+
+
+            HELLOWORLD/MacroExpansion 
+            cursor HELLOWORLD
+            Kind() MacroExpansion
+            Extent: sample.c[67:77]
             cursor.Extent() HELLOWORLD
             bools for cursor.Kind(): IsPreprocessing
             bools for cursor.Type(): ! IsPODType
@@ -2559,8 +2600,8 @@ var testTupleData = []testTuple{
             foo/FunctionDecl {first-seen:1 FunctionNoProto 'char *()' !POD numargs:0 result:{first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8} align:4 size:1 Variadic}
             cursor foo
             Kind() FunctionDecl
-            Extent: sample.c[21:54]
-            cursor.Extent() char* foo() {return HELLOWORLD; }
+            Extent: sample.c[21:80]
+            cursor.Extent() char* foo() {if (1) return HELLOWORLD; return HELLOWORLD; }
             USR c:@F@foo
             Type() char *()
             Type().Kind() FunctionNoProto
@@ -2579,16 +2620,78 @@ var testTupleData = []testTuple{
 
             . CompoundStmt:IsStatement 
               Kind() CompoundStmt
-              Extent: sample.c[33:54]
-              cursor.Extent() {return HELLOWORLD; }
+              Extent: sample.c[33:80]
+              cursor.Extent() {if (1) return HELLOWORLD; return HELLOWORLD; }
               bools for cursor.Kind(): IsStatement
               bools for cursor.Type(): ! IsPODType
               (Availability) Availability_Available
 
 
+            . . IfStmt:IsStatement 
+                Kind() IfStmt
+                Extent: sample.c[34:58]
+                cursor.Extent() if (1) return HELLOWORLD
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . 1/IntegerLiteral:IsLiteral/ {first-seen:4 Int 'int' align:4 size:4}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[38:39]
+                  cursor.Extent() 1
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . ReturnStmt:IsStatement 
+                  Kind() ReturnStmt
+                  Extent: sample.c[41:58]
+                  cursor.Extent() return HELLOWORLD
+                  bools for cursor.Kind(): IsStatement
+                  bools for cursor.Type(): ! IsPODType
+                  (Availability) Availability_Available
+
+
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                    Kind() UnexposedExpr
+                    Extent: sample.c[48:58]
+                    cursor.Extent() HELLOWORLD
+                    Type() char *
+                    Type().Kind() Pointer
+                    Type().PointeeType() char
+                    Type().PointeeType().Kind() Char_S
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    bools for cursor.Location(): ! IsFromMainFile
+                    (Availability) Availability_Available
+
+
+            . . . . . StringLiteral:IsLiteral:[]/"Hello World!" {first-seen:5 ConstantArray 'char [13]' align:1 size:13 len:13 elem:{seen-before:3}}
+                      cursor "Hello World!"
+                      Kind() StringLiteral
+                      Extent: sample.c[48:58]
+                      cursor.Extent() HELLOWORLD
+                      Type() char [13]
+                      Type().Kind() ConstantArray
+                      Type().ElementType() char
+                      Type().ElementType().Kind() Char_S
+                      Type().NumElements() 13
+                      Type().ArrayElementType() char
+                      Type().ArrayElementType().Kind() Char_S
+                      Type().ArraySize() 13
+                      Type().SizeOf() 13
+                      bools for cursor.Kind(): IsExpression
+                      bools for cursor.Location(): ! IsFromMainFile
+                      (Availability) Availability_Available
+
+
             . . ReturnStmt:IsStatement 
                 Kind() ReturnStmt
-                Extent: sample.c[34:51]
+                Extent: sample.c[60:77]
                 cursor.Extent() return HELLOWORLD
                 bools for cursor.Kind(): IsStatement
                 bools for cursor.Type(): ! IsPODType
@@ -2597,7 +2700,7 @@ var testTupleData = []testTuple{
 
             . . . IsUnexposed(UnexposedExpr) {seen-before:2}
                   Kind() UnexposedExpr
-                  Extent: sample.c[41:51]
+                  Extent: sample.c[67:77]
                   cursor.Extent() HELLOWORLD
                   Type() char *
                   Type().Kind() Pointer
@@ -2609,10 +2712,10 @@ var testTupleData = []testTuple{
                   (Availability) Availability_Available
 
 
-            . . . . StringLiteral:IsLiteral:[]/"Hello World!" {first-seen:4 ConstantArray 'char [13]' align:1 size:13 len:13 elem:{seen-before:3}}
+            . . . . StringLiteral:IsLiteral:[]/"Hello World!" {seen-before:5}
                     cursor "Hello World!"
                     Kind() StringLiteral
-                    Extent: sample.c[41:51]
+                    Extent: sample.c[67:77]
                     cursor.Extent() HELLOWORLD
                     Type() char [13]
                     Type().Kind() ConstantArray
@@ -2629,27 +2732,349 @@ var testTupleData = []testTuple{
 `,
 		ExpectedTUPopulate: `
             Tokens:
-            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:12
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:6 11:10 12:7 13:11 14:12 15:13 16:11 17:12 18:13 19:14 20:15 21:16 22:17
+            23:18 24:12 25:15 26:19 27:17
             TokenMap:
             0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
-            7:{Punctuation 7} 8:{Punctuation 8} 9:{Keyword 9} 10:{Identifier 10} 11:{Punctuation 11} 12:{Punctuation 12}
+            7:{Punctuation 7} 8:{Punctuation 8} 9:{Keyword 9} 10:{Literal 10} 11:{Keyword 11} 12:{Identifier 12} 13:{Punctuation 13}
+            14:{Punctuation 14} 15:{Identifier 15} 16:{Literal 16} 17:{Identifier 17} 18:{Literal 18} 19:{Literal 19}
             TokenNameMap:
-            0:# 1:include 2:"hdr.h" 3:char 4:* 5:foo 6:( 7:) 8:{ 9:return 10:HELLOWORLD 11:; 12:}
+            0:# 1:include 2:"hdr.h" 3:char 4:* 5:foo 6:( 7:) 8:{ 9:if 10:1 11:return 12:HELLOWORLD 13:; 14:} 15:HELLO 16:"Hello"
+            17:WORLD 18:"World!" 19:" "
             TypeMap:
             TypeMap{
-                Keys: [{Invalid -1} {Unexposed -1} {Char_S 0} {Pointer 2} {FunctionNoProto 0} {ConstantArray 0}]
-                Intrinsics: [{{Char_S} 1 1 char}]
+                Keys: [{Invalid -1} {Unexposed -1} {Char_S 0} {Pointer 2} {FunctionNoProto 0} {Int 1} {ConstantArray 0}]
+                Intrinsics: [{{Char_S} 1 1 char} {{Int} 4 4 int}]
                 Functions: [{{FunctionNoProto} 3 [] char *()}]
                 Arrays: [{13 {2 1 13 char [13]}}]
             }
             Cursors:
-            0:{TranslationUnit 1 -1 1 {1 3} {0 13}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{MacroExpansion 3 0 0 {0 0} {10 1}}
-            3:{FunctionDecl 4 0 4 {4 1} {3 10}} 4:{CompoundStmt 0 3 0 {5 1} {8 5}} 5:{ReturnStmt 0 4 0 {6 1} {9 2}}
-            6:{UnexposedExpr 0 5 3 {7 1} {0 0}} 7:{StringLiteral 5 6 5 {0 0} {0 0}}
+            0:{TranslationUnit 1 -1 1 {1 7} {0 20}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{MacroDefinition 3 0 0 {0 0} {20 2}}
+            3:{MacroDefinition 4 0 0 {0 0} {22 2}} 4:{MacroDefinition 5 0 0 {0 0} {24 4}} 5:{MacroExpansion 5 0 0 {0 0} {14 1}}
+            6:{MacroExpansion 5 0 0 {0 0} {17 1}} 7:{FunctionDecl 6 0 4 {8 1} {3 17}} 8:{CompoundStmt 0 7 0 {9 2} {8 12}}
+            9:{IfStmt 0 8 0 {11 2} {9 6}} 10:{ReturnStmt 0 8 0 {13 1} {16 2}} 11:{IntegerLiteral 0 9 5 {0 0} {11 1}}
+            12:{ReturnStmt 0 9 0 {14 1} {13 2}} 13:{UnexposedExpr 0 10 3 {15 1} {0 0}} 14:{UnexposedExpr 0 12 3 {16 1} {0 0}}
+            15:{StringLiteral 7 13 6 {0 0} {0 0}} 16:{StringLiteral 7 14 6 {0 0} {0 0}}
             CursorNameMap:
-            0: 1:sample.c 2:hdr.h 3:HELLOWORLD 4:foo 5:"Hello World!"`,
-		ExpectedGobSize0: 1920,
-		ExpectedGobSize1: 1568,
+            0: 1:sample.c 2:hdr.h 3:HELLO 4:WORLD 5:HELLOWORLD 6:foo 7:"Hello World!"
+            Referenced:
+            5:4 6:4`,
+		ExpectedGobSize0: 2223,
+		ExpectedGobSize1: 1770,
+	},
+	{
+		Name: "hdr_macro_expansion_twice_with_args",
+		Comment: `
+			Nonsensical function but it shows off how the same macro
+			appearing twice is handled by clang.
+            First  MacroExpansion comes with
+            		Extent: sample.c[48:72]
+            		cursor.Extent() HELLOWORLD("hoo", "hum")
+            Second MacroExpansion comes with
+            		Extent: sample.c[81:105]
+            		cursor.Extent() HELLOWORLD("hoo", "hum")
+            ...But...
+			the extents where the macros are expanded don't have the proper end offset. :(
+                    cursor "Hellohoo World!hum"
+                    Kind() StringLiteral
+                    Extent: sample.c[48:48]
+
+                    cursor "Hellohoo World!hum"
+                    Kind() StringLiteral
+                    Extent: sample.c[81:81]
+		`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		HdrCode: `
+			#define HELLO(x) "Hello"x
+			#define WORLD(y) "World!"y
+			#define HELLOWORLD(a, b) HELLO(a) " " WORLD(b)
+			#define BEE "bee"
+			#define HIVE(h) h"hive"
+			`,
+		SrcCode: `
+			char* foo() {if (1) return HELLOWORLD("hoo", "hum"); return HELLOWORLD(BEE, HIVE("_")); }
+			`,
+		ExpectedTopCursors: `
+            HELLO      MacroDefinition IsPreprocessing         Linkage_Invalid 
+            WORLD      MacroDefinition IsPreprocessing         Linkage_Invalid 
+            HELLOWORLD MacroDefinition IsPreprocessing         Linkage_Invalid 
+            BEE        MacroDefinition IsPreprocessing         Linkage_Invalid 
+            HIVE       MacroDefinition IsPreprocessing         Linkage_Invalid 
+            HELLOWORLD MacroExpansion  IsPreprocessing         Linkage_Invalid 
+            HELLOWORLD MacroExpansion  IsPreprocessing         Linkage_Invalid 
+            BEE        MacroExpansion  IsPreprocessing         Linkage_Invalid 
+            HIVE       MacroExpansion  IsPreprocessing         Linkage_Invalid 
+            foo        FunctionDecl    IsDeclaration   SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            HELLO/MacroDefinition 
+            cursor HELLO
+            Kind() MacroDefinition
+            Extent: ./hdr.h[12:29]
+            cursor.Extent() HELLO(x) "Hello"x
+            USR c:hdr.h@12@macro@HELLO
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            WORLD/MacroDefinition 
+            cursor WORLD
+            Kind() MacroDefinition
+            Extent: ./hdr.h[41:59]
+            cursor.Extent() WORLD(y) "World!"y
+            USR c:hdr.h@41@macro@WORLD
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            HELLOWORLD/MacroDefinition 
+            cursor HELLOWORLD
+            Kind() MacroDefinition
+            Extent: ./hdr.h[71:109]
+            cursor.Extent() HELLOWORLD(a, b) HELLO(a) " " WORLD(b)
+            USR c:hdr.h@71@macro@HELLOWORLD
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            BEE/MacroDefinition 
+            cursor BEE
+            Kind() MacroDefinition
+            Extent: ./hdr.h[121:130]
+            cursor.Extent() BEE "bee"
+            USR c:hdr.h@121@macro@BEE
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            HIVE/MacroDefinition 
+            cursor HIVE
+            Kind() MacroDefinition
+            Extent: ./hdr.h[142:157]
+            cursor.Extent() HIVE(h) h"hive"
+            USR c:hdr.h@142@macro@HIVE
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            HELLOWORLD/MacroExpansion 
+            cursor HELLOWORLD
+            Kind() MacroExpansion
+            Extent: sample.c[48:72]
+            cursor.Extent() HELLOWORLD("hoo", "hum")
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() HELLOWORLD ./hdr.h[71:109] kind: MacroDefinition
+
+
+            HELLOWORLD/MacroExpansion 
+            cursor HELLOWORLD
+            Kind() MacroExpansion
+            Extent: sample.c[81:107]
+            cursor.Extent() HELLOWORLD(BEE, HIVE("_"))
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() HELLOWORLD ./hdr.h[71:109] kind: MacroDefinition
+
+
+            BEE/MacroExpansion 
+            cursor BEE
+            Kind() MacroExpansion
+            Extent: sample.c[92:95]
+            cursor.Extent() BEE
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() BEE ./hdr.h[121:130] kind: MacroDefinition
+
+
+            HIVE/MacroExpansion 
+            cursor HIVE
+            Kind() MacroExpansion
+            Extent: sample.c[97:106]
+            cursor.Extent() HIVE("_")
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() HIVE ./hdr.h[142:157] kind: MacroDefinition
+
+
+            foo/FunctionDecl {first-seen:1 FunctionNoProto 'char *()' !POD numargs:0 result:{first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8} align:4 size:1 Variadic}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[21:110]
+            cursor.Extent() char* foo() {if (1) return HELLOWORLD("hoo", "hum"); return HELLOWORLD(BEE, HIVE("_")); }
+            USR c:@F@foo
+            Type() char *()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() char *
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[33:110]
+              cursor.Extent() {if (1) return HELLOWORLD("hoo", "hum"); return HELLOWORLD(BEE, HIVE("_")); }
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . IfStmt:IsStatement 
+                Kind() IfStmt
+                Extent: sample.c[34:48]
+                cursor.Extent() if (1) return 
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . 1/IntegerLiteral:IsLiteral/ {first-seen:4 Int 'int' align:4 size:4}
+                  Kind() IntegerLiteral
+                  Extent: sample.c[38:39]
+                  cursor.Extent() 1
+                  Type() int
+                  Type().Kind() Int
+                  Type().SizeOf() 4
+                  bools for cursor.Kind(): IsExpression
+                  (Availability) Availability_Available
+
+
+            . . . ReturnStmt:IsStatement 
+                  Kind() ReturnStmt
+                  Extent: sample.c[41:48]
+                  cursor.Extent() return 
+                  bools for cursor.Kind(): IsStatement
+                  bools for cursor.Type(): ! IsPODType
+                  (Availability) Availability_Available
+
+
+            . . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                    Kind() UnexposedExpr
+                    Extent: sample.c[48:48]
+                    Type() char *
+                    Type().Kind() Pointer
+                    Type().PointeeType() char
+                    Type().PointeeType().Kind() Char_S
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression IsUnexposed
+                    bools for cursor.Location(): ! IsFromMainFile
+                    (Availability) Availability_Available
+
+
+            . . . . . StringLiteral:IsLiteral:[]/"Hellohoo World!hum" {first-seen:5 ConstantArray 'char [19]' align:1 size:19 len:19 elem:{seen-before:3}}
+                      cursor "Hellohoo World!hum"
+                      Kind() StringLiteral
+                      Extent: sample.c[48:48]
+                      Type() char [19]
+                      Type().Kind() ConstantArray
+                      Type().ElementType() char
+                      Type().ElementType().Kind() Char_S
+                      Type().NumElements() 19
+                      Type().ArrayElementType() char
+                      Type().ArrayElementType().Kind() Char_S
+                      Type().ArraySize() 19
+                      Type().SizeOf() 19
+                      bools for cursor.Kind(): IsExpression
+                      bools for cursor.Location(): ! IsFromMainFile
+                      (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[74:81]
+                cursor.Extent() return 
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                  Kind() UnexposedExpr
+                  Extent: sample.c[81:81]
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+
+
+            . . . . StringLiteral:IsLiteral:["Hello" : Literal, x : Identifier, # : Punctuation, define : Identifier, WORLD : Identifier, ( : Punctuation, y : Identifier, ) : Punctuation, "World!" : Literal, y : Identifier, # : Punctuation, define : Identifier, HELLOWORLD : Identifier, ( : Punctuation, a : Identifier, , : Punctuation, b : Identifier, ) : Punctuation, HELLO : Identifier, ( : Punctuation, a : Identifier, ) : Punctuation, " " : Literal, WORLD : Identifier, ( : Punctuation, b : Identifier, ) : Punctuation, # : Punctuation, define : Identifier, BEE : Identifier, "bee" : Literal, # : Punctuation, define : Identifier, HIVE : Identifier, ( : Punctuation, h : Identifier, ) : Punctuation, h : Identifier, "hive" : Literal]/"Hellobee World!_hive" {first-seen:6 ConstantArray 'char [21]' align:1 size:21 len:21 elem:{seen-before:3}}
+                    cursor "Hellobee World!_hive"
+                    Kind() StringLiteral
+                    Extent: sample.c[81:81]
+                    Type() char [21]
+                    Type().Kind() ConstantArray
+                    Type().ElementType() char
+                    Type().ElementType().Kind() Char_S
+                    Type().NumElements() 21
+                    Type().ArrayElementType() char
+                    Type().ArrayElementType().Kind() Char_S
+                    Type().ArraySize() 21
+                    Type().SizeOf() 21
+                    bools for cursor.Kind(): IsExpression
+                    bools for cursor.Location(): ! IsFromMainFile
+                    (Availability) Availability_Available
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:6 11:10 12:7 13:11 14:12 15:6 16:13 17:14 18:15 19:7 20:16 21:11 22:12 23:6
+            24:17 25:14 26:18 27:6 28:19 29:7 30:7 31:16 32:20 33:21 34:6 35:22 36:7 37:23 38:22 39:24 40:6 41:25 42:7 43:26 44:25
+            45:12 46:6 47:27 48:14 49:28 50:7 51:21 52:6 53:27 54:7 55:29 56:24 57:6 58:28 59:7 60:17 61:30 62:18 63:6 64:31 65:7
+            66:31 67:32
+            TokenMap:
+            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Punctuation 4} 5:{Identifier 5} 6:{Punctuation 6}
+            7:{Punctuation 7} 8:{Punctuation 8} 9:{Keyword 9} 10:{Literal 10} 11:{Keyword 11} 12:{Identifier 12} 13:{Literal 13}
+            14:{Punctuation 14} 15:{Literal 15} 16:{Punctuation 16} 17:{Identifier 17} 18:{Identifier 18} 19:{Literal 19}
+            20:{Punctuation 20} 21:{Identifier 21} 22:{Identifier 22} 23:{Literal 23} 24:{Identifier 24} 25:{Identifier 25}
+            26:{Literal 26} 27:{Identifier 27} 28:{Identifier 28} 29:{Literal 29} 30:{Literal 30} 31:{Identifier 31} 32:{Literal 32}
+            TokenNameMap:
+            0:# 1:include 2:"hdr.h" 3:char 4:* 5:foo 6:( 7:) 8:{ 9:if 10:1 11:return 12:HELLOWORLD 13:"hoo" 14:, 15:"hum" 16:;
+            17:BEE 18:HIVE 19:"_" 20:} 21:HELLO 22:x 23:"Hello" 24:WORLD 25:y 26:"World!" 27:a 28:b 29:" " 30:"bee" 31:h 32:"hive"
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Char_S 0} {Pointer 2} {FunctionNoProto 0} {Int 1} {ConstantArray 0} {ConstantArray 1}]
+                Intrinsics: [{{Char_S} 1 1 char} {{Int} 4 4 int}]
+                Functions: [{{FunctionNoProto} 3 [] char *()}]
+                Arrays: [{21 {2 1 21 char [21]}} {19 {2 1 19 char [19]}}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 11} {0 33}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{MacroDefinition 3 0 0 {0 0} {33 6}}
+            3:{MacroDefinition 4 0 0 {0 0} {39 6}} 4:{MacroDefinition 5 0 0 {0 0} {45 15}} 5:{MacroDefinition 6 0 0 {0 0} {60 2}}
+            6:{MacroDefinition 7 0 0 {0 0} {62 6}} 7:{MacroExpansion 5 0 0 {0 0} {14 6}} 8:{MacroExpansion 5 0 0 {0 0} {22 9}}
+            9:{MacroExpansion 6 0 0 {0 0} {24 1}} 10:{MacroExpansion 7 0 0 {0 0} {26 4}} 11:{FunctionDecl 8 0 4 {12 1} {3 30}}
+            12:{CompoundStmt 0 11 0 {13 2} {8 25}} 13:{IfStmt 0 12 0 {15 2} {9 10}} 14:{ReturnStmt 0 12 0 {17 1} {0 0}}
+            15:{IntegerLiteral 0 13 5 {0 0} {11 1}} 16:{ReturnStmt 0 13 0 {18 1} {13 6}} 17:{UnexposedExpr 0 14 3 {19 1} {37 39}}
+            18:{UnexposedExpr 0 16 3 {20 1} {0 0}} 19:{StringLiteral 9 17 6 {0 0} {37 39}} 20:{StringLiteral 10 18 7 {0 0} {0 0}}
+            CursorNameMap:
+            0: 1:sample.c 2:hdr.h 3:HELLO 4:WORLD 5:HELLOWORLD 6:BEE 7:HIVE 8:foo 9:"Hellobee World!_hive" 10:"Hellohoo World!hum"
+            Referenced:
+            7:4 8:4 9:5 10:6`,
+		ExpectedGobSize0: 2510,
+		ExpectedGobSize1: 2028,
 	},
 	{
 		Name:    "struct_a_b",
@@ -2769,8 +3194,8 @@ var testTupleData = []testTuple{
             0: 1:sample.c 2:StructS 3:VarS 4:a 5:b
             Back:
             5:1`,
-		ExpectedGobSize0: 1833,
-		ExpectedGobSize1: 1497,
+		ExpectedGobSize0: 1869,
+		ExpectedGobSize1: 1507,
 	},
 	{
 		Name:    "typedef_int_II",
@@ -2859,9 +3284,11 @@ var testTupleData = []testTuple{
             0:{TranslationUnit 1 -1 1 {1 2} {0 7}} 1:{TypedefDecl 2 0 3 {0 0} {0 3}} 2:{VarDecl 3 0 3 {3 1} {4 2}}
             3:{TypeRef 2 2 3 {0 0} {4 1}}
             CursorNameMap:
-            0: 1:sample.c 2:II 3:ii`,
-		ExpectedGobSize0: 1706,
-		ExpectedGobSize1: 1387,
+            0: 1:sample.c 2:II 3:ii
+            Referenced:
+            3:1`,
+		ExpectedGobSize0: 1744,
+		ExpectedGobSize1: 1399,
 	},
 	{
 		Name: "typedef_struct_TA",
@@ -2979,9 +3406,11 @@ var testTupleData = []testTuple{
             CursorNameMap:
             0: 1:sample.c 2:TA 3:ss 4:a
             Back:
-            5:1`,
-		ExpectedGobSize0: 1807,
-		ExpectedGobSize1: 1458,
+            5:1
+            Referenced:
+            6:2`,
+		ExpectedGobSize0: 1845,
+		ExpectedGobSize1: 1470,
 	},
 	{
 		Name: "typedefs_two_structs",
@@ -3252,9 +3681,11 @@ var testTupleData = []testTuple{
             CursorNameMap:
             0: 1:sample.c 2:TA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b
             Back:
-            10:1 12:3 16:15`,
-		ExpectedGobSize0: 2076,
-		ExpectedGobSize1: 1625,
+            10:1 12:3 16:15
+            Referenced:
+            13:2 14:2 15:4`,
+		ExpectedGobSize0: 2118,
+		ExpectedGobSize1: 1641,
 	},
 	{
 		Name: "compare_named_struct_with_typedef",
@@ -3491,9 +3922,11 @@ var testTupleData = []testTuple{
             CursorNameMap:
             0: 1:sample.c 2:SA 3:TB 4:x0 5:x1 6:y0 7:y1 8:a 9:b 10:struct SA
             Back:
-            10:2 12:11 14:13`,
-		ExpectedGobSize0: 2051,
-		ExpectedGobSize1: 1622,
+            10:2 12:11 14:13
+            Referenced:
+            11:1 13:3`,
+		ExpectedGobSize0: 2091,
+		ExpectedGobSize1: 1636,
 	},
 	{
 		Name: "compare_named_struct_with_two_typedefs",
@@ -3808,9 +4241,11 @@ var testTupleData = []testTuple{
             CursorNameMap:
             0: 1:sample.c 2:SA 3:TA 4:TB 5:x0 6:x1 7:y0 8:y1 9:z0 10:z1 11:a 12:struct SA 13:b
             Back:
-            14:3 16:15 18:17 20:19`,
-		ExpectedGobSize0: 2383,
-		ExpectedGobSize1: 1891,
+            14:3 16:15 18:17 20:19
+            Referenced:
+            12:1 15:1 17:2 19:4`,
+		ExpectedGobSize0: 2427,
+		ExpectedGobSize1: 1909,
 	},
 	{
 		Name: "cascade_int_pointers",
@@ -4237,7 +4672,9 @@ var testTupleData = []testTuple{
             3:{CompoundStmt 0 1 0 {4 1} {6 8}} 4:{DeclStmt 0 3 0 {5 1} {7 6}} 5:{VarDecl 4 4 5 {6 1} {7 5}}
             6:{DeclRefExpr 3 5 2 {0 0} {10 1}}
             CursorNameMap:
-            0: 1:sample.c 2:foo 3:n 4:arr`,
+            0: 1:sample.c 2:foo 3:n 4:arr
+            Referenced:
+            6:2`,
 	},
 	{
 		Name: "type_enum_anonymous",
@@ -4548,7 +4985,9 @@ var testTupleData = []testTuple{
             3:{VarDecl 4 0 3 {7 1} {12 3}} 4:{EnumConstantDecl 5 1 4 {0 0} {3 1}} 5:{EnumConstantDecl 6 1 4 {0 0} {5 1}}
             6:{TypeRef 7 2 2 {0 0} {9 1}} 7:{TypeRef 7 3 2 {0 0} {13 1}}
             CursorNameMap:
-            0: 1:sample.c 2:MyEnum 3:x 4:y 5:A 6:B 7:enum MyEnum`,
+            0: 1:sample.c 2:MyEnum 3:x 4:y 5:A 6:B 7:enum MyEnum
+            Referenced:
+            6:1 7:1`,
 	},
 	{
 		Name:    "const_and_volatile",
@@ -5462,7 +5901,9 @@ var testTupleData = []testTuple{
             21:{DeclRefExpr 6 17 4 {0 0} {27 1}} 22:{MemberRefExpr 5 19 5 {23 1} {36 3}} 23:{UnexposedExpr 6 22 4 {24 1} {36 1}}
             24:{DeclRefExpr 6 23 4 {0 0} {36 1}}
             CursorNameMap:
-            0: 1:sample.c 2:S 3:foo 4:a 5:b 6:p 7:struct S 8:=`,
+            0: 1:sample.c 2:S 3:foo 4:a 5:b 6:p 7:struct S 8:=
+            Referenced:
+            7:1 11:3 13:4 16:5 17:5 20:5 21:5 22:4 23:5 24:5`,
 	},
 	{
 		Name: "double_assignment",
@@ -5679,7 +6120,9 @@ var testTupleData = []testTuple{
             9:{UnaryOperator 0 7 2 {12 1} {15 2}} 10:{IntegerLiteral 0 7 2 {0 0} {18 1}} 11:{DeclRefExpr 3 8 3 {0 0} {13 1}}
             12:{UnexposedExpr 4 9 3 {13 1} {16 1}} 13:{DeclRefExpr 4 12 3 {0 0} {16 1}}
             CursorNameMap:
-            0: 1:sample.c 2:foo 3:x 4:y 5:=`,
+            0: 1:sample.c 2:foo 3:x 4:y 5:=
+            Referenced:
+            8:2 11:2 12:3 13:3`,
 	},
 	{
 		Name: "global_var_mod",
@@ -5815,7 +6258,9 @@ var testTupleData = []testTuple{
             3:{IntegerLiteral 0 1 2 {0 0} {3 1}} 4:{CompoundStmt 0 2 0 {5 1} {9 5}} 5:{UnaryOperator 0 4 2 {6 1} {10 2}}
             6:{DeclRefExpr 2 5 2 {0 0} {10 1}}
             CursorNameMap:
-            0: 1:sample.c 2:i 3:foo`,
+            0: 1:sample.c 2:i 3:foo
+            Referenced:
+            6:1`,
 	},
 	{
 		Name: "local_var_mod",
@@ -5944,7 +6389,9 @@ var testTupleData = []testTuple{
             3:{DeclStmt 0 2 0 {5 1} {5 5}} 4:{UnaryOperator 0 2 4 {6 1} {10 2}} 5:{VarDecl 3 3 4 {7 1} {5 4}}
             6:{DeclRefExpr 3 4 4 {0 0} {10 1}} 7:{IntegerLiteral 0 5 4 {0 0} {8 1}}
             CursorNameMap:
-            0: 1:sample.c 2:foo 3:i`,
+            0: 1:sample.c 2:foo 3:i
+            Referenced:
+            6:5`,
 	},
 	{
 		Name:    "structs_A_in_hdr_B_in_src",
@@ -6335,5 +6782,274 @@ var testTupleData = []testTuple{
                         (Availability) Availability_Available
                         Referenced() p sample.c[134:145] kind: ParmDecl
 `,
+	},
+	{
+		Name: "macros_with_local_variables",
+		Comment: `
+			Referenced cursor kinds:
+				MacroExpansion -> MacroDefinition
+				MemberRefExpr -> FieldDecl
+				DeclRefExpr -> ParmDecl
+				DeclRefExpr -> VarDecl
+				TypeRef -> TypedefDecl
+				TypeRef -> StructDecl
+				TypeRef -> EnumDecl
+		`,
+		Options: clang.TranslationUnit_DetailedPreprocessingRecord,
+		HdrCode: `
+			#define GETA(x) x->a
+			`,
+		SrcCode: `
+			struct S {
+				char *a;
+			} svar;
+			char* foo()
+			{
+				return GETA((&svar));
+			}
+			`,
+		ExpectedTopCursors: `
+            GETA MacroDefinition IsPreprocessing         Linkage_Invalid 
+            GETA MacroExpansion  IsPreprocessing         Linkage_Invalid 
+            S    StructDecl      IsDeclaration           Linkage_External
+            svar VarDecl         IsDeclaration   SC_None Linkage_External
+            foo  FunctionDecl    IsDeclaration   SC_None Linkage_External`,
+		ExpectedFullCursors: `
+            GETA/MacroDefinition 
+            cursor GETA
+            Kind() MacroDefinition
+            Extent: ./hdr.h[12:24]
+            cursor.Extent() GETA(x) x->a
+            USR c:hdr.h@12@macro@GETA
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            bools for cursor.Location(): ! IsFromMainFile
+            (Availability) Availability_Available
+
+
+            GETA/MacroExpansion 
+            cursor GETA
+            Kind() MacroExpansion
+            Extent: sample.c[87:100]
+            cursor.Extent() GETA((&svar))
+            bools for cursor.Kind(): IsPreprocessing
+            bools for cursor.Type(): ! IsPODType
+            (Availability) Availability_Available
+            Referenced() GETA ./hdr.h[12:24] kind: MacroDefinition
+
+
+            S/StructDecl {first-seen:1 Record 'struct S' align:8 size:8}
+            cursor S
+            Kind() StructDecl
+            Extent: sample.c[21:49]
+            cursor.Extent() struct S {
+            				char *a;
+            			}
+            USR c:@S@S
+            Type() struct S
+            Type().Kind() Record
+            Type().Declaration() S
+            Type().SizeOf() 8
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+
+
+            . a/FieldDecl {first-seen:2 Pointer 'char *' *{first-seen:3 Char_S 'char' align:1 size:1} align:8 size:8}
+              cursor a
+              Kind() FieldDecl
+              Extent: sample.c[36:43]
+              cursor.Extent() char *a
+              USR c:@S@S@FI@a
+              Type() char *
+              Type().Kind() Pointer
+              Type().PointeeType() char
+              Type().PointeeType().Kind() Char_S
+              Type().SizeOf() 8
+              bools for cursor: IsCursorDefinition
+              bools for cursor.Kind(): IsDeclaration
+              (Availability) Availability_Available
+              OffsetOfField() 0
+
+
+            svar/VarDecl {first-seen:4 Elaborated 'struct S' Canon:{seen-before:1} align:8 size:8}
+            cursor svar
+            Kind() VarDecl
+            Extent: sample.c[21:54]
+            cursor.Extent() struct S {
+            				char *a;
+            			} svar
+            USR c:@svar
+            Type() struct S
+            Type().Kind() Elaborated
+            Type().CanonicalType() struct S
+            Type().CanonicalType().Kind() Record
+            Type().Declaration() S
+            Type().NamedType() struct S
+            Type().NamedType().Kind() Record
+            Type().SizeOf() 8
+            bools for cursor.Kind(): IsDeclaration
+            (Availability) Availability_Available
+            StorageClass() SC_None
+
+
+            . [2 backreference]
+            foo/FunctionDecl {first-seen:5 FunctionNoProto 'char *()' !POD numargs:0 result:{seen-before:2} align:4 size:1 Variadic}
+            cursor foo
+            Kind() FunctionDecl
+            Extent: sample.c[59:106]
+            cursor.Extent() char* foo()
+            			{
+            				return GETA((&svar));
+            			}
+            USR c:@F@foo
+            Type() char *()
+            Type().Kind() FunctionNoProto
+            Type().ResultType() char *
+            Type().ResultType().Kind() Pointer
+            Type().NumArgTypes() 0
+            Type().SizeOf() 1
+            bools for cursor: IsCursorDefinition
+            bools for cursor.Kind(): IsDeclaration
+            bools for cursor.Type(): IsFunctionTypeVariadic ! IsPODType
+            (Availability) Availability_Available
+            NumArguments() 0
+            ResultType() char *
+            StorageClass() SC_None
+
+
+            . CompoundStmt:IsStatement 
+              Kind() CompoundStmt
+              Extent: sample.c[74:106]
+              cursor.Extent() {
+            				return GETA((&svar));
+            			}
+              bools for cursor.Kind(): IsStatement
+              bools for cursor.Type(): ! IsPODType
+              (Availability) Availability_Available
+
+
+            . . ReturnStmt:IsStatement 
+                Kind() ReturnStmt
+                Extent: sample.c[80:100]
+                cursor.Extent() return GETA((&svar))
+                bools for cursor.Kind(): IsStatement
+                bools for cursor.Type(): ! IsPODType
+                (Availability) Availability_Available
+
+
+            . . . IsUnexposed(UnexposedExpr) {seen-before:2}
+                  cursor a
+                  Kind() UnexposedExpr
+                  Extent: sample.c[87:100]
+                  cursor.Extent() GETA((&svar))
+                  Type() char *
+                  Type().Kind() Pointer
+                  Type().PointeeType() char
+                  Type().PointeeType().Kind() Char_S
+                  Type().SizeOf() 8
+                  bools for cursor.Kind(): IsExpression IsUnexposed
+                  bools for cursor.Location(): ! IsFromMainFile
+                  (Availability) Availability_Available
+                  Referenced() a sample.c[36:43] kind: FieldDecl
+
+
+            . . . . MemberRefExpr:IsExpression:[( : Punctuation, & : Punctuation, svar : Identifier, ) : Punctuation, ) : Punctuation]/a {seen-before:2}
+                    cursor a
+                    Kind() MemberRefExpr
+                    Extent: sample.c[87:100]
+                    cursor.Extent() GETA((&svar))
+                    Type() char *
+                    Type().Kind() Pointer
+                    Type().PointeeType() char
+                    Type().PointeeType().Kind() Char_S
+                    Type().SizeOf() 8
+                    bools for cursor.Kind(): IsExpression
+                    bools for cursor.Location(): ! IsFromMainFile
+                    (Availability) Availability_Available
+                    Referenced() a sample.c[36:43] kind: FieldDecl
+
+
+            . . . . . ParenExpr:IsExpression:[( : Punctuation, & : Punctuation, svar : Identifier, ) : Punctuation]/ {first-seen:6 Pointer 'struct S *' Canon:{first-seen:7 Pointer 'struct S *' *{seen-before:1} align:8 size:8} *{seen-before:4} align:8 size:8}
+                      Kind() ParenExpr
+                      Extent: sample.c[87:87]
+                      Type() struct S *
+                      Type().Kind() Pointer
+                      Type().CanonicalType() struct S *
+                      Type().CanonicalType().Kind() Pointer
+                      Type().PointeeType() struct S
+                      Type().PointeeType().Kind() Elaborated
+                      Type().SizeOf() 8
+                      bools for cursor.Kind(): IsExpression
+                      bools for cursor.Location(): ! IsFromMainFile
+                      (Availability) Availability_Available
+
+
+            . . . . . . UnaryOperator:IsExpression:[& : Punctuation, svar : Identifier]/ {seen-before:6}
+                        Kind() UnaryOperator
+                        Extent: sample.c[87:87]
+                        Type() struct S *
+                        Type().Kind() Pointer
+                        Type().CanonicalType() struct S *
+                        Type().CanonicalType().Kind() Pointer
+                        Type().PointeeType() struct S
+                        Type().PointeeType().Kind() Elaborated
+                        Type().SizeOf() 8
+                        bools for cursor.Kind(): IsExpression
+                        bools for cursor.Location(): ! IsFromMainFile
+                        (Availability) Availability_Available
+
+
+            . . . . . . . DeclRefExpr:IsExpression:[svar : Identifier]/svar {seen-before:4}
+                          cursor svar
+                          Kind() DeclRefExpr
+                          Extent: sample.c[87:87]
+                          Type() struct S
+                          Type().Kind() Elaborated
+                          Type().CanonicalType() struct S
+                          Type().CanonicalType().Kind() Record
+                          Type().Declaration() S
+                          Type().NamedType() struct S
+                          Type().NamedType().Kind() Record
+                          Type().SizeOf() 8
+                          bools for cursor.Kind(): IsExpression
+                          bools for cursor.Location(): ! IsFromMainFile
+                          (Availability) Availability_Available
+                          Referenced() svar sample.c[21:54] kind: VarDecl
+`,
+		ExpectedTUPopulate: `
+            Tokens:
+            0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7 8:8 9:9 10:10 11:11 12:9 13:6 14:7 15:12 16:13 17:14 18:5 19:15 20:16 21:13 22:13 23:17
+            24:11 25:14 26:14 27:9 28:10 29:16 30:13 31:18 32:14 33:18 34:19 35:8
+            TokenMap:
+            0:{Punctuation 0} 1:{Identifier 1} 2:{Literal 2} 3:{Keyword 3} 4:{Identifier 4} 5:{Punctuation 5} 6:{Keyword 6}
+            7:{Punctuation 7} 8:{Identifier 8} 9:{Punctuation 9} 10:{Punctuation 10} 11:{Identifier 11} 12:{Identifier 12}
+            13:{Punctuation 13} 14:{Punctuation 14} 15:{Keyword 15} 16:{Identifier 16} 17:{Punctuation 17} 18:{Identifier 18}
+            19:{Punctuation 19}
+            TokenNameMap:
+            0:# 1:include 2:"hdr.h" 3:struct 4:S 5:{ 6:char 7:* 8:a 9:; 10:} 11:svar 12:foo 13:( 14:) 15:return 16:GETA 17:& 18:x
+            19:->
+            TypeMap:
+            TypeMap{
+                Keys: [{Invalid -1} {Unexposed -1} {Record 0} {Elaborated 2} {Char_S 0} {Pointer 4} {FunctionNoProto 0} {Pointer 3}]
+                Intrinsics: [{{Char_S} 1 1 char}]
+                Records: [{8 8 struct S}]
+                Functions: [{{FunctionNoProto} 5 [] char *()}]
+            }
+            Cursors:
+            0:{TranslationUnit 1 -1 1 {1 6} {0 29}} 1:{InclusionDirective 2 0 0 {0 0} {0 3}} 2:{MacroDefinition 3 0 0 {0 0} {29 7}}
+            3:{MacroExpansion 3 0 0 {0 0} {20 7}} 4:{StructDecl 4 0 2 {7 1} {3 8}} 5:{VarDecl 5 0 3 {8 1} {3 9}}
+            6:{FunctionDecl 6 0 6 {9 1} {13 16}} 7:{FieldDecl 7 4 5 {0 0} {6 3}} 8:{Back 0 5 0 {0 0} {0 0}}
+            9:{CompoundStmt 0 6 0 {10 1} {18 11}} 10:{ReturnStmt 0 9 0 {11 1} {19 8}} 11:{UnexposedExpr 7 10 5 {12 1} {22 5}}
+            12:{MemberRefExpr 7 11 5 {13 1} {22 5}} 13:{ParenExpr 0 12 7 {14 1} {22 4}} 14:{UnaryOperator 0 13 7 {15 1} {23 2}}
+            15:{DeclRefExpr 5 14 3 {0 0} {24 1}}
+            CursorNameMap:
+            0: 1:sample.c 2:hdr.h 3:GETA 4:S 5:svar 6:foo 7:a
+            Back:
+            8:4
+            Referenced:
+            3:2 11:7 12:7 15:5`,
+		ExpectedGobSize0: 2181,
+		ExpectedGobSize1: 1705,
 	},
 }

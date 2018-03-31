@@ -132,7 +132,7 @@ func tokenDescription(tu clang.TranslationUnit, token clang.Token) string {
 // topCursorStrings implements run.TopCursorVisiter and collects cursorString results.
 type topCursorStrings struct {
 	topLevelNamesToSkip map[string]bool
-	sources        ast.Sources
+	sources             ast.Sources
 
 	hdrs []string
 	list []string
@@ -162,7 +162,8 @@ func init() {
 //-- 4.
 // tuParser implements run.TUParser and collects cursorString results.
 type tuParser struct {
-	sources ast.Sources
+	topLevelNamesToSkip map[string]bool
+	sources             ast.Sources
 
 	ast.TranslationUnit // The non clang version of that gets populated from the clang version.
 	err                 error
@@ -172,7 +173,7 @@ type tuParser struct {
 func (x *tuParser) TUParse(tu *clang.TranslationUnit) {
 	ctu := astbridge.ClangTranslationUnit{}
 
-	x.err = ctu.Populate(tu)
+	x.err = ctu.Populate(tu, x.topLevelNamesToSkip)
 	if x.err != nil {
 		return
 	}
@@ -479,6 +480,7 @@ func TestAst(t *testing.T) {
 			}{}
 			tr.topCursorStrings.topLevelNamesToSkip = topLevelNames
 			tr.fullCursorStrings.topLevelNamesToSkip = topLevelNames
+			tr.tuParser.topLevelNamesToSkip = topLevelNames
 
 			tr.topCursorStrings.sources = sources
 			tr.fullCursorStrings.sources = sources
