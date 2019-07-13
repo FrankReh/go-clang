@@ -83,7 +83,7 @@ func (a *StringMap) assertEqualMap(b *StringMap) error {
 	for k, v := range a.m {
 		v2 := b.m[k]
 		if v != v2 {
-			return fmt.Errorf("StringMap unequal map entry, %d %s %s",
+			return fmt.Errorf("StringMap unequal map entry, %s %d %d",
 				k, v, v2)
 		}
 	}

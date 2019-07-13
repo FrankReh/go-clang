@@ -63,7 +63,7 @@ func (a *TokenMap) assertEqualSlice(b *TokenMap) error {
 	for i, v := range a.Tokens {
 		v2 := b.Tokens[i]
 		if v != v2 {
-			return fmt.Errorf("TokenMap unequal slice entry, %d %s %s",
+			return fmt.Errorf("TokenMap unequal slice entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -80,7 +80,7 @@ func (a *TokenMap) assertEqualMap(b *TokenMap) error {
 	for k, v := range a.m {
 		v2 := b.m[k]
 		if v != v2 {
-			return fmt.Errorf("TokenMap unequal map entry, %d %s %s",
+			return fmt.Errorf("TokenMap unequal map entry, %d %#v %#v",
 				k, v, v2)
 		}
 	}

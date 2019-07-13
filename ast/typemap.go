@@ -346,7 +346,7 @@ func (tm *TypeMap) MustAutoKeyIndex(t typekind.Kind) int {
 
 func (tm *TypeMap) Type(i int) (Type, error) {
 	if i < 0 || i >= len(tm.Keys) {
-		return nil, fmt.Errorf("TypeMap.Type(%d) out of range", i, len(tm.Keys)) // TBD change with ast.Error
+		return nil, fmt.Errorf("TypeMap.Type(%d) out of range %d", i, len(tm.Keys)) // TBD change with ast.Error
 	}
 	li := tm.Keys[i].TypeId
 
@@ -523,7 +523,7 @@ func (a *TypeMap) assertEqualKeys(b *TypeMap) error {
 	for i, v := range a.Keys {
 		v2 := b.Keys[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal keys entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal keys entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -538,7 +538,7 @@ func (a *TypeMap) assertEqualIntrinsics(b *TypeMap) error {
 	for i, v := range a.Intrinsics {
 		v2 := b.Intrinsics[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal Intrinsics entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Intrinsics entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -584,7 +584,7 @@ func (a *TypeMap) assertEqualRecords(b *TypeMap) error {
 	for i, v := range a.Records {
 		v2 := b.Records[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal Records entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Records entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -599,7 +599,7 @@ func (a *TypeMap) assertEqualEnums(b *TypeMap) error {
 	for i, v := range a.Enums {
 		v2 := b.Enums[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal Enums entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Enums entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -614,7 +614,7 @@ func (a *TypeMap) assertEqualTypedefs(b *TypeMap) error {
 	for i, v := range a.Typedefs {
 		v2 := b.Typedefs[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal Typedefs entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Typedefs entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -629,7 +629,7 @@ func (a *TypeMap) assertEqualFunctions(b *TypeMap) error {
 	for i, v := range a.Functions {
 		v2 := b.Functions[i]
 		if !v.Equal(v2) {
-			return fmt.Errorf("TypeMap unequal Functions entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Functions entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
@@ -644,7 +644,7 @@ func (a *TypeMap) assertEqualConstantArrays(b *TypeMap) error {
 	for i, v := range a.Arrays {
 		v2 := b.Arrays[i]
 		if v != v2 {
-			return fmt.Errorf("TypeMap unequal Arrays entry, %d %s %s",
+			return fmt.Errorf("TypeMap unequal Arrays entry, %d %#v %#v",
 				i, v, v2)
 		}
 	}
