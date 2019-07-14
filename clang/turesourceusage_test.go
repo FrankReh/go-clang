@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang/clang"
 )
 
 func TestResourceUsage(t *testing.T) {

@@ -3,7 +3,7 @@ package clang
 // #include "./clang-c/Index.h"
 // #include "go-clang.h"
 import "C"
-import "github.com/frankreh/go-clang-v5.0/clang/cursorkind"
+import "github.com/frankreh/go-clang/clang/cursorkind"
 
 /*
 	A semantic string that describes a code-completion result.

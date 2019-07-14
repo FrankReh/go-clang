@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang/clang"
 )
 
 func main() {

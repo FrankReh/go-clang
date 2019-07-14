@@ -6,7 +6,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/frankreh/go-clang-v5.0/clang/typekind"
+	"github.com/frankreh/go-clang/clang/typekind"
 )
 
 // The type of an element in the abstract syntax tree.

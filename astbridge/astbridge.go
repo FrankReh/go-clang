@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/frankreh/go-clang-v5.0/ast"
-	"github.com/frankreh/go-clang-v5.0/clang"
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
-	"github.com/frankreh/go-clang-v5.0/clang/typekind"
+	"github.com/frankreh/go-clang/ast"
+	"github.com/frankreh/go-clang/clang"
+	"github.com/frankreh/go-clang/clang/cursorkind"
+	"github.com/frankreh/go-clang/clang/typekind"
 )
 
 // ClangTranslationUnit references the clang package components.

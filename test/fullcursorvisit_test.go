@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/frankreh/go-clang-v5.0/ast"
-	"github.com/frankreh/go-clang-v5.0/clang"
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
-	"github.com/frankreh/go-clang-v5.0/clang/tokenkind"
-	"github.com/frankreh/go-clang-v5.0/clang/typekind"
-	run "github.com/frankreh/go-clang-v5.0/clangrun"
+	"github.com/frankreh/go-clang/ast"
+	"github.com/frankreh/go-clang/clang"
+	"github.com/frankreh/go-clang/clang/cursorkind"
+	"github.com/frankreh/go-clang/clang/tokenkind"
+	"github.com/frankreh/go-clang/clang/typekind"
+	run "github.com/frankreh/go-clang/clangrun"
 )
 
 //-- 3.
 // fullCursorStrings implements run.FullCursorVisiter and collects cursorString results.
 type fullCursorStrings struct {
 	topLevelNamesToSkip map[string]bool
-	sources        ast.Sources
+	sources             ast.Sources
 
 	depthMap                  map[clang.Cursor]int // 0 When parent is root, -1 when parent is one we are skipping.
 	seenCursors               map[clang.Cursor]int // Cardinal order the cursor was already seen, not descended further.

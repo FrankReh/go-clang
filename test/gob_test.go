@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/frankreh/go-clang-v5.0/ast"
+	"github.com/frankreh/go-clang/ast"
 )
 
 // first_gobtest uses native gob coder and decoder on entire TranslationUnit

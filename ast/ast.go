@@ -11,7 +11,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
+	"github.com/frankreh/go-clang/clang/cursorkind"
 )
 
 // --- 1803 clang ast

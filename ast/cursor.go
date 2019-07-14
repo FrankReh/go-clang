@@ -1,6 +1,6 @@
 package ast
 
-import "github.com/frankreh/go-clang-v5.0/clang/cursorkind"
+import "github.com/frankreh/go-clang/clang/cursorkind"
 
 type IndexPair struct {
 	Head int
