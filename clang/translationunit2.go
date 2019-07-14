@@ -39,6 +39,24 @@ func (tu TranslationUnit) File(fileName string) File {
 	return File{C.clang_getFile(tu.c, c_fileName)}
 }
 
+/*
+ Retrieve the buffer associated with the given file.
+
+ Parameter tu the translation unit
+
+ Parameter file the file for which to retrieve the buffer.
+
+ Parameter size [out] if non-NULL, will be set to the size of the buffer.
+
+ Returns a pointer to the buffer in memory that holds the contents of
+ file, or a NULL pointer when the file is not loaded.
+*/
+func (tu TranslationUnit) FileContents(file File) []byte {
+	var c_size C.size_t
+	c_buf := C.clang_getFileContents(tu.c, file.c, &c_size)
+	return C.GoBytes(unsafe.Pointer(c_buf), C.int(c_size))
+}
+
 // Retrieves the source location associated with a given file/line/column in a particular translation unit.
 func (tu TranslationUnit) Location(file File, line uint32, column uint32) SourceLocation {
 	return SourceLocation{C.clang_getLocation(tu.c, file.c, C.uint(line), C.uint(column))}

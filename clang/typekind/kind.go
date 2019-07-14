@@ -47,8 +47,9 @@ const (
 	ObjCSel      Kind = 29
 	Float128     Kind = 30
 	Half         Kind = 31
+	Float16      Kind = 32
 	FirstBuiltin Kind = Void
-	LastBuiltin  Kind = Half
+	LastBuiltin  Kind = Float16
 
 	Complex             Kind = 100
 	Pointer             Kind = 101
@@ -126,7 +127,7 @@ const (
 func Validate(i int) (Kind, error) {
 	// switch logic taken from stringer output.
 	switch {
-	case 0 <= i && i <= 31:
+	case 0 <= i && i <= 32:
 		return Kind(i), nil
 	case 100 <= i && i <= 160:
 		return Kind(i), nil

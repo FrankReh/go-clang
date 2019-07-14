@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 /*===-- clang-c/CXString.h - C Index strings  --------------------*- C -*-===*\
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|
@@ -38,7 +36,7 @@ extern "C" {
  * with the string data, call \c clang_disposeString() to free the string.
  */
 typedef struct {
-  uintptr_t data;
+  const void *data;
   unsigned private_flags;
 } CXString;
 

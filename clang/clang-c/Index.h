@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 /*===-- clang-c/Index.h - Indexing Public C Interface -------------*- C -*-===*\
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|
@@ -34,7 +32,7 @@
  * compatible, thus CINDEX_VERSION_MAJOR is expected to remain stable.
  */
 #define CINDEX_VERSION_MAJOR 0
-#define CINDEX_VERSION_MINOR 43
+#define CINDEX_VERSION_MINOR 45
 
 #define CINDEX_VERSION_ENCODE(major, minor) ( \
       ((major) * 10000)                       \
@@ -336,6 +334,16 @@ CINDEX_LINKAGE void clang_CXIndex_setGlobalOptions(CXIndex, unsigned options);
 CINDEX_LINKAGE unsigned clang_CXIndex_getGlobalOptions(CXIndex);
 
 /**
+ * \brief Sets the invocation emission path option in a CXIndex.
+ *
+ * The invocation emission path specifies a path which will contain log
+ * files for certain libclang invocations. A null value (default) implies that
+ * libclang invocations are not logged..
+ */
+CINDEX_LINKAGE void
+clang_CXIndex_setInvocationEmissionPathOption(CXIndex, const char *Path);
+
+/**
  * \defgroup CINDEX_FILES File manipulation routines
  *
  * @{
@@ -396,6 +404,21 @@ CINDEX_LINKAGE CXFile clang_getFile(CXTranslationUnit tu,
                                     const char *file_name);
 
 /**
+ * \brief Retrieve the buffer associated with the given file.
+ *
+ * \param tu the translation unit
+ *
+ * \param file the file for which to retrieve the buffer.
+ *
+ * \param size [out] if non-NULL, will be set to the size of the buffer.
+ *
+ * \returns a pointer to the buffer in memory that holds the contents of
+ * \p file, or a NULL pointer when the file is not loaded.
+ */
+CINDEX_LINKAGE const char *clang_getFileContents(CXTranslationUnit tu,
+                                                 CXFile file, size_t *size);
+
+/**
  * \brief Returns non-zero if the \c file1 and \c file2 point to the same file,
  * or they are both NULL.
  */
@@ -426,7 +449,7 @@ CINDEX_LINKAGE int clang_File_isEqual(CXFile file1, CXFile file2);
  * to map a source location to a particular file, line, and column.
  */
 typedef struct {
-  uintptr_t ptr_data[2];
+  const void *ptr_data[2];
   unsigned int_data;
 } CXSourceLocation;
 
@@ -437,7 +460,7 @@ typedef struct {
  * starting and end locations from a source range, respectively.
  */
 typedef struct {
-  uintptr_t ptr_data[2];
+  const void *ptr_data[2];
   unsigned begin_int_data;
   unsigned end_int_data;
 } CXSourceRange;
@@ -1608,7 +1631,7 @@ typedef struct CXTUResourceUsageEntry {
   */
 typedef struct CXTUResourceUsage {
   /* \brief Private data member, used for queries. */
-  uintptr_t data;
+  void *data;
 
   /* \brief The number of entries in the 'entries' array. */
   unsigned numEntries;
@@ -2571,7 +2594,7 @@ enum CXCursorKind {
 typedef struct {
   enum CXCursorKind kind;
   int xdata;
-  uintptr_t data[3];
+  const void *data[3];
 } CXCursor;
 
 /**
@@ -2837,6 +2860,22 @@ enum CXLanguageKind {
  * \brief Determine the "language" of the entity referred to by a given cursor.
  */
 CINDEX_LINKAGE enum CXLanguageKind clang_getCursorLanguage(CXCursor cursor);
+
+/**
+ * \brief Describe the "thread-local storage (TLS) kind" of the declaration
+ * referred to by a cursor.
+ */
+enum CXTLSKind {
+  CXTLS_None = 0,
+  CXTLS_Dynamic,
+  CXTLS_Static
+};
+
+/**
+ * \brief Determine the "thread-local storage (TLS) kind" of the declaration
+ * referred to by a cursor.
+ */
+CINDEX_LINKAGE enum CXTLSKind clang_getCursorTLSKind(CXCursor cursor);
 
 /**
  * \brief Returns the translation unit that a cursor originated from.
@@ -3117,8 +3156,9 @@ enum CXTypeKind {
   CXType_ObjCSel = 29,
   CXType_Float128 = 30,
   CXType_Half = 31,
+  CXType_Float16 = 32,
   CXType_FirstBuiltin = CXType_Void,
-  CXType_LastBuiltin  = CXType_Half,
+  CXType_LastBuiltin  = CXType_Float16,
 
   CXType_Complex = 100,
   CXType_Pointer = 101,
@@ -3226,7 +3266,7 @@ enum CXCallingConv {
  */
 typedef struct {
   enum CXTypeKind kind;
-  uintptr_t data[2];
+  void *data[2];
 } CXType;
 
 /**
@@ -4278,6 +4318,12 @@ CINDEX_LINKAGE CXString clang_Cursor_getMangling(CXCursor);
 CINDEX_LINKAGE CXStringSet *clang_Cursor_getCXXManglings(CXCursor);
 
 /**
+ * \brief Retrieve the CXStrings representing the mangled symbols of the ObjC
+ * class interface or implementation at the cursor.
+ */
+CINDEX_LINKAGE CXStringSet *clang_Cursor_getObjCManglings(CXCursor);
+
+/**
  * @}
  */
 
@@ -4419,6 +4465,12 @@ CINDEX_LINKAGE unsigned clang_CXXMethod_isStatic(CXCursor C);
  * one of the base classes.
  */
 CINDEX_LINKAGE unsigned clang_CXXMethod_isVirtual(CXCursor C);
+
+/**
+ * \brief Determine if a C++ record is abstract, i.e. whether a class or struct
+ * has a pure virtual member function.
+ */
+CINDEX_LINKAGE unsigned clang_CXXRecord_isAbstract(CXCursor C);
 
 /**
  * \brief Determine if an enum declaration refers to a scoped enum.
@@ -4577,7 +4629,7 @@ typedef enum CXTokenKind {
  */
 typedef struct {
   unsigned int_data[4];
-  uintptr_t ptr_data;
+  void *ptr_data;
 } CXToken;
 
 /**
@@ -5609,7 +5661,7 @@ enum CXVisitorResult {
 };
 
 typedef struct CXCursorAndRangeVisitor {
-  uintptr_t context;
+  void *context;
   enum CXVisitorResult (*visit)(void *context, CXCursor, CXSourceRange);
 } CXCursorAndRangeVisitor;
 
@@ -5706,7 +5758,7 @@ typedef void *CXIdxClientASTFile;
  * \brief Source location passed to index callbacks.
  */
 typedef struct {
-  uintptr_t ptr_data[2];
+  void *ptr_data[2];
   unsigned int_data;
 } CXIdxLoc;
 

@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 /*==-- clang-c/BuildSystem.h - Utilities for use by build systems -*- C -*-===*\
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|

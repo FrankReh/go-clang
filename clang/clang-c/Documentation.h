@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 /*==-- clang-c/Documentation.h - Utilities for comment processing -*- C -*-===*\
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|
@@ -37,7 +35,7 @@ extern "C" {
  * \brief A parsed comment.
  */
 typedef struct {
-  uintptr_t ASTNode;
+  const void *ASTNode;
   CXTranslationUnit TranslationUnit;
 } CXComment;
 

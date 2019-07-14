@@ -96,6 +96,24 @@ func (i Index) GlobalOptions() GlobalOptFlags {
 }
 
 /*
+	Sets the invocation emission path option in a CXIndex.
+
+	The invocation emission path specifies a path which will contain log
+	files for certain libclang invocations. A null value (default) implies that
+	libclang invocations are not logged..
+*/
+func (i Index) SetInvocationEmissionPathOption(path string) {
+	if path == "" {
+		C.clang_CXIndex_setInvocationEmissionPathOption(i.c, nil)
+		return
+	}
+	c_path := C.CString(path)
+	defer C.free(unsafe.Pointer(c_path))
+
+	C.clang_CXIndex_setInvocationEmissionPathOption(i.c, c_path)
+}
+
+/*
 	Return the CXTranslationUnit for a given source file and the provided
 	command line arguments one would pass to the compiler.
 

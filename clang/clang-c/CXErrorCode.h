@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 /*===-- clang-c/CXErrorCode.h - C Index Error Codes  --------------*- C -*-===*\
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|

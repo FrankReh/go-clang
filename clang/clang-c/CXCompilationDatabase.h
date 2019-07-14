@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 /*===-- clang-c/CXCompilationDatabase.h - Compilation database  ---*- C -*-===*\
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|
