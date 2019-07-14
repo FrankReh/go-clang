@@ -1,6 +1,6 @@
 # frankreh/go-clang-v5.0 
 
-Native Go bindings for Clang's C API (for versions 5.0.0 and 5.0.1).
+Native Go bindings for Clang's C API (for versions 5.0.0, 5.0.1, and 6.0).
 
 ## Alpha
 
@@ -9,9 +9,10 @@ albeit minor ones, that would break some compiles.
 
 ## Forked
 
-Forked from [https://github.com/go-clang/v3.9](https://github.com/go-clang/v3.9).
+Forked from [https://github.com/go-clang/v3.9](https://github.com/go-clang/v3.9) some years ago.
 
-This version has incorporated the clang-c headers from 5.0.0 and comes with some necessary changes as a result.
+This first incorporated the clang-c headers from 5.0.0 and came with
+some necessary changes as a result.
 Some bug fixes and some API changes are also included.
 
 The git log will show what has changed. Or the quick way for users of previous versions to incorporate this
@@ -34,7 +35,10 @@ As before, an example on how to use the AST visitor of the Clang API can be foun
 The v3.9 bindings were used as a base.
 The gen tool from github.com/go-clang was also used on the 3.9 headers to get a sense for what had to be manually changed when the v3.9 repository was created.
 The gen tool was used on the new headers which saved a considerable amount of time.
-Finally a diff between 5.0 and 3.9 headers was done to see how the libclang API had changed and what might need to be accounted for manually.
+A diff between 5.0 and 3.9 headers was done to see how the libclang API had changed and what might need to be accounted for manually.
+
+No the clang-c include files from 6.0 has prompted further additions.
+
 
 ## Build and run self tests.
 
