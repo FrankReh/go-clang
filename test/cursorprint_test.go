@@ -5,11 +5,11 @@ import (
 	//"io/ioutil"
 	"strings"
 
-	"github.com/frankreh/go-clang-v5.0/ast"
-	"github.com/frankreh/go-clang-v5.0/clang"
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
-	//"github.com/frankreh/go-clang-v5.0/clang/tokenkind"
-	"github.com/frankreh/go-clang-v5.0/clang/typekind"
+	"github.com/frankreh/go-clang/ast"
+	"github.com/frankreh/go-clang/clang"
+	"github.com/frankreh/go-clang/clang/cursorkind"
+	//"github.com/frankreh/go-clang/clang/tokenkind"
+	"github.com/frankreh/go-clang/clang/typekind"
 )
 
 // TBD move SourcesUnsavedFiles to clangrun package perhaps, or clangbridge.
@@ -32,7 +32,7 @@ func (s *SourcesUnsavedFiles) Extract(file string, soffset, eoffset int) (string
 	// Since the file wasn't found, build the list of filenames for the error.
 	var f []string
 	for i := range s.unsavedFiles {
-		f = append(f,  s.unsavedFiles[i].Filename())
+		f = append(f, s.unsavedFiles[i].Filename())
 	}
 	return "", fmt.Errorf("file not found in buffers: %s, %v", file, f)
 }
@@ -450,10 +450,10 @@ func (sr *SourceRange) ExtractString(sources ast.Sources) (string, error) {
 		return "", fmt.Errorf("ExtractString: sr.file is null")
 	}
 	if sr.soffset > sr.eoffset {
-		return "", fmt.Errorf("ExtractString: soffset > eoffset, %d, %d", sr.soffset ,sr.eoffset)
+		return "", fmt.Errorf("ExtractString: soffset > eoffset, %d, %d", sr.soffset, sr.eoffset)
 	}
-	s, err :=   sources.Extract(sr.file, int(sr.soffset), int(sr.eoffset))
-	return   s, err
+	s, err := sources.Extract(sr.file, int(sr.soffset), int(sr.eoffset))
+	return s, err
 
 	/*
 		buf, err := ioutil.ReadFile(sr.file)
@@ -509,8 +509,8 @@ func (m *MacroExpansions) Add(cursor clang.Cursor, sources ast.Sources) error {
 	// Only add if it would introduce a new extent since the only thing being
 	// matched up so far is the extent.
 	extent, err := extentsource(cursor, sources)
-	if  err != nil {
-		return  err
+	if err != nil {
+		return err
 	}
 	if _, err := m.find(extent); err != nil {
 		m.me = append(m.me,
@@ -539,7 +539,7 @@ func (m *MacroExpansions) find(extent string) (int, error) {
 func (m *MacroExpansions) Find(cursor clang.Cursor, sources ast.Sources) (int, error) {
 	if !cursor.Location().IsFromMainFile() {
 		s, err := extentsource(cursor, sources)
-		if  err != nil {
+		if err != nil {
 			return -1, err
 		}
 		return m.find(s)

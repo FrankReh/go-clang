@@ -4,7 +4,7 @@ import (
 	"encoding/gob"
 	"io"
 
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
+	"github.com/frankreh/go-clang/clang/cursorkind"
 )
 
 func (tu *TranslationUnit) EncodeGobV1(w io.Writer) error {

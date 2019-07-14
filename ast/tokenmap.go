@@ -3,7 +3,7 @@ package ast
 import (
 	"fmt"
 
-	"github.com/frankreh/go-clang-v5.0/clang/tokenkind"
+	"github.com/frankreh/go-clang/clang/tokenkind"
 )
 
 // Token is the pure Go version of the clang Token.

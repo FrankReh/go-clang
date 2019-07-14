@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/frankreh/go-clang-v5.0/clang/typekind"
+	"github.com/frankreh/go-clang/clang/typekind"
 )
 
 // TypeKey keys a single index int to a kind of type and the

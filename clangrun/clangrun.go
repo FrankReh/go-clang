@@ -16,7 +16,7 @@ package clangrun
 import (
 	"fmt"
 
-	"github.com/frankreh/go-clang-v5.0/clang"
+	"github.com/frankreh/go-clang/clang"
 )
 
 // Define four interfaces, matching the four forms of translation unit visiting
@@ -167,7 +167,7 @@ func BuildUnsavedFiles(hdrCode, srcCode string) []clang.UnsavedFile {
 		// But the lookup performed by the Sources.Extract() wants to match filenames exactly.
 		hdrFilename := "hdr.h"
 
-		r = append(r, clang.NewUnsavedFile("./" + hdrFilename, hdrCode))          // 1. unsaved file for header
+		r = append(r, clang.NewUnsavedFile("./"+hdrFilename, hdrCode))     // 1. unsaved file for header
 		srcCode = fmt.Sprintf("#include \"%s\"\n%s", hdrFilename, srcCode) // 2. include header in source
 	}
 

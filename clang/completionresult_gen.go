@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"unsafe"
 
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
+	"github.com/frankreh/go-clang/clang/cursorkind"
 )
 
 // A single result of code completion.

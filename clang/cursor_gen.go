@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"unsafe"
 
-	"github.com/frankreh/go-clang-v5.0/clang/cursorkind"
-	"github.com/frankreh/go-clang-v5.0/clang/tls"
+	"github.com/frankreh/go-clang/clang/cursorkind"
+	"github.com/frankreh/go-clang/clang/tls"
 )
 
 /*

@@ -1,4 +1,3 @@
-# frankreh/go-clang-v5.0 
 
 Native Go bindings for Clang's C API (for versions 5.0.0, 5.0.1, and 6.0).
 
