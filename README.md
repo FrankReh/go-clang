@@ -1,10 +1,13 @@
 
-Native Go bindings for Clang's C API (for versions 5.0.0, 5.0.1, and 6.0).
+Native Go bindings for Clang's C API (libclang) for versions 5.0, 6.0, 7.0 and 8.0.
+
+Refer to https://llvm.org for the latest clang versions and documentation.
 
 ## Alpha
 
-This should still be considered alpha as there are some API changes coming,
-albeit minor ones, that would break some compiles.
+This should still be considered alpha as the API deserves further cleanup.
+The *error* go type should be used more extensively. Enum types typically have
+an *Invalid* value which should be used to trigger an error return.
 
 ## Forked
 
@@ -25,7 +28,7 @@ As with that repository, this comes with a liberal license and users are free to
 
 Usage hasn't changed drastically. Some return types have changed so that some Dispose calls could be done away with.
 Some return error values have been changed to be more go idiomatic. In at least one case, a routine's return values
-are swapped so the error result is second.
+were swapped so the error result is second.
 
 As before, an example on how to use the AST visitor of the Clang API can be found in [/cmd/go-clang-dump/main.go](/cmd/go-clang-dump/main.go)
 
@@ -36,8 +39,9 @@ The gen tool from github.com/go-clang was also used on the 3.9 headers to get a 
 The gen tool was used on the new headers which saved a considerable amount of time.
 A diff between 5.0 and 3.9 headers was done to see how the libclang API had changed and what might need to be accounted for manually.
 
-No the clang-c include files from 6.0 has prompted further additions.
+Support for clang 6.0, 7.0, and 8.0 was added by hand by looking at the differences to the clang-c headers from one version to the next.
 
+Unit tests were not added to keep up with the changes so the new code is largely untested.
 
 ## Build and run self tests.
 
@@ -60,9 +64,13 @@ Once you have downloaded the repository:
   cd ../go-clang-includes
   go build
   go test
+
+  cd ../go-clang-globals
+  go build
+  go test
 ```
 
-## Platforms tested.
+## Older platforms tested.
 
 | Platform | clang+llvm |
 | --- | --- |
@@ -71,7 +79,15 @@ Once you have downloaded the repository:
 | 4.9 Debian | clang+llvm 5.0.1 built for Debian8 |
 | 11 FreeBSD | clang+llvm 5.0.1 built for FreeBSD10 |
 
-All builds done with go1.10. This was also found to build and test successfully with the new vgo command.
+All builds done with go1.10. At the time, this was also found to build and test successfully with the new vgo command.
+
+## Current platform tested.
+
+| Platform | clang+llvm |
+| --- | --- |
+| 10.14.5 Darwin | clang+llvm 8.0.0 |
+
+Built with with go1.12.7.
 
 # License
 
