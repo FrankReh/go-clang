@@ -367,6 +367,33 @@ func (tu TranslationUnit) Tokenize(r SourceRange) []Token {
 }
 
 /*
+	Get the raw lexical token starting with the given location.
+
+	TU the translation unit whose text is being tokenized.
+
+	Location the source location with which the token starts.
+
+	Returns The token starting with the given location or NULL if no such token
+	exist. The returned pointer must be freed with clang_disposeTokens before the
+	translation unit is destroyed.
+*/
+func (tu TranslationUnit) Token(s SourceLocation) *Token {
+	var cp_token *C.CXToken
+
+	cp_token = C.clang_getToken(tu.c, s.c)
+
+	if cp_token == nil {
+		return nil
+	}
+	token := &Token{*cp_token}
+
+	C.clang_disposeTokens(tu.c, cp_token, 1)
+
+	return token
+}
+
+
+/*
 	Perform code completion at a given location in a translation unit.
 
 	This function performs code completion at a particular file, line, and
@@ -443,12 +470,11 @@ func (tu TranslationUnit) CodeCompleteAt(completeFilename string, completeLine u
 
 	o := C.clang_codeCompleteAt(tu.c, c_completeFilename, C.uint(completeLine), C.uint(completeColumn), cp_unsavedFiles, C.uint(len(unsavedFiles)), C.uint(options))
 
-	var gop_o *CodeCompleteResults
-	if o != nil {
-		gop_o = &CodeCompleteResults{o}
+	if o == nil {
+		return nil
 	}
 
-	return gop_o
+	return &CodeCompleteResults{o}
 }
 
 /*

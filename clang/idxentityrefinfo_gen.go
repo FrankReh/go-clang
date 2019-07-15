@@ -24,14 +24,10 @@ func (ieri IdxEntityRefInfo) Loc() IdxLoc {
 
 // The entity that gets referenced.
 func (ieri IdxEntityRefInfo) ReferencedEntity() *IdxEntityInfo {
-	o := ieri.c.referencedEntity
-
-	var gop_o *IdxEntityInfo
-	if o != nil {
-		gop_o = &IdxEntityInfo{o}
+	if o := ieri.c.referencedEntity; o != nil {
+		return &IdxEntityInfo{o}
 	}
-
-	return gop_o
+	return nil
 }
 
 /*
@@ -46,24 +42,21 @@ func (ieri IdxEntityRefInfo) ReferencedEntity() *IdxEntityInfo {
 	the parentEntity will be the function/method.
 */
 func (ieri IdxEntityRefInfo) ParentEntity() *IdxEntityInfo {
-	o := ieri.c.parentEntity
-
-	var gop_o *IdxEntityInfo
-	if o != nil {
-		gop_o = &IdxEntityInfo{o}
+	if o := ieri.c.parentEntity; o != nil {
+		return &IdxEntityInfo{o}
 	}
-
-	return gop_o
+	return nil
 }
 
 // Lexical container context of the reference.
 func (ieri IdxEntityRefInfo) Container() *IdxContainerInfo {
-	o := ieri.c.container
-
-	var gop_o *IdxContainerInfo
-	if o != nil {
-		gop_o = &IdxContainerInfo{o}
+	if o := ieri.c.container; o != nil {
+		return &IdxContainerInfo{o}
 	}
+	return nil
+}
 
-	return gop_o
+// Sets of symbol roles of the reference.
+func (ieri IdxEntityRefInfo) Role() SymbolRole {
+	return SymbolRole(ieri.c.role)
 }

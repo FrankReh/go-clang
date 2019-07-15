@@ -728,6 +728,20 @@ func (c Cursor) IsCursorDefinition() bool {
 }
 
 /*
+	Determine whether the given declaration is invalid.
+
+	A declaration is invalid if it could not be parsed successfully.
+
+	Returns non-zero if the cursor represents a declaration and it is invalid,
+	otherwise NULL.
+*/
+func (c Cursor) IsInvalidDeclaration() bool {
+	o := C.clang_isInvalidDeclaration(c.c)
+
+	return o != C.uint(0)
+}
+
+/*
 	Retrieve the canonical cursor corresponding to the given cursor.
 
 	In the C family of languages, many kinds of entities can be declared several

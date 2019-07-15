@@ -17,8 +17,8 @@ esac
 . env.sh
 
 cd clang
-go install
-go test
+go install ./...
+go test ./...
 
 cd ../cmd/go-clang-dump
 go build

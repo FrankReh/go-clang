@@ -121,4 +121,12 @@ const (
 		Sets the preprocessor in a mode for parsing a single file only.
 	*/
 	TranslationUnit_SingleFileParse TranslationUnit_Flags = C.CXTranslationUnit_SingleFileParse
+
+	/*
+		Used in combination with CXTranslationUnit_SkipFunctionBodies to
+		constrain the skipping of function bodies to the preamble.
+
+		The function bodies of the main file are not skipped.
+	*/
+	TranslationUnit_LimitSkipFunctionBodiesToPreamble TranslationUnit_Flags = C.CXTranslationUnit_LimitSkipFunctionBodiesToPreamble
 )

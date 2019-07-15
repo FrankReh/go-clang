@@ -48,8 +48,14 @@ const (
 	Float128     Kind = 30
 	Half         Kind = 31
 	Float16      Kind = 32
+	ShortAccum   Kind = 33
+	Accum        Kind = 34
+	LongAccum    Kind = 35
+	UShortAccum  Kind = 36
+	UAccum       Kind = 37
+	ULongAccum   Kind = 38
 	FirstBuiltin Kind = Void
-	LastBuiltin  Kind = Float16
+	LastBuiltin  Kind = ULongAccum
 
 	Complex             Kind = 100
 	Pointer             Kind = 101
@@ -125,11 +131,10 @@ const (
 )
 
 func Validate(i int) (Kind, error) {
-	// switch logic taken from stringer output.
 	switch {
-	case 0 <= i && i <= 32:
+	case 0 <= i && i <= int(LastBuiltin):
 		return Kind(i), nil
-	case 100 <= i && i <= 160:
+	case int(Complex) <= i && i <= int(OCLReserveID):
 		return Kind(i), nil
 	default:
 		return 0, InvalidErr

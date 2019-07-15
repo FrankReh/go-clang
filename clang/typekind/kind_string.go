@@ -41,8 +41,14 @@ func _() {
 	_ = x[Float128-30]
 	_ = x[Half-31]
 	_ = x[Float16-32]
+	_ = x[ShortAccum-33]
+	_ = x[Accum-34]
+	_ = x[LongAccum-35]
+	_ = x[UShortAccum-36]
+	_ = x[UAccum-37]
+	_ = x[ULongAccum-38]
 	_ = x[FirstBuiltin-2]
-	_ = x[LastBuiltin-32]
+	_ = x[LastBuiltin-38]
 	_ = x[Complex-100]
 	_ = x[Pointer-101]
 	_ = x[BlockPointer-102]
@@ -107,18 +113,18 @@ func _() {
 }
 
 const (
-	_Kind_name_0 = "InvalidUnexposedVoidBoolChar_UUCharChar16Char32UShortUIntULongULongLongUInt128Char_SSCharWCharShortIntLongLongLongInt128FloatDoubleLongDoubleNullPtrOverloadDependentObjCIdObjCClassObjCSelFloat128HalfFloat16"
+	_Kind_name_0 = "InvalidUnexposedVoidBoolChar_UUCharChar16Char32UShortUIntULongULongLongUInt128Char_SSCharWCharShortIntLongLongLongInt128FloatDoubleLongDoubleNullPtrOverloadDependentObjCIdObjCClassObjCSelFloat128HalfFloat16ShortAccumAccumLongAccumUShortAccumUAccumULongAccum"
 	_Kind_name_1 = "ComplexPointerBlockPointerLValueReferenceRValueReferenceRecordEnumTypedefObjCInterfaceObjCObjectPointerFunctionNoProtoFunctionProtoConstantArrayVectorIncompleteArrayVariableArrayDependentSizedArrayMemberPointerAutoElaboratedPipeOCLImage1dROOCLImage1dArrayROOCLImage1dBufferROOCLImage2dROOCLImage2dArrayROOCLImage2dDepthROOCLImage2dArrayDepthROOCLImage2dMSAAROOCLImage2dArrayMSAAROOCLImage2dMSAADepthROOCLImage2dArrayMSAADepthROOCLImage3dROOCLImage1dWOOCLImage1dArrayWOOCLImage1dBufferWOOCLImage2dWOOCLImage2dArrayWOOCLImage2dDepthWOOCLImage2dArrayDepthWOOCLImage2dMSAAWOOCLImage2dArrayMSAAWOOCLImage2dMSAADepthWOOCLImage2dArrayMSAADepthWOOCLImage3dWOOCLImage1dRWOCLImage1dArrayRWOCLImage1dBufferRWOCLImage2dRWOCLImage2dArrayRWOCLImage2dDepthRWOCLImage2dArrayDepthRWOCLImage2dMSAARWOCLImage2dArrayMSAARWOCLImage2dMSAADepthRWOCLImage2dArrayMSAADepthRWOCLImage3dRWOCLSamplerOCLEventOCLQueueOCLReserveID"
 )
 
 var (
-	_Kind_index_0 = [...]uint8{0, 7, 16, 20, 24, 30, 35, 41, 47, 53, 57, 62, 71, 78, 84, 89, 94, 99, 102, 106, 114, 120, 125, 131, 141, 148, 156, 165, 171, 180, 187, 195, 199, 206}
+	_Kind_index_0 = [...]uint16{0, 7, 16, 20, 24, 30, 35, 41, 47, 53, 57, 62, 71, 78, 84, 89, 94, 99, 102, 106, 114, 120, 125, 131, 141, 148, 156, 165, 171, 180, 187, 195, 199, 206, 216, 221, 230, 241, 247, 257}
 	_Kind_index_1 = [...]uint16{0, 7, 14, 26, 41, 56, 62, 66, 73, 86, 103, 118, 131, 144, 150, 165, 178, 197, 210, 214, 224, 228, 240, 257, 275, 287, 304, 321, 343, 359, 380, 401, 427, 439, 451, 468, 486, 498, 515, 532, 554, 570, 591, 612, 638, 650, 662, 679, 697, 709, 726, 743, 765, 781, 802, 823, 849, 861, 871, 879, 887, 899}
 )
 
 func (i Kind) String() string {
 	switch {
-	case 0 <= i && i <= 32:
+	case 0 <= i && i <= 38:
 		return _Kind_name_0[_Kind_index_0[i]:_Kind_index_0[i+1]]
 	case 100 <= i && i <= 160:
 		i -= 100

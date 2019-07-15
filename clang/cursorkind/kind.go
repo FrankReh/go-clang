@@ -429,6 +429,10 @@ const (
 	 */
 	ObjCAvailabilityCheckExpr Kind = 148
 
+	/** Fixed point literal
+	 */
+	FixedPointLiteral = 149
+
 	/* Statements */
 	/**
 	 * A statement whose specific kind is not exposed via this
@@ -849,7 +853,7 @@ const (
 	FirstInvalid       Kind = InvalidFile
 	LastInvalid        Kind = InvalidCode
 	FirstExpr          Kind = UnexposedExpr
-	LastExpr           Kind = ObjCAvailabilityCheckExpr
+	LastExpr           Kind = FixedPointLiteral
 	FirstStmt          Kind = UnexposedStmt
 	LastStmt           Kind = OMPTargetTeamsDistributeSimdDirective
 	FirstAttr          Kind = UnexposedAttr
