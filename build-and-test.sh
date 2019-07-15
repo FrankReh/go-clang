@@ -31,3 +31,7 @@ go test
 cd ../go-clang-includes
 go build
 go test
+
+cd ../go-clang-globals
+go build
+go test

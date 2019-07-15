@@ -213,6 +213,24 @@ func _() {
 	_ = x[VisibilityAttr-417]
 	_ = x[DLLExport-418]
 	_ = x[DLLImport-419]
+	_ = x[NSReturnsRetained-420]
+	_ = x[NSReturnsNotRetained-421]
+	_ = x[NSReturnsAutoreleased-422]
+	_ = x[NSConsumesSelf-423]
+	_ = x[NSConsumed-424]
+	_ = x[ObjCException-425]
+	_ = x[ObjCNSObject-426]
+	_ = x[ObjCIndependentClass-427]
+	_ = x[ObjCPreciseLifetime-428]
+	_ = x[ObjCReturnsInnerPointer-429]
+	_ = x[ObjCRequiresSuper-430]
+	_ = x[ObjCRootClass-431]
+	_ = x[ObjCSubclassingRestricted-432]
+	_ = x[ObjCExplicitProtocolImpl-433]
+	_ = x[ObjCDesignatedInitializer-434]
+	_ = x[ObjCRuntimeVisible-435]
+	_ = x[ObjCBoxable-436]
+	_ = x[FlagEnum-437]
 	_ = x[PreprocessingDirective-500]
 	_ = x[MacroDefinition-501]
 	_ = x[MacroExpansion-502]
@@ -235,7 +253,7 @@ func _() {
 	_ = x[FirstStmt-200]
 	_ = x[LastStmt-279]
 	_ = x[FirstAttr-400]
-	_ = x[LastAttr-419]
+	_ = x[LastAttr-437]
 	_ = x[FirstPreprocessing-500]
 	_ = x[LastPreprocessing-503]
 	_ = x[FirstExtraDecl-600]
@@ -249,7 +267,7 @@ const (
 	_Kind_name_3 = "UnexposedExprDeclRefExprMemberRefExprCallExprObjCMessageExprBlockExprIntegerLiteralFloatingLiteralImaginaryLiteralStringLiteralCharacterLiteralParenExprUnaryOperatorArraySubscriptExprBinaryOperatorCompoundAssignOperatorConditionalOperatorCStyleCastExprCompoundLiteralExprInitListExprAddrLabelExprStmtExprGenericSelectionExprGNUNullExprCXXStaticCastExprCXXDynamicCastExprCXXReinterpretCastExprCXXConstCastExprCXXFunctionalCastExprCXXTypeidExprCXXBoolLiteralExprCXXNullPtrLiteralExprCXXThisExprCXXThrowExprCXXNewExprCXXDeleteExprUnaryExprObjCStringLiteralObjCEncodeExprObjCSelectorExprObjCProtocolExprObjCBridgedCastExprPackExpansionExprSizeOfPackExprLambdaExprObjCBoolLiteralExprObjCSelfExprOMPArraySectionExprObjCAvailabilityCheckExprLastExpr"
 	_Kind_name_4 = "UnexposedStmtLabelStmtCompoundStmtCaseStmtDefaultStmtIfStmtSwitchStmtWhileStmtDoStmtForStmtGotoStmtIndirectGotoStmtContinueStmtBreakStmtReturnStmtGCCAsmStmtObjCAtTryStmtObjCAtCatchStmtObjCAtFinallyStmtObjCAtThrowStmtObjCAtSynchronizedStmtObjCAutoreleasePoolStmtObjCForCollectionStmtCXXCatchStmtCXXTryStmtCXXForRangeStmtSEHTryStmtSEHExceptStmtSEHFinallyStmtMSAsmStmtNullStmtDeclStmtOMPParallelDirectiveOMPSimdDirectiveOMPForDirectiveOMPSectionsDirectiveOMPSectionDirectiveOMPSingleDirectiveOMPParallelForDirectiveOMPParallelSectionsDirectiveOMPTaskDirectiveOMPMasterDirectiveOMPCriticalDirectiveOMPTaskyieldDirectiveOMPBarrierDirectiveOMPTaskwaitDirectiveOMPFlushDirectiveSEHLeaveStmtOMPOrderedDirectiveOMPAtomicDirectiveOMPForSimdDirectiveOMPParallelForSimdDirectiveOMPTargetDirectiveOMPTeamsDirectiveOMPTaskgroupDirectiveOMPCancellationPointDirectiveOMPCancelDirectiveOMPTargetDataDirectiveOMPTaskLoopDirectiveOMPTaskLoopSimdDirectiveOMPDistributeDirectiveOMPTargetEnterDataDirectiveOMPTargetExitDataDirectiveOMPTargetParallelDirectiveOMPTargetParallelForDirectiveOMPTargetUpdateDirectiveOMPDistributeParallelForDirectiveOMPDistributeParallelForSimdDirectiveOMPDistributeSimdDirectiveOMPTargetParallelForSimdDirectiveOMPTargetSimdDirectiveOMPTeamsDistributeDirectiveOMPTeamsDistributeSimdDirectiveOMPTeamsDistributeParallelForSimdDirectiveOMPTeamsDistributeParallelForDirectiveOMPTargetTeamsDirectiveOMPTargetTeamsDistributeDirectiveOMPTargetTeamsDistributeParallelForDirectiveOMPTargetTeamsDistributeParallelForSimdDirectiveOMPTargetTeamsDistributeSimdDirective"
 	_Kind_name_5 = "TranslationUnit"
-	_Kind_name_6 = "UnexposedAttrIBActionAttrIBOutletAttrIBOutletCollectionAttrCXXFinalAttrCXXOverrideAttrAnnotateAttrAsmLabelAttrPackedAttrPureAttrConstAttrNoDuplicateAttrCUDAConstantAttrCUDADeviceAttrCUDAGlobalAttrCUDAHostAttrCUDASharedAttrVisibilityAttrDLLExportDLLImport"
+	_Kind_name_6 = "UnexposedAttrIBActionAttrIBOutletAttrIBOutletCollectionAttrCXXFinalAttrCXXOverrideAttrAnnotateAttrAsmLabelAttrPackedAttrPureAttrConstAttrNoDuplicateAttrCUDAConstantAttrCUDADeviceAttrCUDAGlobalAttrCUDAHostAttrCUDASharedAttrVisibilityAttrDLLExportDLLImportNSReturnsRetainedNSReturnsNotRetainedNSReturnsAutoreleasedNSConsumesSelfNSConsumedObjCExceptionObjCNSObjectObjCIndependentClassObjCPreciseLifetimeObjCReturnsInnerPointerObjCRequiresSuperObjCRootClassObjCSubclassingRestrictedObjCExplicitProtocolImplObjCDesignatedInitializerObjCRuntimeVisibleObjCBoxableFlagEnum"
 	_Kind_name_7 = "PreprocessingDirectiveMacroDefinitionMacroExpansionInclusionDirective"
 	_Kind_name_8 = "ModuleImportDeclTypeAliasTemplateDeclStaticAssertFriendDecl"
 	_Kind_name_9 = "OverloadCandidate"
@@ -260,7 +278,7 @@ var (
 	_Kind_index_2 = [...]uint8{0, 11, 22, 36, 47}
 	_Kind_index_3 = [...]uint16{0, 13, 24, 37, 45, 60, 69, 83, 98, 114, 127, 143, 152, 165, 183, 197, 219, 238, 252, 271, 283, 296, 304, 324, 335, 352, 370, 392, 408, 429, 442, 460, 481, 492, 504, 514, 527, 536, 553, 567, 583, 599, 618, 635, 649, 659, 678, 690, 709, 734, 742}
 	_Kind_index_4 = [...]uint16{0, 13, 22, 34, 42, 53, 59, 69, 78, 84, 91, 99, 115, 127, 136, 146, 156, 169, 184, 201, 216, 238, 261, 282, 294, 304, 319, 329, 342, 356, 365, 373, 381, 401, 417, 432, 452, 471, 489, 512, 540, 556, 574, 594, 615, 634, 654, 671, 683, 702, 720, 739, 766, 784, 801, 822, 851, 869, 891, 911, 935, 957, 984, 1010, 1036, 1065, 1089, 1122, 1159, 1185, 1218, 1240, 1267, 1298, 1340, 1378, 1401, 1434, 1478, 1526, 1563}
-	_Kind_index_6 = [...]uint8{0, 13, 25, 37, 59, 71, 86, 98, 110, 120, 128, 137, 152, 168, 182, 196, 208, 222, 236, 245, 254}
+	_Kind_index_6 = [...]uint16{0, 13, 25, 37, 59, 71, 86, 98, 110, 120, 128, 137, 152, 168, 182, 196, 208, 222, 236, 245, 254, 271, 291, 312, 326, 336, 349, 361, 381, 400, 423, 440, 453, 478, 502, 527, 545, 556, 564}
 	_Kind_index_7 = [...]uint8{0, 22, 37, 51, 69}
 	_Kind_index_8 = [...]uint8{0, 16, 37, 49, 59}
 )
@@ -283,7 +301,7 @@ func (i Kind) String() string {
 		return _Kind_name_4[_Kind_index_4[i]:_Kind_index_4[i+1]]
 	case i == 300:
 		return _Kind_name_5
-	case 400 <= i && i <= 419:
+	case 400 <= i && i <= 437:
 		i -= 400
 		return _Kind_name_6[_Kind_index_6[i]:_Kind_index_6[i+1]]
 	case 500 <= i && i <= 503:

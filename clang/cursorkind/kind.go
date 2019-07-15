@@ -792,25 +792,43 @@ const (
 	 */
 	UnexposedAttr Kind = 400
 
-	IBActionAttr           Kind = 401
-	IBOutletAttr           Kind = 402
-	IBOutletCollectionAttr Kind = 403
-	CXXFinalAttr           Kind = 404
-	CXXOverrideAttr        Kind = 405
-	AnnotateAttr           Kind = 406
-	AsmLabelAttr           Kind = 407
-	PackedAttr             Kind = 408
-	PureAttr               Kind = 409
-	ConstAttr              Kind = 410
-	NoDuplicateAttr        Kind = 411
-	CUDAConstantAttr       Kind = 412
-	CUDADeviceAttr         Kind = 413
-	CUDAGlobalAttr         Kind = 414
-	CUDAHostAttr           Kind = 415
-	CUDASharedAttr         Kind = 416
-	VisibilityAttr         Kind = 417
-	DLLExport              Kind = 418
-	DLLImport              Kind = 419
+	IBActionAttr              Kind = 401
+	IBOutletAttr              Kind = 402
+	IBOutletCollectionAttr    Kind = 403
+	CXXFinalAttr              Kind = 404
+	CXXOverrideAttr           Kind = 405
+	AnnotateAttr              Kind = 406
+	AsmLabelAttr              Kind = 407
+	PackedAttr                Kind = 408
+	PureAttr                  Kind = 409
+	ConstAttr                 Kind = 410
+	NoDuplicateAttr           Kind = 411
+	CUDAConstantAttr          Kind = 412
+	CUDADeviceAttr            Kind = 413
+	CUDAGlobalAttr            Kind = 414
+	CUDAHostAttr              Kind = 415
+	CUDASharedAttr            Kind = 416
+	VisibilityAttr            Kind = 417
+	DLLExport                 Kind = 418
+	DLLImport                 Kind = 419
+	NSReturnsRetained         Kind = 420
+	NSReturnsNotRetained      Kind = 421
+	NSReturnsAutoreleased     Kind = 422
+	NSConsumesSelf            Kind = 423
+	NSConsumed                Kind = 424
+	ObjCException             Kind = 425
+	ObjCNSObject              Kind = 426
+	ObjCIndependentClass      Kind = 427
+	ObjCPreciseLifetime       Kind = 428
+	ObjCReturnsInnerPointer   Kind = 429
+	ObjCRequiresSuper         Kind = 430
+	ObjCRootClass             Kind = 431
+	ObjCSubclassingRestricted Kind = 432
+	ObjCExplicitProtocolImpl  Kind = 433
+	ObjCDesignatedInitializer Kind = 434
+	ObjCRuntimeVisible        Kind = 435
+	ObjCBoxable               Kind = 436
+	FlagEnum                  Kind = 437
 
 	/* Preprocessing */
 	PreprocessingDirective Kind = 500
@@ -857,7 +875,7 @@ const (
 	FirstStmt          Kind = UnexposedStmt
 	LastStmt           Kind = OMPTargetTeamsDistributeSimdDirective
 	FirstAttr          Kind = UnexposedAttr
-	LastAttr           Kind = DLLImport
+	LastAttr           Kind = FlagEnum
 	FirstPreprocessing Kind = PreprocessingDirective
 	LastPreprocessing  Kind = InclusionDirective
 	FirstExtraDecl     Kind = ModuleImportDecl
@@ -865,27 +883,26 @@ const (
 )
 
 func Validate(i int) (Kind, error) {
-	// switch logic taken from stringer output.
 	switch {
 	case -1 == i:
 		return Kind(i), nil
-	case 1 <= i && i <= 50:
+	case int(FirstDecl) <= i && i <= int(LastRef):
 		return Kind(i), nil
-	case 70 <= i && i <= 73:
+	case int(FirstInvalid) <= i && i <= int(LastInvalid):
 		return Kind(i), nil
-	case 100 <= i && i <= 148:
+	case int(FirstExpr) <= i && i <= int(LastExpr):
 		return Kind(i), nil
-	case 200 <= i && i <= 279:
+	case int(FirstStmt) <= i && i <= int(LastStmt):
 		return Kind(i), nil
-	case i == 300:
+	case i == int(TranslationUnit):
 		return Kind(i), nil
-	case 400 <= i && i <= 419:
+	case int(FirstAttr) <= i && i <= int(LastAttr):
 		return Kind(i), nil
-	case 500 <= i && i <= 503:
+	case int(FirstPreprocessing) <= i && i <= int(LastPreprocessing):
 		return Kind(i), nil
-	case 600 <= i && i <= 603:
+	case int(FirstExtraDecl) <= i && i <= int(LastExtraDecl):
 		return Kind(i), nil
-	case i == 700:
+	case i == int(OverloadCandidate):
 		return Kind(i), nil
 	default:
 		return 0, InvalidErr

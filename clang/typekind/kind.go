@@ -128,13 +128,31 @@ const (
 	OCLEvent                   Kind = 158
 	OCLQueue                   Kind = 159
 	OCLReserveID               Kind = 160
+
+	ObjCObject    Kind = 161
+	ObjCTypeParam Kind = 162
+	Attributed    Kind = 163
+
+	OCLIntelSubgroupAVCMcePayload                  Kind = 164
+	OCLIntelSubgroupAVCImePayload                  Kind = 165
+	OCLIntelSubgroupAVCRefPayload                  Kind = 166
+	OCLIntelSubgroupAVCSicPayload                  Kind = 167
+	OCLIntelSubgroupAVCMceResult                   Kind = 168
+	OCLIntelSubgroupAVCImeResult                   Kind = 169
+	OCLIntelSubgroupAVCRefResult                   Kind = 170
+	OCLIntelSubgroupAVCSicResult                   Kind = 171
+	OCLIntelSubgroupAVCImeResultSingleRefStreamout Kind = 172
+	OCLIntelSubgroupAVCImeResultDualRefStreamout   Kind = 173
+	OCLIntelSubgroupAVCImeSingleRefStreamin        Kind = 174
+
+	OCLIntelSubgroupAVCImeDualRefStreamin Kind = 175
 )
 
 func Validate(i int) (Kind, error) {
 	switch {
 	case 0 <= i && i <= int(LastBuiltin):
 		return Kind(i), nil
-	case int(Complex) <= i && i <= int(OCLReserveID):
+	case int(Complex) <= i && i <= int(OCLIntelSubgroupAVCImeDualRefStreamin):
 		return Kind(i), nil
 	default:
 		return 0, InvalidErr

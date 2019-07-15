@@ -128,5 +128,16 @@ const (
 
 		The function bodies of the main file are not skipped.
 	*/
+
 	TranslationUnit_LimitSkipFunctionBodiesToPreamble TranslationUnit_Flags = C.CXTranslationUnit_LimitSkipFunctionBodiesToPreamble
+
+	/*
+		Used to indicate that attributed types should be included in CXType.
+	*/
+	TranslationUnit_IncludeAttributedTypes TranslationUnit_Flags = C.CXTranslationUnit_IncludeAttributedTypes
+
+	/*
+		Used to indicate that implicit attributes should be visited.
+	*/
+	TranslationUnit_VisitImplicitAttributes TranslationUnit_Flags = C.CXTranslationUnit_VisitImplicitAttributes
 )

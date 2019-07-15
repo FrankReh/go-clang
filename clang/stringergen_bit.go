@@ -21,8 +21,8 @@ var _CompletionContext_stringer = _stringerBitflagCache{
 		typename: "CompletionContext",
 		zero:     "CompletionContext_Unexposed",
 		first:    uint64(1),
-		names:    "CompletionContext_AnyTypeCompletionContext_AnyValueCompletionContext_ObjCObjectValueCompletionContext_ObjCSelectorValueCompletionContext_CXXClassTypeValueCompletionContext_DotMemberAccessCompletionContext_ArrowMemberAccessCompletionContext_ObjCPropertyAccessCompletionContext_EnumTagCompletionContext_UnionTagCompletionContext_StructTagCompletionContext_ClassTagCompletionContext_NamespaceCompletionContext_NestedNameSpecifierCompletionContext_ObjCInterfaceCompletionContext_ObjCProtocolCompletionContext_ObjCCategoryCompletionContext_ObjCInstanceMessageCompletionContext_ObjCClassMessageCompletionContext_ObjCSelectorNameCompletionContext_MacroNameCompletionContext_NaturalLanguage",
-		offsets:  []uint8{25, 26, 33, 35, 35, 33, 35, 36, 25, 26, 27, 26, 27, 37, 31, 30, 30, 37, 34, 34, 27, 33},
+		names:    "CompletionContext_AnyTypeCompletionContext_AnyValueCompletionContext_ObjCObjectValueCompletionContext_ObjCSelectorValueCompletionContext_CXXClassTypeValueCompletionContext_DotMemberAccessCompletionContext_ArrowMemberAccessCompletionContext_ObjCPropertyAccessCompletionContext_EnumTagCompletionContext_UnionTagCompletionContext_StructTagCompletionContext_ClassTagCompletionContext_NamespaceCompletionContext_NestedNameSpecifierCompletionContext_ObjCInterfaceCompletionContext_ObjCProtocolCompletionContext_ObjCCategoryCompletionContext_ObjCInstanceMessageCompletionContext_ObjCClassMessageCompletionContext_ObjCSelectorNameCompletionContext_MacroNameCompletionContext_NaturalLanguageCompletionContext_IncludedFile",
+		offsets:  []uint8{25, 26, 33, 35, 35, 33, 35, 36, 25, 26, 27, 26, 27, 37, 31, 30, 30, 37, 34, 34, 27, 33, 30},
 	},
 }
 
@@ -77,8 +77,8 @@ var _TranslationUnit_Flags_stringer = _stringerBitflagCache{
 		typename: "TranslationUnit_Flags",
 		zero:     "TranslationUnit_None",
 		first:    uint64(1),
-		names:    "TranslationUnit_DetailedPreprocessingRecordTranslationUnit_IncompleteTranslationUnit_PrecompiledPreambleTranslationUnit_CacheCompletionResultsTranslationUnit_ForSerializationTranslationUnit_CXXChainedPCHTranslationUnit_SkipFunctionBodiesTranslationUnit_IncludeBriefCommentsInCodeCompletionTranslationUnit_CreatePreambleOnFirstParseTranslationUnit_KeepGoingTranslationUnit_SingleFileParseTranslationUnit_LimitSkipFunctionBodiesToPreamble",
-		offsets:  []uint8{43, 26, 35, 38, 32, 29, 34, 52, 42, 25, 31, 49},
+		names:    "TranslationUnit_DetailedPreprocessingRecordTranslationUnit_IncompleteTranslationUnit_PrecompiledPreambleTranslationUnit_CacheCompletionResultsTranslationUnit_ForSerializationTranslationUnit_CXXChainedPCHTranslationUnit_SkipFunctionBodiesTranslationUnit_IncludeBriefCommentsInCodeCompletionTranslationUnit_CreatePreambleOnFirstParseTranslationUnit_KeepGoingTranslationUnit_SingleFileParseTranslationUnit_LimitSkipFunctionBodiesToPreambleTranslationUnit_IncludeAttributedTypesTranslationUnit_VisitImplicitAttributes",
+		offsets:  []uint8{43, 26, 35, 38, 32, 29, 34, 52, 42, 25, 31, 49, 38, 39},
 	},
 }
 

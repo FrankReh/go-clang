@@ -59,6 +59,8 @@ const (
 	CompletionContext_MacroName CompletionContext = C.CXCompletionContext_MacroName
 	// Natural language completions should be included in the results.
 	CompletionContext_NaturalLanguage CompletionContext = C.CXCompletionContext_NaturalLanguage
+	// #include file completions should be included in the results.
+	CompletionContext_IncludedFile CompletionContext = C.CXCompletionContext_IncludedFile
 	// The current context is unknown, so set all contexts.
 	CompletionContext_Unknown CompletionContext = C.CXCompletionContext_Unknown
 )

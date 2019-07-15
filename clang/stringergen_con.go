@@ -65,23 +65,24 @@ func _() {
 	_ = x[CallingConv_Swift-13]
 	_ = x[CallingConv_PreserveMost-14]
 	_ = x[CallingConv_PreserveAll-15]
+	_ = x[CallingConv_AArch64VectorCall-16]
 	_ = x[CallingConv_Invalid-100]
 	_ = x[CallingConv_Unexposed-200]
 }
 
 const (
-	_CallingConv_name_0 = "CallingConv_DefaultCallingConv_CCallingConv_X86StdCallCallingConv_X86FastCallCallingConv_X86ThisCallCallingConv_X86PascalCallingConv_AAPCSCallingConv_AAPCS_VFPCallingConv_X86RegCallCallingConv_IntelOclBiccCallingConv_Win64CallingConv_X86_64SysVCallingConv_X86VectorCallCallingConv_SwiftCallingConv_PreserveMostCallingConv_PreserveAll"
+	_CallingConv_name_0 = "CallingConv_DefaultCallingConv_CCallingConv_X86StdCallCallingConv_X86FastCallCallingConv_X86ThisCallCallingConv_X86PascalCallingConv_AAPCSCallingConv_AAPCS_VFPCallingConv_X86RegCallCallingConv_IntelOclBiccCallingConv_Win64CallingConv_X86_64SysVCallingConv_X86VectorCallCallingConv_SwiftCallingConv_PreserveMostCallingConv_PreserveAllCallingConv_AArch64VectorCall"
 	_CallingConv_name_1 = "CallingConv_Invalid"
 	_CallingConv_name_2 = "CallingConv_Unexposed"
 )
 
 var (
-	_CallingConv_index_0 = [...]uint16{0, 19, 32, 54, 77, 100, 121, 138, 159, 181, 205, 222, 244, 269, 286, 310, 333}
+	_CallingConv_index_0 = [...]uint16{0, 19, 32, 54, 77, 100, 121, 138, 159, 181, 205, 222, 244, 269, 286, 310, 333, 362}
 )
 
 func (i CallingConv) String() string {
 	switch {
-	case 0 <= i && i <= 15:
+	case 0 <= i && i <= 16:
 		return _CallingConv_name_0[_CallingConv_index_0[i]:_CallingConv_index_0[i+1]]
 	case i == 100:
 		return _CallingConv_name_1

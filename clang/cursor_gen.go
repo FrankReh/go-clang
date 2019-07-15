@@ -817,6 +817,22 @@ func (c Cursor) PropertyAttributes(reserved uint32) uint32 {
 	return uint32(C.clang_Cursor_getObjCPropertyAttributes(c.c, C.uint(reserved)))
 }
 
+/*
+	Given a cursor that represents a property declaration, return the
+	name of the method that implements the getter.
+*/
+func (c Cursor) ObjCPropertyGetterName() string {
+	return cx2GoString(C.clang_Cursor_getObjCPropertyGetterName(c.c))
+}
+
+/*
+	Given a cursor that represents a property declaration, return the
+	name of the method that implements the setter, if any.
+*/
+func (c Cursor) ObjCPropertySetterName() string {
+	return cx2GoString(C.clang_Cursor_getObjCPropertySetterName(c.c))
+}
+
 // Given a cursor that represents an Objective-C method or parameter declaration, return the associated Objective-C qualifiers for the return type or the parameter respectively. The bits are formed from CXObjCDeclQualifierKind.
 func (c Cursor) DeclQualifiers() uint32 {
 	return uint32(C.clang_Cursor_getObjCDeclQualifiers(c.c))
