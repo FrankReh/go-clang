@@ -10,7 +10,7 @@ func TestTargetInfo(t *testing.T) {
 	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
-	tu := idx.ParseTranslationUnit("cursor.c", nil, nil, 0)
+	tu := idx.ParseTranslationUnit("go-clang.c", nil, nil, 0)
 	assertTrue(t, tu.IsValid())
 	defer tu.Dispose()
 

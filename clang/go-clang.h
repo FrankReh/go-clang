@@ -5,6 +5,6 @@
 
 #include "clang-c/Index.h"
 
-unsigned go_clang_visit_children(CXCursor c, void *fct);
+unsigned go_clang_visit_children(CXCursor c, void *opaque);
 
 #endif

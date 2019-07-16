@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-// CursorVisitor does the following.
+// CursorVisitor is the callback function type passed to Visit.
 /**
  * Visitor invoked for each cursor found by a traversal.
  *
@@ -25,11 +25,11 @@ type CursorVisitor func(cursor, parent Cursor) ChildVisitResult
 type funcRegistry struct {
 	sync.RWMutex
 
-	index int
-	funcs map[int]*CursorVisitor
+	index uintptr // Gets passed to C as (void*) via unsafe.Pointer, so uintptr is most convenient.
+	funcs map[uintptr]CursorVisitor
 }
 
-func (fm *funcRegistry) register(f *CursorVisitor) int {
+func (fm *funcRegistry) register(f CursorVisitor) uintptr {
 	fm.Lock()
 	defer fm.Unlock()
 
@@ -43,16 +43,14 @@ func (fm *funcRegistry) register(f *CursorVisitor) int {
 	return fm.index
 }
 
-func (fm *funcRegistry) lookup(index int) *CursorVisitor {
+func (fm *funcRegistry) lookup(index uintptr) CursorVisitor {
 	fm.RLock()
 	defer fm.RUnlock()
 
-	//_, ok := fm.funcs[index]
-	//fmt.Println("func (fm *funcRegistry) lookup(index int) *CursorVisitor", "index:", index, ok)
 	return fm.funcs[index]
 }
 
-func (fm *funcRegistry) unregister(index int) {
+func (fm *funcRegistry) unregister(index uintptr) {
 	fm.Lock()
 
 	delete(fm.funcs, index)
@@ -61,22 +59,12 @@ func (fm *funcRegistry) unregister(index int) {
 }
 
 var visitors = funcRegistry{
-	funcs: make(map[int]*CursorVisitor),
+	funcs: make(map[uintptr]CursorVisitor),
 }
 
-// GoClangCursorVisitor calls the cursor visitor
-//export GoClangCursorVisitor
-func GoClangCursorVisitor(cursor C.CXCursor, parent C.CXCursor, cfct unsafe.Pointer) ChildVisitResult {
-	i := *(*C.int)(cfct)
-	f := visitors.lookup(int(i))
-
-	return (*f)(Cursor{cursor}, Cursor{parent})
-}
-
-// Visit does the following.
+// Visit invokes the visitor callback on a cursor's children.
+// Probably a misnomer. Should have been named VisitChildren.
 /**
- * Visit the children of a particular cursor.
- *
  * This function visits all the direct children of the given cursor,
  * invoking the given visitor function with the cursors of each
  * visited child. The traversal may be recursive, if the visitor returns
@@ -97,22 +85,26 @@ func GoClangCursorVisitor(cursor C.CXCursor, parent C.CXCursor, cfct unsafe.Poin
  * prematurely by the visitor returning CXChildVisit_Break.
  */
 func (c Cursor) Visit(visitor CursorVisitor) bool {
-	i := visitors.register(&visitor)
-	defer visitors.unregister(i)
+	index := visitors.register(visitor)
+	defer visitors.unregister(index)
 
-	//fmt.Println("func (c Cursor) Visit(visitor CursorVisitor) bool",
-	//"registered location i:", i)
+	o := C.go_clang_visit_children(c.c, unsafe.Pointer(index))
 
-	// We need a pointer to the index because clang_visitChildren data parameter is a void pointer.
-	ci := C.int(i)
+	return o == 0
+}
 
-	o := C.go_clang_visit_children(c.c, unsafe.Pointer(&ci))
+// GoClangCursorVisitor calls the cursor visitor
+//export GoClangCursorVisitor
+func GoClangCursorVisitor(cursor C.CXCursor, parent C.CXCursor, opaque unsafe.Pointer) ChildVisitResult {
+	index := uintptr(opaque)
+	fn := visitors.lookup(index)
 
-	r := o == 0
-	//if !r {
-	//fmt.Println("go_clang_visit_children returns break indication", o)
-	//}
-	return r
+	if fn == nil {
+		// TODO consider calling panic or setting an error.
+		return ChildVisit_Break
+	}
+
+	return fn(Cursor{cursor}, Cursor{parent})
 }
 
 // Describes how the traversal of the children of a particular cursor should

@@ -11,11 +11,11 @@ func TestCompletion(t *testing.T) {
 	idx := clang.NewIndex(0, 0)
 	defer idx.Dispose()
 
-	tu := idx.ParseTranslationUnit("cursor.c", nil, nil, 0)
+	tu := idx.ParseTranslationUnit("go-clang.c", nil, nil, 0)
 	assertTrue(t, tu.IsValid())
 	defer tu.Dispose()
 
-	res := tu.CodeCompleteAt("cursor.c", 5, 18, nil, 0)
+	res := tu.CodeCompleteAt("go-clang.c", 5, 18, nil, 0)
 	assertTrue(t, res != nil)
 	defer res.Dispose()
 
