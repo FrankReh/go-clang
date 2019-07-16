@@ -1,6 +1,5 @@
 package clang
 
-// #include "./clang-c/BuildSystem.h"
 // #include "go-clang.h"
 import "C"
 import "unsafe"
