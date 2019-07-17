@@ -47,7 +47,16 @@ func (ia IndexAction) Dispose() {
 
 	The rest of the parameters are the same as #clang_parseTranslationUnit.
 */
-func (ia IndexAction) IndexSourceFile(clientData ClientData, indexCallbacks *IndexerCallbacks, indexCallbacksSize uint32, indexOptions IndexOptFlags, sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, outTU *TranslationUnit, tUOptions TranslationUnit_Flags) error {
+func (ia IndexAction) IndexSourceFile(
+	clientData ClientData,
+	indexCallbacks *IndexerCallbacks,
+	indexOptions IndexOptFlags,
+	sourceFilename string,
+	commandLineArgs []string,
+	unsavedFiles []UnsavedFile,
+	outTU *TranslationUnit,
+	tUOptions TranslationUnit_Flags,
+) error {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {
@@ -64,11 +73,35 @@ func (ia IndexAction) IndexSourceFile(clientData ClientData, indexCallbacks *Ind
 	c_sourceFilename := C.CString(sourceFilename)
 	defer C.free(unsafe.Pointer(c_sourceFilename))
 
-	return convertErrorCode(C.enum_CXErrorCode(C.clang_indexSourceFile(ia.c, clientData.c, &indexCallbacks.c, C.uint(indexCallbacksSize), C.uint(indexOptions), c_sourceFilename, cp_commandLineArgs, C.int(len(commandLineArgs)), cp_unsavedFiles, C.uint(len(unsavedFiles)), &outTU.c, C.uint(tUOptions))))
+	o := C.clang_indexSourceFile(
+		ia.c,
+		clientData.c,
+		&indexCallbacks.c,
+		C.sizeof_IndexerCallbacks,
+		C.uint(indexOptions),
+		c_sourceFilename,
+		cp_commandLineArgs, // should be safe, Go memory pointing to C.CString s.
+		C.int(len(commandLineArgs)),
+		cp_unsavedFiles, // (probably) safe because the slice doesn't hold Go addresses.
+		C.uint(len(unsavedFiles)),
+		&outTU.c, // Probably safe because a TranslationUnit stores C addresses.
+		C.uint(tUOptions),
+	)
+
+	return convertErrorCode(C.enum_CXErrorCode(o))
 }
 
 // Same as clang_indexSourceFile but requires a full command line for command_line_args including argv[0]. This is useful if the standard library paths are relative to the binary.
-func (ia IndexAction) IndexSourceFileFullArgv(clientData ClientData, indexCallbacks *IndexerCallbacks, indexCallbacksSize uint32, indexOptions IndexOptFlags, sourceFilename string, commandLineArgs []string, unsavedFiles []UnsavedFile, outTU *TranslationUnit, tUOptions TranslationUnit_Flags) error {
+func (ia IndexAction) IndexSourceFileFullArgv(
+	clientData ClientData,
+	indexCallbacks *IndexerCallbacks,
+	indexOptions IndexOptFlags,
+	sourceFilename string,
+	commandLineArgs []string,
+	unsavedFiles []UnsavedFile,
+	outTU *TranslationUnit,
+	tUOptions TranslationUnit_Flags,
+) error {
 	ca_commandLineArgs := make([]*C.char, len(commandLineArgs))
 	var cp_commandLineArgs **C.char
 	if len(commandLineArgs) > 0 {
@@ -85,7 +118,21 @@ func (ia IndexAction) IndexSourceFileFullArgv(clientData ClientData, indexCallba
 	c_sourceFilename := C.CString(sourceFilename)
 	defer C.free(unsafe.Pointer(c_sourceFilename))
 
-	return convertErrorCode(C.enum_CXErrorCode(C.clang_indexSourceFileFullArgv(ia.c, clientData.c, &indexCallbacks.c, C.uint(indexCallbacksSize), C.uint(indexOptions), c_sourceFilename, cp_commandLineArgs, C.int(len(commandLineArgs)), cp_unsavedFiles, C.uint(len(unsavedFiles)), &outTU.c, C.uint(tUOptions))))
+	o := C.clang_indexSourceFileFullArgv(
+		ia.c,
+		clientData.c,
+		&indexCallbacks.c,
+		C.sizeof_IndexerCallbacks,
+		C.uint(indexOptions),
+		c_sourceFilename,
+		cp_commandLineArgs,
+		C.int(len(commandLineArgs)),
+		cp_unsavedFiles,
+		C.uint(len(unsavedFiles)),
+		&outTU.c, C.uint(tUOptions),
+	)
+
+	return convertErrorCode(C.enum_CXErrorCode(o))
 }
 
 /*
@@ -104,6 +151,39 @@ func (ia IndexAction) IndexSourceFileFullArgv(clientData ClientData, indexCallba
 	Returns If there is a failure from which there is no recovery, returns
 	non-zero, otherwise returns 0.
 */
-func (ia IndexAction) IndexTranslationUnit(clientData ClientData, indexCallbacks *IndexerCallbacks, indexCallbacksSize uint32, indexOptions IndexOptFlags, tu TranslationUnit) error {
-	return convertErrorCode(C.enum_CXErrorCode(C.clang_indexTranslationUnit(ia.c, clientData.c, &indexCallbacks.c, C.uint(indexCallbacksSize), C.uint(indexOptions), tu.c)))
+func (ia IndexAction) IndexTranslationUnit(
+	clientData ClientData,
+	indexCallbacks *IndexerCallbacks,
+	indexOptions IndexOptFlags,
+	tu TranslationUnit,
+) error {
+	o := C.clang_indexTranslationUnit(
+		ia.c,
+		clientData.c,
+		&indexCallbacks.c,
+		C.sizeof_IndexerCallbacks,
+		C.uint(indexOptions),
+		tu.c,
+	)
+	return convertErrorCode(C.enum_CXErrorCode(o))
+}
+
+func (ia IndexAction) IndexTranslationUnitWorkInProgress(
+	// clientData ClientData,
+	// indexCallbacks *IndexerCallbacks,
+	// indexOptions IndexOptFlags,
+	tu TranslationUnit,
+) error {
+	var opaque uintptr
+	var c_indexerCallbacks C.IndexerCallbacks
+
+	o := C.clang_indexTranslationUnit(
+		ia.c,
+		C.CXClientData(unsafe.Pointer(opaque)),
+		&c_indexerCallbacks,
+		C.sizeof_IndexerCallbacks,
+		0,
+		tu.c,
+	)
+	return convertErrorCode(C.enum_CXErrorCode(o))
 }
