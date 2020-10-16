@@ -377,6 +377,7 @@ const TypeLayout_IncompleteErr = Error("IncompleteTypeLayout")
 const TypeLayout_DependentErr = Error("DependentTypeLayout")
 const TypeLayout_NotConstantSizeErr = Error("NotConstantSizeTypeLayout")
 const TypeLayout_InvalidFieldNameErr = Error("InvalidFieldNameTypeLayout")
+const TypeLayout_UndeducedErr = Error("UndeducedTypeLayout")
 
 func convertTypeLayoutError(r C.longlong) (uint64, error) {
 	if r >= 0 {
@@ -393,6 +394,8 @@ func convertTypeLayoutError(r C.longlong) (uint64, error) {
 		return 0, TypeLayout_NotConstantSizeErr
 	case C.CXTypeLayoutError_InvalidFieldName:
 		return 0, TypeLayout_InvalidFieldNameErr
+	case C.CXTypeLayoutError_Undeduced:
+		return 0, TypeLayout_UndeducedErr
 	}
 
 	return 0, fmt.Errorf("unknown CXTypeLayoutError %d", r)

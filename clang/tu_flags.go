@@ -139,4 +139,9 @@ const (
 		Used to indicate that implicit attributes should be visited.
 	*/
 	TranslationUnit_VisitImplicitAttributes TranslationUnit_Flags = C.CXTranslationUnit_VisitImplicitAttributes
+
+	/*
+		Used to indicate that non-errors from included files should be ignored.
+	*/
+	TranslationUnit_IgnoreNonErrorsFromIncludedFiles TranslationUnit_Flags = C.CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
 )

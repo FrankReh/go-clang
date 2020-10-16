@@ -144,15 +144,15 @@ const (
 	OCLIntelSubgroupAVCImeResultSingleRefStreamout Kind = 172
 	OCLIntelSubgroupAVCImeResultDualRefStreamout   Kind = 173
 	OCLIntelSubgroupAVCImeSingleRefStreamin        Kind = 174
-
-	OCLIntelSubgroupAVCImeDualRefStreamin Kind = 175
+	OCLIntelSubgroupAVCImeDualRefStreamin          Kind = 175
+	ExtVector                                      Kind = 176
 )
 
 func Validate(i int) (Kind, error) {
 	switch {
 	case 0 <= i && i <= int(LastBuiltin):
 		return Kind(i), nil
-	case int(Complex) <= i && i <= int(OCLIntelSubgroupAVCImeDualRefStreamin):
+	case int(Complex) <= i && i <= int(ExtVector):
 		return Kind(i), nil
 	default:
 		return 0, InvalidErr

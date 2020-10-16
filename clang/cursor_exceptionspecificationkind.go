@@ -29,4 +29,6 @@ const (
 	ExceptionSpecification_Uninstantiated ExceptionSpecification = C.CXCursor_ExceptionSpecificationKind_Uninstantiated
 	// The exception specification has not been parsed yet.
 	ExceptionSpecification_Unparsed ExceptionSpecification = C.CXCursor_ExceptionSpecificationKind_Unparsed
+	// The cursor has a __declspec(nothrow) exception specification.
+	ExceptionSpecification_NoThrow ExceptionSpecification = C.CXCursor_ExceptionSpecificationKind_NoThrow
 )

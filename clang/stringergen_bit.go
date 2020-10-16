@@ -77,8 +77,8 @@ var _TranslationUnit_Flags_stringer = _stringerBitflagCache{
 		typename: "TranslationUnit_Flags",
 		zero:     "TranslationUnit_None",
 		first:    uint64(1),
-		names:    "TranslationUnit_DetailedPreprocessingRecordTranslationUnit_IncompleteTranslationUnit_PrecompiledPreambleTranslationUnit_CacheCompletionResultsTranslationUnit_ForSerializationTranslationUnit_CXXChainedPCHTranslationUnit_SkipFunctionBodiesTranslationUnit_IncludeBriefCommentsInCodeCompletionTranslationUnit_CreatePreambleOnFirstParseTranslationUnit_KeepGoingTranslationUnit_SingleFileParseTranslationUnit_LimitSkipFunctionBodiesToPreambleTranslationUnit_IncludeAttributedTypesTranslationUnit_VisitImplicitAttributes",
-		offsets:  []uint8{43, 26, 35, 38, 32, 29, 34, 52, 42, 25, 31, 49, 38, 39},
+		names:    "TranslationUnit_DetailedPreprocessingRecordTranslationUnit_IncompleteTranslationUnit_PrecompiledPreambleTranslationUnit_CacheCompletionResultsTranslationUnit_ForSerializationTranslationUnit_CXXChainedPCHTranslationUnit_SkipFunctionBodiesTranslationUnit_IncludeBriefCommentsInCodeCompletionTranslationUnit_CreatePreambleOnFirstParseTranslationUnit_KeepGoingTranslationUnit_SingleFileParseTranslationUnit_LimitSkipFunctionBodiesToPreambleTranslationUnit_IncludeAttributedTypesTranslationUnit_VisitImplicitAttributesTranslationUnit_IgnoreNonErrorsFromIncludedFiles",
+		offsets:  []uint8{43, 26, 35, 38, 32, 29, 34, 52, 42, 25, 31, 49, 38, 39, 48},
 	},
 }
 

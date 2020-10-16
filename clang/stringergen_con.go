@@ -230,11 +230,12 @@ func _() {
 	_ = x[ExceptionSpecification_Unevaluated-6]
 	_ = x[ExceptionSpecification_Uninstantiated-7]
 	_ = x[ExceptionSpecification_Unparsed-8]
+	_ = x[ExceptionSpecification_NoThrow-9]
 }
 
-const _ExceptionSpecification_name = "ExceptionSpecification_NonFunctionExceptionSpecification_NoneExceptionSpecification_DynamicNoneExceptionSpecification_DynamicExceptionSpecification_MSAnyExceptionSpecification_BasicNoexceptExceptionSpecification_ComputedNoexceptExceptionSpecification_UnevaluatedExceptionSpecification_UninstantiatedExceptionSpecification_Unparsed"
+const _ExceptionSpecification_name = "ExceptionSpecification_NonFunctionExceptionSpecification_NoneExceptionSpecification_DynamicNoneExceptionSpecification_DynamicExceptionSpecification_MSAnyExceptionSpecification_BasicNoexceptExceptionSpecification_ComputedNoexceptExceptionSpecification_UnevaluatedExceptionSpecification_UninstantiatedExceptionSpecification_UnparsedExceptionSpecification_NoThrow"
 
-var _ExceptionSpecification_index = [...]uint16{0, 34, 61, 95, 125, 153, 189, 228, 262, 299, 330}
+var _ExceptionSpecification_index = [...]uint16{0, 34, 61, 95, 125, 153, 189, 228, 262, 299, 330, 360}
 
 func (i ExceptionSpecification) String() string {
 	i -= -1

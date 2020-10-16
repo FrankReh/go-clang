@@ -777,6 +777,10 @@ const (
 	 */
 	OMPTargetTeamsDistributeSimdDirective Kind = 279
 
+	/** C++2a std::bit_cast expression.
+	 */
+	BuiltinBitCastExpr Kind = 280
+
 	/**
 	 * Cursor that represents the translation unit itself.
 	 *
@@ -829,6 +833,10 @@ const (
 	ObjCRuntimeVisible        Kind = 435
 	ObjCBoxable               Kind = 436
 	FlagEnum                  Kind = 437
+	ConvergentAttr            Kind = 438
+	WarnUnusedAttr            Kind = 439
+	WarnUnusedResultAttr      Kind = 440
+	AlignedAttr               Kind = 441
 
 	/* Preprocessing */
 	PreprocessingDirective Kind = 500
@@ -873,9 +881,9 @@ const (
 	FirstExpr          Kind = UnexposedExpr
 	LastExpr           Kind = FixedPointLiteral
 	FirstStmt          Kind = UnexposedStmt
-	LastStmt           Kind = OMPTargetTeamsDistributeSimdDirective
+	LastStmt           Kind = BuiltinBitCastExpr
 	FirstAttr          Kind = UnexposedAttr
-	LastAttr           Kind = FlagEnum
+	LastAttr           Kind = AlignedAttr
 	FirstPreprocessing Kind = PreprocessingDirective
 	LastPreprocessing  Kind = InclusionDirective
 	FirstExtraDecl     Kind = ModuleImportDecl

@@ -535,9 +535,19 @@ func (c Cursor) OffsetOfField() (uint64, error) {
 	return convertTypeLayoutError(C.clang_Cursor_getOffsetOfField(c.c))
 }
 
-// Determine whether the given cursor represents an anonymous record declaration.
+// Determine whether the given cursor represents an anonymous tag or namespace.
 func (c Cursor) IsAnonymous() bool {
 	return C.clang_Cursor_isAnonymous(c.c) != 0
+}
+
+// Determine whether the given cursor represents an anonymous record declaration.
+func (c Cursor) IsAnonymousRecordDecl() bool {
+	return C.clang_Cursor_isAnonymousRecordDecl(c.c) != 0
+}
+
+// Determine whether the given cursor represents an inline namespace declaration.
+func (c Cursor) IsInlineNamespace() bool {
+	return C.clang_Cursor_isInlineNamespace(c.c) != 0
 }
 
 // Returns non-zero if the cursor specifies a Record member that is a bitfield.
