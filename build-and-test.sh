@@ -30,8 +30,8 @@ go test
 
 cd ../go-clang-includes
 go build
-go test
+go test -cflags="$CGO_CPPFLAGS"
 
 cd ../go-clang-globals
 go build
-go test
+go test -cflags="$CGO_CPPFLAGS"
