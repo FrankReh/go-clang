@@ -33,6 +33,7 @@ func TestCompilationDatabase(t *testing.T) {
 			directory: "/home/user/llvm/build",
 			args: []string{
 				"/usr/bin/clang++",
+				"--driver-mode=g++", // as of clang 10.0, this is added automatically anyway
 				"-Irelative",
 				//FIXME: bug in clang ?
 				//`-DSOMEDEF="With spaces, quotes and \-es.`,
@@ -45,30 +46,33 @@ func TestCompilationDatabase(t *testing.T) {
 		},
 		{
 			directory: "@TESTDIR@",
-			args:      []string{"g++", "-c", "-DMYMACRO=a", "subdir/a.cpp"},
+			args:      []string{"g++", "--driver-mode=g++", "-c", "-DMYMACRO=a", "subdir/a.cpp"},
 		},
 	}
 
 	cmds := db.AllCompileCommands()
 	if len(cmds) != len(table) {
-		t.Errorf("expected #cmds=%d. got=%d", len(table), len(cmds))
+		t.Fatalf("expected #cmds=%d. got=%d", len(table), len(cmds))
 	}
 
 	for i, cmd := range cmds {
 		if cmd.Directory != table[i].directory {
-			t.Errorf("expected dir=%q. got=%q", table[i].directory, cmd.Directory)
+			t.Fatalf("expected dir=%q. got=%q", table[i].directory, cmd.Directory)
 		}
 
 		nargs := len(cmd.Args)
 		if nargs != len(table[i].args) {
-			t.Errorf("expected #args=%d. got=%d", len(table[i].args), nargs)
+			t.Logf("i %d", i)
+			t.Logf("table[i].args: %q", table[i].args)
+			t.Logf("cmd.Args: %q", cmd.Args)
+			t.Fatalf("expected #args=%d. got=%d", len(table[i].args), nargs)
 		}
 		if nargs > len(table[i].args) {
 			nargs = len(table[i].args)
 		}
 		for j, arg := range cmd.Args {
 			if arg != table[i].args[j] {
-				t.Errorf("expected arg[%d]=%q. got=%q", j, table[i].args[j], arg)
+				t.Fatalf("expected arg[%d]=%q. got=%q", j, table[i].args[j], arg)
 			}
 		}
 	}

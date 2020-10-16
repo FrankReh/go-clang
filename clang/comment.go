@@ -99,6 +99,9 @@ const (
 
 	// Command argument should be rendered emphasized (typically italic font).
 	CommentInlineCommandRenderKind_Emphasized CommentInlineCommandRenderKind = C.CXCommentInlineCommandRenderKind_Emphasized
+
+	// Command argument should not be rendered (since it only defines an anchor).
+	CommentInlineCommandRenderKind_Anchor CommentInlineCommandRenderKind = C.CXCommentInlineCommandRenderKind_Anchor
 )
 
 /*

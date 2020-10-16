@@ -193,6 +193,11 @@ func _() {
 	_ = x[OMPTargetTeamsDistributeParallelForSimdDirective-278]
 	_ = x[OMPTargetTeamsDistributeSimdDirective-279]
 	_ = x[BuiltinBitCastExpr-280]
+	_ = x[OMPMasterTaskLoopDirective-281]
+	_ = x[OMPParallelMasterTaskLoopDirective-282]
+	_ = x[OMPMasterTaskLoopSimdDirective-283]
+	_ = x[OMPParallelMasterTaskLoopSimdDirective-284]
+	_ = x[OMPParallelMasterDirective-285]
 	_ = x[TranslationUnit-300]
 	_ = x[UnexposedAttr-400]
 	_ = x[IBActionAttr-401]
@@ -256,7 +261,7 @@ func _() {
 	_ = x[FirstExpr-100]
 	_ = x[LastExpr-149]
 	_ = x[FirstStmt-200]
-	_ = x[LastStmt-280]
+	_ = x[LastStmt-285]
 	_ = x[FirstAttr-400]
 	_ = x[LastAttr-441]
 	_ = x[FirstPreprocessing-500]
@@ -270,7 +275,7 @@ const (
 	_Kind_name_1 = "UnexposedDeclStructDeclUnionDeclClassDeclEnumDeclFieldDeclEnumConstantDeclFunctionDeclVarDeclParmDeclObjCInterfaceDeclObjCCategoryDeclObjCProtocolDeclObjCPropertyDeclObjCIvarDeclObjCInstanceMethodDeclObjCClassMethodDeclObjCImplementationDeclObjCCategoryImplDeclTypedefDeclCXXMethodNamespaceLinkageSpecConstructorDestructorConversionFunctionTemplateTypeParameterNonTypeTemplateParameterTemplateTemplateParameterFunctionTemplateClassTemplateClassTemplatePartialSpecializationNamespaceAliasUsingDirectiveUsingDeclarationTypeAliasDeclObjCSynthesizeDeclObjCDynamicDeclCXXAccessSpecifierObjCSuperClassRefObjCProtocolRefObjCClassRefTypeRefCXXBaseSpecifierTemplateRefNamespaceRefMemberRefLabelRefOverloadedDeclRefVariableRef"
 	_Kind_name_2 = "InvalidFileNoDeclFoundNotImplementedInvalidCode"
 	_Kind_name_3 = "UnexposedExprDeclRefExprMemberRefExprCallExprObjCMessageExprBlockExprIntegerLiteralFloatingLiteralImaginaryLiteralStringLiteralCharacterLiteralParenExprUnaryOperatorArraySubscriptExprBinaryOperatorCompoundAssignOperatorConditionalOperatorCStyleCastExprCompoundLiteralExprInitListExprAddrLabelExprStmtExprGenericSelectionExprGNUNullExprCXXStaticCastExprCXXDynamicCastExprCXXReinterpretCastExprCXXConstCastExprCXXFunctionalCastExprCXXTypeidExprCXXBoolLiteralExprCXXNullPtrLiteralExprCXXThisExprCXXThrowExprCXXNewExprCXXDeleteExprUnaryExprObjCStringLiteralObjCEncodeExprObjCSelectorExprObjCProtocolExprObjCBridgedCastExprPackExpansionExprSizeOfPackExprLambdaExprObjCBoolLiteralExprObjCSelfExprOMPArraySectionExprObjCAvailabilityCheckExprLastExpr"
-	_Kind_name_4 = "UnexposedStmtLabelStmtCompoundStmtCaseStmtDefaultStmtIfStmtSwitchStmtWhileStmtDoStmtForStmtGotoStmtIndirectGotoStmtContinueStmtBreakStmtReturnStmtGCCAsmStmtObjCAtTryStmtObjCAtCatchStmtObjCAtFinallyStmtObjCAtThrowStmtObjCAtSynchronizedStmtObjCAutoreleasePoolStmtObjCForCollectionStmtCXXCatchStmtCXXTryStmtCXXForRangeStmtSEHTryStmtSEHExceptStmtSEHFinallyStmtMSAsmStmtNullStmtDeclStmtOMPParallelDirectiveOMPSimdDirectiveOMPForDirectiveOMPSectionsDirectiveOMPSectionDirectiveOMPSingleDirectiveOMPParallelForDirectiveOMPParallelSectionsDirectiveOMPTaskDirectiveOMPMasterDirectiveOMPCriticalDirectiveOMPTaskyieldDirectiveOMPBarrierDirectiveOMPTaskwaitDirectiveOMPFlushDirectiveSEHLeaveStmtOMPOrderedDirectiveOMPAtomicDirectiveOMPForSimdDirectiveOMPParallelForSimdDirectiveOMPTargetDirectiveOMPTeamsDirectiveOMPTaskgroupDirectiveOMPCancellationPointDirectiveOMPCancelDirectiveOMPTargetDataDirectiveOMPTaskLoopDirectiveOMPTaskLoopSimdDirectiveOMPDistributeDirectiveOMPTargetEnterDataDirectiveOMPTargetExitDataDirectiveOMPTargetParallelDirectiveOMPTargetParallelForDirectiveOMPTargetUpdateDirectiveOMPDistributeParallelForDirectiveOMPDistributeParallelForSimdDirectiveOMPDistributeSimdDirectiveOMPTargetParallelForSimdDirectiveOMPTargetSimdDirectiveOMPTeamsDistributeDirectiveOMPTeamsDistributeSimdDirectiveOMPTeamsDistributeParallelForSimdDirectiveOMPTeamsDistributeParallelForDirectiveOMPTargetTeamsDirectiveOMPTargetTeamsDistributeDirectiveOMPTargetTeamsDistributeParallelForDirectiveOMPTargetTeamsDistributeParallelForSimdDirectiveOMPTargetTeamsDistributeSimdDirectiveBuiltinBitCastExpr"
+	_Kind_name_4 = "UnexposedStmtLabelStmtCompoundStmtCaseStmtDefaultStmtIfStmtSwitchStmtWhileStmtDoStmtForStmtGotoStmtIndirectGotoStmtContinueStmtBreakStmtReturnStmtGCCAsmStmtObjCAtTryStmtObjCAtCatchStmtObjCAtFinallyStmtObjCAtThrowStmtObjCAtSynchronizedStmtObjCAutoreleasePoolStmtObjCForCollectionStmtCXXCatchStmtCXXTryStmtCXXForRangeStmtSEHTryStmtSEHExceptStmtSEHFinallyStmtMSAsmStmtNullStmtDeclStmtOMPParallelDirectiveOMPSimdDirectiveOMPForDirectiveOMPSectionsDirectiveOMPSectionDirectiveOMPSingleDirectiveOMPParallelForDirectiveOMPParallelSectionsDirectiveOMPTaskDirectiveOMPMasterDirectiveOMPCriticalDirectiveOMPTaskyieldDirectiveOMPBarrierDirectiveOMPTaskwaitDirectiveOMPFlushDirectiveSEHLeaveStmtOMPOrderedDirectiveOMPAtomicDirectiveOMPForSimdDirectiveOMPParallelForSimdDirectiveOMPTargetDirectiveOMPTeamsDirectiveOMPTaskgroupDirectiveOMPCancellationPointDirectiveOMPCancelDirectiveOMPTargetDataDirectiveOMPTaskLoopDirectiveOMPTaskLoopSimdDirectiveOMPDistributeDirectiveOMPTargetEnterDataDirectiveOMPTargetExitDataDirectiveOMPTargetParallelDirectiveOMPTargetParallelForDirectiveOMPTargetUpdateDirectiveOMPDistributeParallelForDirectiveOMPDistributeParallelForSimdDirectiveOMPDistributeSimdDirectiveOMPTargetParallelForSimdDirectiveOMPTargetSimdDirectiveOMPTeamsDistributeDirectiveOMPTeamsDistributeSimdDirectiveOMPTeamsDistributeParallelForSimdDirectiveOMPTeamsDistributeParallelForDirectiveOMPTargetTeamsDirectiveOMPTargetTeamsDistributeDirectiveOMPTargetTeamsDistributeParallelForDirectiveOMPTargetTeamsDistributeParallelForSimdDirectiveOMPTargetTeamsDistributeSimdDirectiveBuiltinBitCastExprOMPMasterTaskLoopDirectiveOMPParallelMasterTaskLoopDirectiveOMPMasterTaskLoopSimdDirectiveOMPParallelMasterTaskLoopSimdDirectiveOMPParallelMasterDirective"
 	_Kind_name_5 = "TranslationUnit"
 	_Kind_name_6 = "UnexposedAttrIBActionAttrIBOutletAttrIBOutletCollectionAttrCXXFinalAttrCXXOverrideAttrAnnotateAttrAsmLabelAttrPackedAttrPureAttrConstAttrNoDuplicateAttrCUDAConstantAttrCUDADeviceAttrCUDAGlobalAttrCUDAHostAttrCUDASharedAttrVisibilityAttrDLLExportDLLImportNSReturnsRetainedNSReturnsNotRetainedNSReturnsAutoreleasedNSConsumesSelfNSConsumedObjCExceptionObjCNSObjectObjCIndependentClassObjCPreciseLifetimeObjCReturnsInnerPointerObjCRequiresSuperObjCRootClassObjCSubclassingRestrictedObjCExplicitProtocolImplObjCDesignatedInitializerObjCRuntimeVisibleObjCBoxableFlagEnumConvergentAttrWarnUnusedAttrWarnUnusedResultAttrAlignedAttr"
 	_Kind_name_7 = "PreprocessingDirectiveMacroDefinitionMacroExpansionInclusionDirective"
@@ -282,7 +287,7 @@ var (
 	_Kind_index_1 = [...]uint16{0, 13, 23, 32, 41, 49, 58, 74, 86, 93, 101, 118, 134, 150, 166, 178, 200, 219, 241, 261, 272, 281, 290, 301, 312, 322, 340, 361, 385, 410, 426, 439, 473, 487, 501, 517, 530, 548, 563, 581, 598, 613, 625, 632, 648, 659, 671, 680, 688, 705, 716}
 	_Kind_index_2 = [...]uint8{0, 11, 22, 36, 47}
 	_Kind_index_3 = [...]uint16{0, 13, 24, 37, 45, 60, 69, 83, 98, 114, 127, 143, 152, 165, 183, 197, 219, 238, 252, 271, 283, 296, 304, 324, 335, 352, 370, 392, 408, 429, 442, 460, 481, 492, 504, 514, 527, 536, 553, 567, 583, 599, 618, 635, 649, 659, 678, 690, 709, 734, 742}
-	_Kind_index_4 = [...]uint16{0, 13, 22, 34, 42, 53, 59, 69, 78, 84, 91, 99, 115, 127, 136, 146, 156, 169, 184, 201, 216, 238, 261, 282, 294, 304, 319, 329, 342, 356, 365, 373, 381, 401, 417, 432, 452, 471, 489, 512, 540, 556, 574, 594, 615, 634, 654, 671, 683, 702, 720, 739, 766, 784, 801, 822, 851, 869, 891, 911, 935, 957, 984, 1010, 1036, 1065, 1089, 1122, 1159, 1185, 1218, 1240, 1267, 1298, 1340, 1378, 1401, 1434, 1478, 1526, 1563, 1581}
+	_Kind_index_4 = [...]uint16{0, 13, 22, 34, 42, 53, 59, 69, 78, 84, 91, 99, 115, 127, 136, 146, 156, 169, 184, 201, 216, 238, 261, 282, 294, 304, 319, 329, 342, 356, 365, 373, 381, 401, 417, 432, 452, 471, 489, 512, 540, 556, 574, 594, 615, 634, 654, 671, 683, 702, 720, 739, 766, 784, 801, 822, 851, 869, 891, 911, 935, 957, 984, 1010, 1036, 1065, 1089, 1122, 1159, 1185, 1218, 1240, 1267, 1298, 1340, 1378, 1401, 1434, 1478, 1526, 1563, 1581, 1607, 1641, 1671, 1709, 1735}
 	_Kind_index_6 = [...]uint16{0, 13, 25, 37, 59, 71, 86, 98, 110, 120, 128, 137, 152, 168, 182, 196, 208, 222, 236, 245, 254, 271, 291, 312, 326, 336, 349, 361, 381, 400, 423, 440, 453, 478, 502, 527, 545, 556, 564, 578, 592, 612, 623}
 	_Kind_index_7 = [...]uint8{0, 22, 37, 51, 69}
 	_Kind_index_8 = [...]uint8{0, 16, 37, 49, 59}
@@ -301,7 +306,7 @@ func (i Kind) String() string {
 	case 100 <= i && i <= 149:
 		i -= 100
 		return _Kind_name_3[_Kind_index_3[i]:_Kind_index_3[i+1]]
-	case 200 <= i && i <= 280:
+	case 200 <= i && i <= 285:
 		i -= 200
 		return _Kind_name_4[_Kind_index_4[i]:_Kind_index_4[i+1]]
 	case i == 300:

@@ -119,11 +119,12 @@ func _() {
 	_ = x[CommentInlineCommandRenderKind_Bold-1]
 	_ = x[CommentInlineCommandRenderKind_Monospaced-2]
 	_ = x[CommentInlineCommandRenderKind_Emphasized-3]
+	_ = x[CommentInlineCommandRenderKind_Anchor-4]
 }
 
-const _CommentInlineCommandRenderKind_name = "CommentInlineCommandRenderKind_NormalCommentInlineCommandRenderKind_BoldCommentInlineCommandRenderKind_MonospacedCommentInlineCommandRenderKind_Emphasized"
+const _CommentInlineCommandRenderKind_name = "CommentInlineCommandRenderKind_NormalCommentInlineCommandRenderKind_BoldCommentInlineCommandRenderKind_MonospacedCommentInlineCommandRenderKind_EmphasizedCommentInlineCommandRenderKind_Anchor"
 
-var _CommentInlineCommandRenderKind_index = [...]uint8{0, 37, 72, 113, 154}
+var _CommentInlineCommandRenderKind_index = [...]uint8{0, 37, 72, 113, 154, 191}
 
 func (i CommentInlineCommandRenderKind) String() string {
 	if i >= CommentInlineCommandRenderKind(len(_CommentInlineCommandRenderKind_index)-1) {

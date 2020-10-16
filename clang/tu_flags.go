@@ -144,4 +144,9 @@ const (
 		Used to indicate that non-errors from included files should be ignored.
 	*/
 	TranslationUnit_IgnoreNonErrorsFromIncludedFiles TranslationUnit_Flags = C.CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
+
+	/*
+		Tells the preprocessor not to skip excluded conditional blocks.
+	*/
+	TranslationUnit_RetainExcludedConditionalBlocks TranslationUnit_Flags = C.CXTranslationUnit_RetainExcludedConditionalBlocks
 )

@@ -781,6 +781,26 @@ const (
 	 */
 	BuiltinBitCastExpr Kind = 280
 
+	/** OpenMP master taskloop directive.
+	 */
+	OMPMasterTaskLoopDirective Kind = 281
+
+	/** OpenMP parallel master taskloop directive.
+	 */
+	OMPParallelMasterTaskLoopDirective Kind = 282
+
+	/** OpenMP master taskloop simd directive.
+	 */
+	OMPMasterTaskLoopSimdDirective Kind = 283
+
+	/** OpenMP parallel master taskloop simd directive.
+	 */
+	OMPParallelMasterTaskLoopSimdDirective Kind = 284
+
+	/** OpenMP parallel master directive.
+	 */
+	OMPParallelMasterDirective Kind = 285
+
 	/**
 	 * Cursor that represents the translation unit itself.
 	 *
@@ -881,7 +901,7 @@ const (
 	FirstExpr          Kind = UnexposedExpr
 	LastExpr           Kind = FixedPointLiteral
 	FirstStmt          Kind = UnexposedStmt
-	LastStmt           Kind = BuiltinBitCastExpr
+	LastStmt           Kind = OMPParallelMasterDirective
 	FirstAttr          Kind = UnexposedAttr
 	LastAttr           Kind = AlignedAttr
 	FirstPreprocessing Kind = PreprocessingDirective
