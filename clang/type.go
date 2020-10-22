@@ -327,6 +327,15 @@ func (t Type) ModifiedType() Type {
 	return Type{C.clang_Type_getModifiedType(t.c)}
 }
 
+/**
+ * Gets the type contained by this atomic type.
+ *
+ * If a non-atomic type is passed in, an invalid type is returned.
+ */
+func (t Type) ValueType() Type {
+	return Type{C.clang_Type_getValueType(t.c)}
+}
+
 /*
 	Returns the number of template arguments for given class template
 	specialization, or -1 if type T is not a class template specialization.

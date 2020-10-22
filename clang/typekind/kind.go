@@ -54,8 +54,9 @@ const (
 	UShortAccum  Kind = 36
 	UAccum       Kind = 37
 	ULongAccum   Kind = 38
+	BFloat16     Kind = 39
 	FirstBuiltin Kind = Void
-	LastBuiltin  Kind = ULongAccum
+	LastBuiltin  Kind = BFloat16
 
 	Complex             Kind = 100
 	Pointer             Kind = 101
@@ -146,13 +147,14 @@ const (
 	OCLIntelSubgroupAVCImeSingleRefStreamin        Kind = 174
 	OCLIntelSubgroupAVCImeDualRefStreamin          Kind = 175
 	ExtVector                                      Kind = 176
+	Atomic                                         Kind = 177
 )
 
 func Validate(i int) (Kind, error) {
 	switch {
 	case 0 <= i && i <= int(LastBuiltin):
 		return Kind(i), nil
-	case int(Complex) <= i && i <= int(ExtVector):
+	case int(Complex) <= i && i <= int(Atomic):
 		return Kind(i), nil
 	default:
 		return 0, InvalidErr

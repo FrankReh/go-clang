@@ -310,67 +310,71 @@ const (
 	 */
 	CXXFunctionalCastExpr Kind = 128
 
+	/** OpenCL's addrspace_cast<> expression.
+	 */
+	CXXAddrspaceCastExpr Kind = 129
+
 	/** A C++ typeid expression (C++ [expr.typeid]).
 	 */
-	CXXTypeidExpr Kind = 129
+	CXXTypeidExpr Kind = 130
 
 	/** [C++ 2.13.5] C++ Boolean Literal.
 	 */
-	CXXBoolLiteralExpr Kind = 130
+	CXXBoolLiteralExpr Kind = 131
 
 	/** [C++0x 2.14.7] C++ Pointer Literal.
 	 */
-	CXXNullPtrLiteralExpr Kind = 131
+	CXXNullPtrLiteralExpr Kind = 132
 
 	/** Represents the "this" expression in C++
 	 */
-	CXXThisExpr Kind = 132
+	CXXThisExpr Kind = 133
 
 	/** [C++ 15] C++ Throw Expression.
 	 *
 	 * This handles 'throw' and 'throw' assignment-expression. When
 	 * assignment-expression isn't present, Op will be null.
 	 */
-	CXXThrowExpr Kind = 133
+	CXXThrowExpr Kind = 134
 
 	/** A new expression for memory allocation and constructor calls, e.g:
 	 * "new CXXNewExpr(foo)".
 	 */
-	CXXNewExpr Kind = 134
+	CXXNewExpr Kind = 135
 
-	/** A delete expression for memory deallocation and destructor calls
+	/** A delete expression for memory deallocation and destructor calls,
 	 * e.g. "delete[] pArray".
 	 */
-	CXXDeleteExpr Kind = 135
+	CXXDeleteExpr Kind = 136
 
 	/** A unary expression. (noexcept, sizeof, or other traits)
 	 */
-	UnaryExpr Kind = 136
+	UnaryExpr Kind = 137
 
 	/** An Objective-C string literal i.e. @"foo".
 	 */
-	ObjCStringLiteral Kind = 137
+	ObjCStringLiteral Kind = 138
 
 	/** An Objective-C \@encode expression.
 	 */
-	ObjCEncodeExpr Kind = 138
+	ObjCEncodeExpr Kind = 139
 
 	/** An Objective-C \@selector expression.
 	 */
-	ObjCSelectorExpr Kind = 139
+	ObjCSelectorExpr Kind = 140
 
 	/** An Objective-C \@protocol expression.
 	 */
-	ObjCProtocolExpr Kind = 140
+	ObjCProtocolExpr Kind = 141
 
 	/** An Objective-C "bridged" cast expression, which casts between
 	 * Objective-C pointers and C pointers, transferring ownership in the process.
 	 *
 	 * \code
-	 *   NSString *str Kind = (__bridge_transfer NSString *)CFCreateString();
+	 *   NSString *str = (__bridge_transfer NSString *)CFCreateString();
 	 * \endcode
 	 */
-	ObjCBridgedCastExpr Kind = 141
+	ObjCBridgedCastExpr Kind = 142
 
 	/** Represents a C++0x pack expansion that produces a sequence of
 	 * expressions.
@@ -385,7 +389,7 @@ const (
 	 * }
 	 * \endcode
 	 */
-	PackExpansionExpr Kind = 142
+	PackExpansionExpr Kind = 143
 
 	/** Represents an expression that computes the length of a parameter
 	 * pack.
@@ -393,45 +397,55 @@ const (
 	 * \code
 	 * template<typename ...Types>
 	 * struct count {
-	 *   static const unsigned value Kind = sizeof...(Types);
+	 *   static const unsigned value = sizeof...(Types);
 	 * };
 	 * \endcode
 	 */
-	SizeOfPackExpr Kind = 143
+	SizeOfPackExpr Kind = 144
 
 	/* Represents a C++ lambda expression that produces a local function
 	 * object.
 	 *
 	 * \code
 	 * void abssort(float *x, unsigned N) {
-	 *   std::sort(x, x + N
+	 *   std::sort(x, x + N,
 	 *             [](float a, float b) {
 	 *               return std::abs(a) < std::abs(b);
 	 *             });
 	 * }
 	 * \endcode
 	 */
-	LambdaExpr Kind = 144
+	LambdaExpr Kind = 145
 
 	/** Objective-c Boolean Literal.
 	 */
-	ObjCBoolLiteralExpr Kind = 145
+	ObjCBoolLiteralExpr Kind = 146
 
 	/** Represents the "self" expression in an Objective-C method.
 	 */
-	ObjCSelfExpr Kind = 146
+	ObjCSelfExpr Kind = 147
 
-	/** OpenMP 4.0 [2.4, Array Section].
+	/** OpenMP 5.0 [2.1.5, Array Section].
 	 */
-	OMPArraySectionExpr Kind = 147
+	OMPArraySectionExpr Kind = 148
 
 	/** Represents an @available(...) check.
 	 */
-	ObjCAvailabilityCheckExpr Kind = 148
+	ObjCAvailabilityCheckExpr Kind = 149
 
-	/** Fixed point literal
+	/**
+	 * Fixed point literal
 	 */
-	FixedPointLiteral = 149
+	FixedPointLiteral Kind = 150
+
+	/** OpenMP 5.0 [2.1.4, Array Shaping].
+	 */
+	OMPArrayShapingExpr Kind = 151
+
+	/**
+	 * OpenMP 5.0 [2.1.6 Iterators]
+	 */
+	OMPIteratorExpr Kind = 152
 
 	/* Statements */
 	/**
@@ -439,7 +453,7 @@ const (
 	 * interface.
 	 *
 	 * Unexposed statements have the same operations as any other kind of
-	 * statement; one can extract their location information, spelling
+	 * statement; one can extract their location information, spelling,
 	 * children, etc. However, the specific kind of the statement is not
 	 * reported.
 	 */
@@ -801,6 +815,14 @@ const (
 	 */
 	OMPParallelMasterDirective Kind = 285
 
+	/** OpenMP depobj directive.
+	 */
+	OMPDepobjDirective Kind = 286
+
+	/** OpenMP scan directive.
+	 */
+	OMPScanDirective Kind = 287
+
 	/**
 	 * Cursor that represents the translation unit itself.
 	 *
@@ -899,9 +921,9 @@ const (
 	FirstInvalid       Kind = InvalidFile
 	LastInvalid        Kind = InvalidCode
 	FirstExpr          Kind = UnexposedExpr
-	LastExpr           Kind = FixedPointLiteral
+	LastExpr           Kind = OMPIteratorExpr
 	FirstStmt          Kind = UnexposedStmt
-	LastStmt           Kind = OMPParallelMasterDirective
+	LastStmt           Kind = OMPScanDirective
 	FirstAttr          Kind = UnexposedAttr
 	LastAttr           Kind = AlignedAttr
 	FirstPreprocessing Kind = PreprocessingDirective

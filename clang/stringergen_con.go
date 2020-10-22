@@ -82,7 +82,7 @@ var (
 
 func (i CallingConv) String() string {
 	switch {
-	case 0 <= i && i <= 16:
+	case i <= 16:
 		return _CallingConv_name_0[_CallingConv_index_0[i]:_CallingConv_index_0[i+1]]
 	case i == 100:
 		return _CallingConv_name_1
@@ -456,7 +456,7 @@ var (
 
 func (i IndexOptFlags) String() string {
 	switch {
-	case 0 <= i && i <= 2:
+	case i <= 2:
 		return _IndexOptFlags_name_0[_IndexOptFlags_index_0[i]:_IndexOptFlags_index_0[i+1]]
 	case i == 4:
 		return _IndexOptFlags_name_1
