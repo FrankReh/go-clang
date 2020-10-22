@@ -1,5 +1,5 @@
 
-Native Go bindings for Clang's C API (libclang) for versions 5.0, 6.0, 7.0 and 8.0.
+Native Go bindings for Clang's C API (libclang) for versions 5.0 through 11.0.
 
 Refer to https://llvm.org for the latest clang versions and documentation.
 
